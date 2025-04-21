@@ -1,0 +1,11 @@
+{
+  "bindings": [
+    {
+      "role": "roles/run.invoker",
+      "members": [
+        "domain:https://urbandocs.web.app",
+        "domain:https://urbandocs.firebaseapp.com"
+      ]
+    }
+  ]
+}

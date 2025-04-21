@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UrbanDocs</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- Supabase (si utilisé ailleurs, sinon peut être retiré) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <div class="container mt-5 mb-5">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h1 class="mb-0 h4 text-center">Synthèses de Documents PLU</h1>
+        </div>
+        <div class="card-body">
+          <form>
+            <!-- Ville -->
+            <div class="mb-3">
+              <label for="villeSelect" class="form-label select-label">
+                Ville
+                <span
+                  class="spinner-border spinner-border-sm text-primary ms-2 d-none"
+                  role="status"
+                  aria-hidden="true"
+                  id="villeSpinner"
+                ></span>
+              </label>
+              <select
+                id="villeSelect"
+                class="form-select form-select-lg"
+                disabled
+              >
+                <!-- Options chargées par JS -->
+              </select>
+            </div>
+
+            <!-- Zonage -->
+            <div class="mb-3">
+              <label for="zonageSelect" class="form-label select-label">
+                Zonage
+                <span
+                  class="spinner-border spinner-border-sm text-primary ms-2 d-none"
+                  role="status"
+                  aria-hidden="true"
+                  id="zonageSpinner"
+                ></span>
+              </label>
+              <select
+                id="zonageSelect"
+                class="form-select form-select-lg"
+                disabled
+              >
+                <option value="">Sélectionnez d'abord une ville</option>
+              </select>
+            </div>
+
+            <!-- Zone -->
+            <div class="mb-3">
+              <label for="zoneSelect" class="form-label select-label">
+                Zone
+                <span
+                  class="spinner-border spinner-border-sm text-primary ms-2 d-none"
+                  role="status"
+                  aria-hidden="true"
+                  id="zoneSpinner"
+                ></span>
+              </label>
+              <select
+                id="zoneSelect"
+                class="form-select form-select-lg"
+                disabled
+              >
+                <option value="">Sélectionnez d'abord un zonage</option>
+              </select>
+            </div>
+
+            <!-- Typologie -->
+            <div class="mb-3">
+              <label for="typologieSelect" class="form-label select-label">
+                Typologie
+                <span
+                  class="spinner-border spinner-border-sm text-primary ms-2 d-none"
+                  role="status"
+                  aria-hidden="true"
+                  id="typologieSpinner"
+                ></span>
+              </label>
+              <select
+                id="typologieSelect"
+                class="form-select form-select-lg"
+                disabled
+              >
+                <option value="">Sélectionnez d'abord une zone</option>
+              </select>
+            </div>
+
+            <!-- Bouton Téléchargement/Voir -->
+            <div class="d-grid gap-2 mt-4">
+              <button
+                id="downloadBtn"
+                class="btn btn-success btn-lg"
+                type="button"
+                disabled
+              >
+                <i class="bi bi-eye-fill me-2"></i>
+                <!-- Icône "oeil" -->
+                Voir le PDF
+                <span
+                  class="spinner-border spinner-border-sm ms-2 d-none"
+                  role="status"
+                  aria-hidden="true"
+                  id="documentSpinner"
+                ></span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Zone de statut -->
+          <div
+            id="statusMessage"
+            class="status-message alert alert-info mt-4"
+            role="alert"
+          >
+            Veuillez sélectionner une ville pour commencer.
+          </div>
+        </div>
+        <!-- /card-body -->
+      </div>
+      <!-- /card -->
+    </div>
+    <!-- /container -->
+
+    <!-- Bootstrap JS Bundle (includes Popper) - Optionnel si vous n'utilisez pas de composants JS Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Votre script JS -->
+    <script type="module" src="js/app.js"></script> 
+  </body>
+</html>
