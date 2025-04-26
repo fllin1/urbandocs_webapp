@@ -47,5 +47,5 @@ export const zoneNameMappings = {
   zone_ud1: "Zone UD1",
   zone_ud2: "Zone UD2",
   zone_ud3: "Zone UD3",
-  zone_ud4: "Zone UD4"
+  zone_ud4: "Zone UD4",
 };

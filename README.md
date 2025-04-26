@@ -61,13 +61,13 @@ To run this project, you will need to add the following environment variables to
 Clone the project
 
 ```bash
-  git clone https://github.com/fllin1/urbandocs_app.git
+  git clone https://github.com/fllin1/urbandocs_webapp.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd urbandocs_app
+  cd urbandocs_webapp
 ```
 
 Install dependencies and then init your project

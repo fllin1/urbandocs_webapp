@@ -17,8 +17,8 @@ cors_config = options.CorsOptions(
     cors_origins=[
         "https://urbandocs.web.app",
         "https://urbandocs.firebaseapp.com",
-        "http://127.0.0.1:5000",
-        "http://localhost:5000",
+        "http://127.0.0.1:5000", # Port on Linux
+        "http://127.0.0.1:5002", # Port on Mac
     ],
     cors_methods=["GET", "OPTIONS"],
 )
