@@ -1,4 +1,15 @@
 // js/mappings.js
+/**
+ * Firebase Mappings
+ * @module mappings
+ * @description This module contains mappings for zone names used in the application.
+ * @version 0.0.1
+ * @author GreyPanda
+ * @todo Add more mappings as needed.
+ *
+ * @changelog
+ * - 0.0.1 (2025-04-21): Mappings for Grenoble.
+ */
 
 // Clés: noms de l'API (minuscules, underscore)
 // Valeurs: noms à afficher (format spécifié)

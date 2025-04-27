@@ -1,3 +1,16 @@
+// src/js/login.js
+/**
+ * Firebase Login
+ * @module login
+ * @description This module handles user login functionality using Firebase Authentication.
+ * @version 0.0.1
+ * @author GreyPanda
+ * @todo Add phone number authentication (optional : password reset functionality).
+ *
+ * @changelog
+ * - 0.0.1 (2025-04-27): Login functionality implemented using Firebase Authentication.
+ */
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";

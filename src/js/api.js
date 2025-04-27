@@ -1,4 +1,15 @@
-// public/js/api.js
+// src/js/api.js
+/**
+ * Firebase API
+ * @module api
+ * @description This module handles API calls to fetch data for cities, zoning, zones, and typologies.
+ * @version 0.0.1
+ * @author GreyPanda
+ * @todo
+ *
+ * @changelog
+ * - 0.0.1 (2025-04-26): Separate module for API calls to improve code organization and maintainability.
+ */
 
 // Import UI functions and elements (will be defined in ui.js)
 import {
@@ -18,6 +29,9 @@ import {
   typologieSpinner,
   documentSpinner,
 } from "./ui.js"; // Adjust path if needed
+
+// Import the current user state from app.js
+import { currentUser } from "./app.js";
 
 // --- API URL Definitions ---
 const IS_LOCAL =
@@ -234,15 +248,26 @@ async function loadTypologies(zoneId, zonageId) {
 }
 
 /**
- * Recherche le document correspondant aux sélections
+ * Recherche le document correspondant aux sélections, only if authenticated
  */
 async function findDocument(zonageId, zoneId, typologieId) {
   downloadBtn.disabled = true;
   selectedDocument = null; // Reset before search
 
+  // Check authentication status FIRST
+  if (!currentUser) {
+    showStatus(
+      "Veuillez vous connecter pour rechercher et voir les documents.",
+      "warning"
+    );
+    // Keep button disabled, no need to toggle spinner as we are not fetching
+    return;
+  }
+
+  // Proceed only if authenticated
   if (!zonageId || !zoneId || !typologieId) {
     showStatus("Sélection incomplète pour rechercher le document.", "info");
-    return;
+    return; // Exit if selection is incomplete
   }
 
   toggleSpinner(documentSpinner, true);
@@ -264,7 +289,8 @@ async function findDocument(zonageId, zoneId, typologieId) {
     const data = await response.json();
     selectedDocument = data; // Store the found document details
 
-    if (data && data.plu_url) {
+    // Enable download button only if authenticated AND document URL exists
+    if (currentUser && data && data.plu_url) {
       downloadBtn.disabled = false;
       showStatus(
         `Document trouvé (Source: ${

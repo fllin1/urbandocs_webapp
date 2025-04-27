@@ -1,4 +1,15 @@
 // public/js/ui.js
+/**
+ * Firebase UI
+ * @module ui
+ * @description This module handles the UI elements and utility functions for the application.
+ * @version 0.0.1
+ * @author GreyPanda
+ * @todo Rework on the messages to "login before downloading"
+ *
+ * @changelog
+ * - 0.0.1 (2025-04-26): Initial version with basic UI functions and element references.
+ */
 
 // Import mappings needed for formatting
 import { zoneNameMappings } from "./mappings";
@@ -17,6 +28,12 @@ const zonageSpinner = document.getElementById("zonageSpinner");
 const zoneSpinner = document.getElementById("zoneSpinner");
 const typologieSpinner = document.getElementById("typologieSpinner");
 const documentSpinner = document.getElementById("documentSpinner"); // For the final search/download button area
+
+// New elements for Auth UI
+const userStatus = document.getElementById("userStatus");
+const loginPrompt = document.getElementById("loginPrompt");
+const logoutBtn = document.getElementById("logoutBtn");
+const loginLink = document.getElementById("loginLink"); // Reference to the login link/button
 // --- End DOM Element References ---
 
 // --- UI Utility Functions ---
@@ -142,4 +159,9 @@ export {
   resetSelect,
   formatApiName,
   populateSelect,
+  // Export new auth-related elements
+  userStatus,
+  loginPrompt,
+  logoutBtn,
+  loginLink,
 };

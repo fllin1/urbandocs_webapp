@@ -1,4 +1,20 @@
 // public/js/app.js - Main application logic
+/**
+ * Firebase App
+ * @module app
+ * @description This module handles the main application logic.
+ * @version 0.0.2
+ * @author GreyPanda
+ * @todo Secure the document links, removing them as secure links.
+ *
+ * @changelog
+ * - 0.0.2 (2025-04-27): Added authentication state management and document download functionality.
+ * - 0.0.1 (2025-04-21): Initial version with basic document download functionality.
+ */
+
+// Import Firebase Auth functions
+import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 // Import API functions
 import {
@@ -20,11 +36,107 @@ import {
   downloadBtn,
   showStatus,
   resetSelect,
-  formatApiName, // Keep formatApiName accessible if needed directly here, though it's mainly used in api.js via ui.js
+  formatApiName,
+  // Get references to new UI elements from ui.js
+  userStatus,
+  loginPrompt,
+  logoutBtn,
+  loginLink,
 } from "./ui.js";
 
-// Document access functions check auth state before unlocking download button
+// --- Firebase Configuration ---
+// TODO: Move this to a separate config file or environment variables
+const firebaseConfig = {
+  apiKey: "AIzaSyDK3ITKCUSgErPvvZSmC562G3_I1mFIlMk", // Replace with your actual API key if different
+  authDomain: "urbandocs.firebaseapp.com",
+  projectId: "urbandocs",
+  storageBucket: "urbandocs.firebasestorage.app",
+  messagingSenderId: "518197024916",
+  appId: "1:518197024916:web:55c7e7fd5255ab96ff7c81",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+let currentUser = null; // Variable to hold the current user state
+
+// --- Authentication State Management ---
+function updateUIForAuthState(user) {
+  currentUser = user; // Update global user state
+  if (user) {
+    // User is signed in
+    // Use the correctly imported variable names
+    userStatus.textContent = `Connecté: ${user.email}`;
+    userStatus.style.display = "block";
+    loginPrompt.style.display = "none";
+    loginLink.style.display = "none";
+    logoutBtn.style.display = "inline-block"; // Show logout button
+
+    // Enable download button ONLY if a document is already selected and valid
+    // The findDocument function will handle enabling/disabling based on auth AND selection
+    const selectedDocument = getSelectedDocument();
+    if (selectedDocument && selectedDocument.plu_url) {
+      downloadBtn.disabled = false;
+      showStatus(
+        `Document trouvé (Source: ${
+          formatApiName(selectedDocument.source_plu_date) || "Non spécifiée"
+        }). Prêt à consulter.`,
+        "success"
+      );
+    } else {
+      // Keep disabled if no document selected yet, or re-selected after login
+      downloadBtn.disabled = true;
+      // Optionally reset status message or show a generic logged-in message
+      // showStatus("Connecté. Sélectionnez les options pour trouver un document.", "info");
+    }
+  } else {
+    // User is signed out
+    // Use the correctly imported variable names
+    userStatus.style.display = "none";
+    loginPrompt.style.display = "block"; // Show login prompt
+    loginLink.style.display = "inline-block"; // Show login link
+    logoutBtn.style.display = "none";
+    downloadBtn.disabled = true; // Always disable download if logged out
+    showStatus(
+      "Veuillez vous connecter pour télécharger les documents.",
+      "warning"
+    );
+  }
+}
+
+// Listen for authentication state changes
+onAuthStateChanged(auth, (user) => {
+  updateUIForAuthState(user);
+});
+
+// Logout functionality
+logoutBtn.addEventListener("click", () => {
+  signOut(auth)
+    .then(() => {
+      // Sign-out successful. UI updated by onAuthStateChanged
+      console.log("User signed out successfully.");
+      showStatus("Vous avez été déconnecté.", "info");
+      // Reset selections? Optional.
+      resetSelect(villeSelect, "Sélectionnez une ville");
+      resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
+      resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
+      downloadBtn.disabled = true;
+    })
+    .catch((error) => {
+      console.error("Sign out error:", error);
+      showStatus(`Erreur lors de la déconnexion: ${error.message}`, "danger");
+    });
+});
+
+// --- Document Download Logic ---
+// Modified to check currentUser state as an extra precaution
 function downloadDocument() {
+  if (!currentUser) {
+    showStatus("Authentification requise pour télécharger.", "warning");
+    downloadBtn.disabled = true;
+    return; // Exit if not authenticated
+  }
+
   const selectedDocument = getSelectedDocument(); // Get from api.js
   if (selectedDocument && selectedDocument.plu_url) {
     showStatus("Ouverture du document...", "info");
@@ -105,54 +217,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Load initial data
   await loadVilles(); // Start loading cities
 
-  // --- FirebaseUI Configuration ---
-  // Check if FirebaseUI is loaded
-  if (typeof firebaseui !== "undefined" && window.firebaseAuth) {
-    // Initialize the FirebaseUI Widget using Firebase.
-    const ui = new firebaseui.auth.AuthUI(window.firebaseAuth);
-
-    const uiConfig = {
-      callbacks: {
-        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-          // User successfully signed in.
-          // Return type determines whether we continue the redirect automatically
-          // or whether we leave that to developer to handle.
-          console.log("Sign-in successful!", authResult);
-          showStatus(`Bienvenue ${authResult.user.email}!`, "success");
-          // Hide the sign-in container after success?
-          // document.getElementById('firebaseui-auth-container').style.display = 'none';
-          return false; // Prevent redirect
-        },
-        uiShown: function () {
-          // The widget is rendered.
-          // Hide the loader.
-          // document.getElementById('loader').style.display = 'none';
-          console.log("FirebaseUI widget shown.");
-        },
-      },
-      // Will use popup for IDP Providers sign-in flow instead of redirect flow.
-      signInFlow: "popup",
-      // We will display Email as auth provider.
-      signInOptions: [
-        // Use the constant provided by the globally loaded Firebase library
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      ],
-      // Terms of service url.
-      // tosUrl: '<your-tos-url>', // Optional
-      // Privacy policy url.
-      // privacyPolicyUrl: '<your-privacy-policy-url>' // Optional
-    };
-
-    // The start method will wait until the DOM is loaded.
-    ui.start("#firebaseui-auth-container", uiConfig);
-  } else {
-    console.error(
-      "FirebaseUI or Firebase Auth not loaded. Cannot start Auth UI."
-    );
-    showStatus(
-      "Erreur: Impossible d'initialiser le module d'authentification.",
-      "danger"
-    );
-  }
-  // --- End FirebaseUI Configuration ---
+  // --- Initialisation on DOMContentLoaded ---
+  // The onAuthStateChanged listener handles the initial auth check
 });
+
+// Export currentUser for use in api.js
+export { currentUser };

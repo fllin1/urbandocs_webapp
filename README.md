@@ -1,11 +1,8 @@
-
 # UrbanDocs App
 
 Web platform to access the synthesis of the Ubran Documents in France.
 
 ## Patch Notes
-
-### Future Patchs
 
 1. Document access on login : [LLM Prompt](./docs/document_acces_on_login.md)
 2. Update the README.md to add the new build steps:
@@ -23,10 +20,13 @@ Web platform to access the synthesis of the Ubran Documents in France.
 
 ![Firebase](https://img.shields.io/badge/firebase-a08021?style=for-the-badge&logo=firebase&logoColor=ffcd34)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?style=for-the-badge&logo=Webpack&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
 ## Documentation
+
+### Setting Up
 
 [![Static Badge](https://img.shields.io/badge/Firebase-App%20Hosting-red)](https://firebase.google.com/docs/app-hosting)
 [![Static Badge](https://img.shields.io/badge/Firebase-Cloud%20Functions-red)](https://firebase.google.com/docs/functions)
@@ -34,7 +34,6 @@ Web platform to access the synthesis of the Ubran Documents in France.
 [![Static Badge](https://img.shields.io/badge/Reddit-Functions%20Rules-orange)](https://www.reddit.com/r/reactjs/comments/fsw405/firebase_cloud_functions_cors_policy_error/?rdt=48891)
 
 In this project, only the *App Hosting* and *Cloud Functions* from **Firebase** were used. The storage of the data was done with **Supabase**. Lastly, for Firebase *gen2 functions*, refer to the reddit post on **Function Rules** to correctly update newly added rules in the Cloud Functions.
-
 
 ## Installation
 
@@ -44,9 +43,13 @@ Then setup your [Firebase CLI](https://firebase.google.com/docs/cli) on your loc
 
 After that you just have to init a project, select `App Hosting` and `Cloud Functions`. Then it will as you if you want to overwrite the scripts, **say No** to any overwrite. For Cloud Functions, chose **Python** and accept to install the dependencies.
 
-```bash
-  firebase init
+You should use a `bundler` such as webpack.
+
+```sh
+  npm i webpack webpack-cli -D
 ```
+
+Write first your JS modules in the `./src/js/` folder, add its name in the `./webpack.config.js`.
 
 ### Roadblocks
 
@@ -57,7 +60,6 @@ After that you just have to init a project, select `App Hosting` and `Cloud Func
   gcloud functions add-invoker-policy-binding $python_function_name --member=allUsers
 ```
 
-
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
@@ -65,7 +67,6 @@ To run this project, you will need to add the following environment variables to
 `SUPABASE_URL`
 
 `SUPABASE_KEY`
-
 
 ## Run Locally
 
@@ -93,7 +94,6 @@ Start the emulator
  firebase emulators:start
 ```
 
-
 ## Deployment
 
 To deploy this project run
@@ -101,7 +101,6 @@ To deploy this project run
 ```bash
   firebase deploy
 ```
-
 
 ## Licence
 

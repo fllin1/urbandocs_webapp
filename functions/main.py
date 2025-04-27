@@ -1,3 +1,17 @@
+# -* coding: utf-8 -*-
+"""
+Firebase functions
+
+This module contains Firebase functions for handling requests related to
+urban planning documents. It interacts with a Supabase database to retrieve
+data about cities, zoning, zones, typologies, and documents.
+
+Version: 0.0.1
+Last update: 2025-04-15
+TODO: Secure the Supabase URLs
+TODO: Retrieve Supabase info when user is logged in
+"""
+
 import os
 import json
 
@@ -17,8 +31,8 @@ cors_config = options.CorsOptions(
     cors_origins=[
         "https://urbandocs.web.app",
         "https://urbandocs.firebaseapp.com",
-        "http://127.0.0.1:5000", # Port on Linux
-        "http://127.0.0.1:5002", # Port on Mac
+        "http://127.0.0.1:5000",  # Port on Linux
+        "http://127.0.0.1:5002",  # Port on Mac
     ],
     cors_methods=["GET", "OPTIONS"],
 )
