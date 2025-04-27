@@ -2,14 +2,17 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-const app = initializeApp({
-  apiKey: "AIzaSyAWl41Uers8kYoid2EGLGG9T5ZlQJ28oG0",
-  authDomain: "automatic-plu.firebaseapp.com",
-  projectId: "automatic-plu",
-  storageBucket: "automatic-plu.firebasestorage.app",
-  messagingSenderId: "393407128570",
-  appId: "1:393407128570:web:2b2d606f4315d9d349fa43",
-});
+const firebaseConfig = {
+  apiKey: "AIzaSyDK3ITKCUSgErPvvZSmC562G3_I1mFIlMk",
+  authDomain: "urbandocs.firebaseapp.com",
+  projectId: "urbandocs",
+  storageBucket: "urbandocs.firebasestorage.app",
+  messagingSenderId: "518197024916",
+  appId: "1:518197024916:web:55c7e7fd5255ab96ff7c81",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // Gestion du formulaire de connexion
@@ -21,6 +24,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const loginBtn = document.getElementById("loginBtn");
   const loginSpinner = document.getElementById("loginSpinner");
   const errorMessage = document.getElementById("errorMessage");
+
+  // NOTE : On pourra stocker d'avantage d'infos sur l'utilisateur dans le localStorage
+  localStorage.setItem("user", JSON.stringify({ email: email }));
 
   // Afficher le spinner et désactiver le bouton
   loginBtn.disabled = true;

@@ -3,6 +3,17 @@
 
 Web platform to access the synthesis of the Ubran Documents in France.
 
+## Patch Notes
+
+### Future Patchs
+
+1. Document access on login : [LLM Prompt](./docs/document_acces_on_login.md)
+2. Update the README.md to add the new build steps:
+   1. `npm i webpack webpack-cli -D`
+   2. Write JS scripts in the src folder.
+3. Update the README.md to add the new features:
+   1. Login feature;
+   2. Login page.
 
 ## Author
 

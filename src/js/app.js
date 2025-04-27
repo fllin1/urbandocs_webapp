@@ -23,10 +23,7 @@ import {
   formatApiName, // Keep formatApiName accessible if needed directly here, though it's mainly used in api.js via ui.js
 } from "./ui.js";
 
-/**
- * Opens the selected document in a new tab.
- * Retrieves the document details using getSelectedDocument from api.js.
- */
+// Document access functions check auth state before unlocking download button
 function downloadDocument() {
   const selectedDocument = getSelectedDocument(); // Get from api.js
   if (selectedDocument && selectedDocument.plu_url) {
