@@ -6,6 +6,7 @@ module.exports = {
   entry: {
     api: "./src/js/api.js",
     app: "./src/js/app.js",
+    auth: "./src/js/auth.js",
     login: "./src/js/login.js",
     mappings: "./src/js/mappings.js",
     ui: "./src/js/ui.js",

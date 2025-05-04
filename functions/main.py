@@ -12,19 +12,20 @@ TODO: Secure the Supabase URLs
 TODO: Retrieve Supabase info when user is logged in
 """
 
-import os
 import json
+import os
+import re
+import urllib.parse
 
+import gotrue
+import requests
 from firebase_functions import https_fn, options
 from supabase import create_client
 
 # Initialisation de Supabase
-supabase_url = os.environ.get("SUPABASE_URL", "")
-supabase_key = os.environ.get("SUPABASE_KEY", "")
-try:
-    supabase = create_client(supabase_url, supabase_key)
-except Exception as e:
-    raise (f"Erreur de connexion à Supabase: {str(e)}")
+supabase_url = os.environ.get("SUPABASE_PROJECT_URL")
+supabase_key = os.environ.get("SUPABASE_SERVICE_KEY")
+supabase = create_client(supabase_url, supabase_key)
 
 # Configuration CORS
 cors_config = options.CorsOptions(
@@ -34,7 +35,7 @@ cors_config = options.CorsOptions(
         "http://127.0.0.1:5000",  # Port on Linux
         "http://127.0.0.1:5002",  # Port on Mac
     ],
-    cors_methods=["GET", "OPTIONS"],
+    cors_methods=["GET", "POST", "OPTIONS"],
 )
 
 
@@ -207,3 +208,44 @@ def get_document(req: https_fn.Request) -> https_fn.Response:
             status=500,
             mimetype="application/json",
         )
+
+
+## SUPABASE AUTHENTICATION
+
+
+@https_fn.on_request(cors=cors_config)
+def handle_confirmation(req: https_fn.Request) -> https_fn.Response:
+    # 1. Récupération et vérification du paramètre
+    confirmation_url = req.args.get("confirmation_url")
+    if not confirmation_url:
+        return https_fn.Response(
+            response=json.dumps({"error": "Missing confirmation URL"}),
+            status=400,
+            mimetype="application/json",
+        )
+
+    # 2. Décodage
+    decoded_url = urllib.parse.unquote(confirmation_url)
+
+    # 3. Appel vers Supabase sans suivre les redirections
+    try:
+        resp = requests.get(decoded_url, allow_redirects=False, timeout=10)
+    except requests.RequestException:
+        return https_fn.Response(
+            response=json.dumps({"error": "Supabase unreachable"}),
+            status=502,
+            mimetype="application/json",
+        )
+
+    # 4. Si Supabase renvoie un Location (redirigé vers redirect_to)
+    location = resp.headers.get("Location")
+    if location:
+        # On transmet cette redirection au navigateur
+        return https_fn.Response(status=302, headers={"Location": location})
+
+    # 5. Sinon, erreur de confirmation
+    return https_fn.Response(
+        response=json.dumps({"error": "Confirmation failed"}),
+        status=400,
+        mimetype="application/json",
+    )
