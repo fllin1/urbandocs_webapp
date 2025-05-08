@@ -3,57 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UrbanDocs - Connexion</title>
-    <!-- Bootstrap CSS -->
+    <title>UrbanDocs - Création de compte</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Bootstrap Icons -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/styles.css" />
-    <!-- FirebaseUI CSS -->
     <link
       type="text/css"
       rel="stylesheet"
       href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css"
     />
-    <!-- Style supplémentaire pour cette page -->
     <style>
-      .login-container {
+      .signup-container {
         max-width: 450px;
       }
-      .login-header {
+      .signup-header {
         text-align: center;
         margin-bottom: 2rem;
       }
-      .login-icon {
+      .signup-icon {
         font-size: 3rem;
         color: #0d6efd;
         margin-bottom: 1rem;
       }
+      /* Style pour les messages d'erreur dans la liste */
+      #errorMessage ul {
+        padding-left: 20px; /* Ajoute un padding à gauche pour la liste */
+        margin-bottom: 0; /* Supprime la marge basse si c'est le dernier élément */
+      }
     </style>
   </head>
   <body>
-    <div class="container login-container mt-5 mb-5">
+    <div class="container signup-container mt-5 mb-5">
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
-          <h1 class="mb-0 h4 text-center">Connexion à UrbanDocs</h1>
+          <h1 class="mb-0 h4 text-center">Créer un compte UrbanDocs</h1>
         </div>
         <div class="card-body">
-          <div class="login-header">
-            <i class="bi bi-person-circle login-icon"></i>
+          <div class="signup-header">
+            <i class="bi bi-person-plus-fill signup-icon"></i>
             <p class="text-muted">
-              Veuillez saisir vos identifiants pour accéder à votre compte
+              Créez votre compte pour accéder aux documents urbanistiques
             </p>
           </div>
 
-          <form id="loginForm">
-            <!-- Email -->
+          <form id="signupForm">
             <div class="mb-3">
               <label for="email" class="form-label select-label"> Email </label>
               <div class="input-group">
@@ -70,7 +69,6 @@
               </div>
             </div>
 
-            <!-- Mot de passe -->
             <div class="mb-3">
               <label for="password" class="form-label select-label">
                 Mot de passe
@@ -81,46 +79,54 @@
                   type="password"
                   id="password"
                   class="form-control form-control-lg"
-                  placeholder="Votre mot de passe"
+                  placeholder="Créez un mot de passe sécurisé"
                   required
                 />
-                <button
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  id="togglePassword"
-                >
-                  <i class="bi bi-eye-slash"></i>
-                </button>
               </div>
             </div>
 
-            <!-- Bouton Connexion -->
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label select-label">
+                Confirmer le mot de passe
+              </label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-lock-fill"></i
+                ></span>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  class="form-control form-control-lg"
+                  placeholder="Confirmez votre mot de passe"
+                  required
+                />
+              </div>
+            </div>
+
             <div class="d-grid gap-2 mt-4">
               <button
-                id="loginBtn"
+                id="signupBtn"
                 class="btn btn-primary btn-lg"
                 type="submit"
               >
-                <i class="bi bi-box-arrow-in-right me-2"></i>
-                Se connecter
+                <i class="bi bi-person-plus-fill me-2"></i>
+                Créer un compte
                 <span
                   class="spinner-border spinner-border-sm ms-2 d-none"
                   role="status"
                   aria-hidden="true"
-                  id="loginSpinner"
+                  id="signupSpinner"
                 ></span>
               </button>
             </div>
 
-            <!-- TODO : Ajouter la page "Mot de passe oublié"-->
-            <!-- Lien pour mot de passe oublié -->
             <div class="text-center mt-3">
-              <a href="forgotten-password.html" class="text-decoration-none">
-                <i class="bi bi-person-plus-fill me-1"></i>Mot de passe oublié ?
+              <p class="mb-0">Vous avez déjà un compte ?</p>
+              <a href="login.html" class="text-decoration-none">
+                <i class="bi bi-box-arrow-in-right me-1"></i>Se connecter
               </a>
             </div>
 
-            <!-- Lien pour revenir à l'accueil -->
             <div class="text-center mt-3">
               <a href="index.html" class="text-decoration-none">
                 <i class="bi bi-arrow-left me-1"></i>Retour à l'accueil
@@ -128,19 +134,21 @@
             </div>
           </form>
 
-          <!-- Zone de message d'erreur -->
           <div
             id="errorMessage"
             class="alert alert-danger mt-4 d-none"
             role="alert"
-          >
-            <!-- Messages d'erreur ajoutés par JS -->
-          </div>
+          ></div>
+
+          <div
+            id="statusMessage"
+            class="status-message alert alert-info mt-4 d-none"
+            role="alert"
+          ></div>
         </div>
       </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script type="module" src="js/login.bundle.js"></script>
+    <script type="module" src="js/signup.bundle.js"></script>
   </body>
 </html>

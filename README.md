@@ -102,6 +102,61 @@ To deploy this project run
   firebase deploy
 ```
 
+## Code Structure
+
+### Frontend (JavaScript)
+
+```text
+src/
+├── js/
+│   ├── auth/                     # Authentication modules
+│   │   ├── auth.js               # Common base functions
+│   │   ├── login.js              # Functions specific to login
+│   │   ├── signup.js             # Functions specific to signup
+│   │   └── confirmation.js       # Functions specific to confirmation
+│   │
+│   ├── entries/                  # Entry points for webpack
+│   │   ├── auth.js               # General entry point for authentication
+│   │   ├── login.js              # Entry point for login.html
+│   │   ├── signup.js             # Entry point for signup.html
+│   │   └── confirmation.js       # Entry point for confirmation.html
+│   │
+│   ├── api.js                    # API to communicate with the backend
+│   ├── app.js                    # Main entry point
+│   ├── mappings.js               # Mappings for the application
+│   └── ui.js                     # Common UI functions
+│
+├── css/
+│   └── styles.css
+│
+├── index.html
+├── login.html
+├── signup.html
+└── confirmation.html
+```
+
+### Backend (Python)
+
+```text
+functions/
+├── main.py                      # Entry point for Firebase functions
+├── auth/                        # Functions related to authentication
+│   ├── handle_login.py          # Function to handle login
+│   ├── handle_signup.py         # Function to handle signup
+│   └── handle_confirmation.py   # Function to handle email confirmation
+│
+├── docs/                        # Functions related to documents
+│   ├── get_villes.py
+│   ├── get_zonages.py
+│   ├── get_zones.py
+│   ├── get_typologies.py
+│   └── get_document.py
+│
+└── utils/                       # Common utilities
+    ├── supabase_client.py       # Supabase client initialization
+    └── cors_config.py           # Common CORS configuration
+```
+
 ## Licence
 
 [![Licence](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)](./LICENSE)

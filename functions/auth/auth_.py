@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+Supabase Authentication Functions
+
+This module contains functions for user authentication using Supabase.
+It includes user sign-up, sign-in, and confirmation handling.
+Version: 0.0.1
+Last update: 2025-05-08
+"""
+
 import json
 import os
 import re
@@ -5,7 +15,7 @@ import urllib.parse
 
 import gotrue
 from dotenv import load_dotenv
-from firebase_functions import https_fn, options
+from firebase_functions import https_fn
 from supabase import Client, create_client
 
 load_dotenv()

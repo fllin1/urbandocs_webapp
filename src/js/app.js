@@ -3,11 +3,12 @@
  * Firebase App
  * @module app
  * @description This module handles the main application logic.
- * @version 0.0.2
+ * @version 0.0.3
  * @author GreyPanda
  * @todo Secure the document links, removing them as secure links.
  *
  * @changelog
+ * - 0.0.3 (2025-05-08): Moved Firebase configuration into a separate file.
  * - 0.0.2 (2025-04-27): Added authentication state management and document download functionality.
  * - 0.0.1 (2025-04-21): Initial version with basic document download functionality.
  */
@@ -44,16 +45,8 @@ import {
   loginLink,
 } from "./ui.js";
 
-// --- Firebase Configuration ---
-// TODO: Move this to a separate config file or environment variables
-const firebaseConfig = {
-  apiKey: "AIzaSyDK3ITKCUSgErPvvZSmC562G3_I1mFIlMk", // Replace with your actual API key if different
-  authDomain: "urbandocs.firebaseapp.com",
-  projectId: "urbandocs",
-  storageBucket: "urbandocs.firebasestorage.app",
-  messagingSenderId: "518197024916",
-  appId: "1:518197024916:web:55c7e7fd5255ab96ff7c81",
-};
+// Import Firebase configuration
+import { firebaseConfig } from "./firebase-config.js";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
