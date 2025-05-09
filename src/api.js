@@ -11,6 +11,10 @@
  * - 0.0.1 (2025-04-26): Separate module for API calls to improve code organization and maintainability.
  */
 
+// Initialize the Firebase app
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "./firebase-config.js";
+
 // Import UI functions and elements (will be defined in ui.js)
 import {
   toggleSpinner,
@@ -32,6 +36,9 @@ import {
 
 // Import the current user state from app.js
 import { currentUser } from "./app.js";
+
+// Initialize the Firebase app
+const app = initializeApp(firebaseConfig);
 
 // --- API URL Definitions ---
 const IS_LOCAL =

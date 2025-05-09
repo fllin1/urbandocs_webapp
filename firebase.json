@@ -17,8 +17,8 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
-        "source": "/confirm-signup",
-        "destination": "/confirm-signup.html"
+        "source": "/confirmation",
+        "destination": "/confirmation.html"
       }
     ]
   }

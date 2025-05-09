@@ -34,6 +34,7 @@ const userStatus = document.getElementById("userStatus");
 const loginPrompt = document.getElementById("loginPrompt");
 const logoutBtn = document.getElementById("logoutBtn");
 const loginLink = document.getElementById("loginLink"); // Reference to the login link/button
+const signupLink = document.getElementById("signupLink"); // Reference to the signup link/button
 // --- End DOM Element References ---
 
 // --- UI Utility Functions ---
@@ -164,4 +165,5 @@ export {
   loginPrompt,
   logoutBtn,
   loginLink,
+  signupLink,
 };

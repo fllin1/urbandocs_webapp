@@ -3,7 +3,7 @@
  * Firebase Login
  * @module login
  * @description This module handles user login functionality using Supabase Authentication.
- * @version 0.0.2
+ * @version 0.0.3
  * @author GreyPanda
  * @todo Add phone number authentication & password reset functionality.
  *
@@ -21,6 +21,7 @@ import {
   showLoading,
   hideLoading,
 } from "./auth.js";
+import { supabase } from "../supabase-client.js";
 
 /**
  * Initializes the login page
@@ -124,7 +125,40 @@ export async function login(email, password) {
     }
 
     // Store user data and session tokens
-    setCurrentUser(responseData.user, responseData.session);
+    if (
+      responseData.session &&
+      responseData.session.access_token &&
+      responseData.session.refresh_token
+    ) {
+      console.log(
+        "[login.js] Attempting to set Supabase session with tokens:",
+        responseData.session
+      );
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: responseData.session.access_token,
+        refresh_token: responseData.session.refresh_token,
+      });
+      if (sessionError) {
+        console.error(
+          "[login.js] Error setting Supabase session:",
+          sessionError
+        );
+        throw new Error("La session utilisateur n'a pas pu être initialisée.");
+      }
+      console.log("[login.js] Supabase session set successfully.");
+    } else if (responseData.user && !responseData.session) {
+      console.warn(
+        "Login response contained user data but no session. User will not be logged in on client-side Supabase."
+      );
+      setCurrentUser(responseData.user);
+      throw new Error("Données de session manquantes après la connexion.");
+    } else {
+      console.error(
+        "Login error: Missing session data from backend response",
+        responseData
+      );
+      throw new Error("Données de session manquantes après la connexion.");
+    }
 
     // Show success message before redirect
     showStatus("Connexion réussie! Redirection...", "success");
@@ -141,11 +175,3 @@ export async function login(email, password) {
     throw error;
   }
 }
-
-// Initialize login page when DOM is loaded
-document.addEventListener("DOMContentLoaded", initLoginPage);
-
-export default {
-  initLoginPage,
-  login,
-};

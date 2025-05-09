@@ -117,7 +117,7 @@ def handle_login(req: https_fn.Request) -> https_fn.Response:
         # Handle invalid credentials
         if "invalid login credentials" in error_message:
             return https_fn.Response(
-                response=json.dumps({"error": "Incorrect email or password."}),
+                response=json.dumps({"error": "Email ou mot de passe incorrect."}),
                 status=401,
                 mimetype="application/json",
             )

@@ -1,8 +1,12 @@
 /**
  * Firebase Configuration
+ * @module firebase-config
+ * @description This module handles the Firebase configuration for the application.
+ * @version 0.0.1
+ * @author GreyPanda
  *
- * This file contains the Firebase configuration for the application.
- * Replace the placeholder values with your actual Firebase project configuration.
+ * @changelog
+ * - 0.0.1 (2025-05-08): Initial version with basic Firebase configuration.
  */
 
 const firebaseConfig = {
