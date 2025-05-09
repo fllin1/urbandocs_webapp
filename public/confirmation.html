@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UrbanDocs - Confirmation d'Email</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- FirebaseUI CSS -->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css"
+    />
+    <!-- Style supplémentaire pour cette page -->
+    <style>
+      .confirmation-container {
+        max-width: 450px;
+      }
+      .confirmation-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .confirmation-icon {
+        font-size: 3rem;
+        color: #0d6efd;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container confirmation-container mt-5 mb-5">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h1 class="mb-0 h4 text-center">Confirmation d'Email</h1>
+        </div>
+        <div class="card-body">
+          <div class="confirmation-header">
+            <i class="bi bi-envelope-check-fill confirmation-icon"></i>
+            <p class="text-muted">
+              Confirmez votre adresse email pour activer votre compte
+            </p>
+          </div>
+
+          <!-- Zone de chargement -->
+          <div id="loading" class="text-center mb-4 d-none">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-2">Vérification en cours...</p>
+          </div>
+
+          <!-- Bouton de confirmation -->
+          <div class="d-grid gap-2">
+            <button
+              id="confirmButton"
+              class="btn btn-primary btn-lg"
+              type="button"
+            >
+              <i class="bi bi-check-circle-fill me-2"></i>
+              Confirmer mon email
+              <span
+                class="spinner-border spinner-border-sm ms-2 d-none"
+                role="status"
+                aria-hidden="true"
+                id="confirmSpinner"
+              ></span>
+            </button>
+          </div>
+
+          <!-- Lien pour revenir à l'accueil -->
+          <div class="text-center mt-3">
+            <a href="index.html" class="text-decoration-none">
+              <i class="bi bi-arrow-left me-1"></i>Retour à l'accueil
+            </a>
+          </div>
+
+          <!-- Zone de message de statut -->
+          <div id="statusMessage" class="alert alert-info mt-4" role="alert">
+            Cliquez sur le bouton pour confirmer votre adresse email.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="js/confirmation.bundle.js"></script>
+  </body>
+</html>

@@ -1,8 +1,24 @@
-
 # UrbanDocs App
 
 Web platform to access the synthesis of the Ubran Documents in France.
 
+## Patch Notes
+
+### Next Steps
+
+Adding security layers, other methods of authentication and improving user experience.
+
+Detail list of tasks in the [TODO list](./TODO.md).
+
+### Version Update
+
+```markdown
+0.0.5 (May 9th 2025) - Moved to Supabase Authentication (login & signup)
+0.0.4 (May 3rd 2025) - Supabase Mail Confirmation
+0.0.3 (April 27th 2025) - Firebase Authentication system for login
+0.0.2 (April 26th 2025) - Update on the UI
+0.0.1 (April 21st 2025) - Initial commit of the website
+```
 
 ## Author
 
@@ -12,10 +28,13 @@ Web platform to access the synthesis of the Ubran Documents in France.
 
 ![Firebase](https://img.shields.io/badge/firebase-a08021?style=for-the-badge&logo=firebase&logoColor=ffcd34)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?style=for-the-badge&logo=Webpack&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
 ## Documentation
+
+### Setting Up
 
 [![Static Badge](https://img.shields.io/badge/Firebase-App%20Hosting-red)](https://firebase.google.com/docs/app-hosting)
 [![Static Badge](https://img.shields.io/badge/Firebase-Cloud%20Functions-red)](https://firebase.google.com/docs/functions)
@@ -23,7 +42,6 @@ Web platform to access the synthesis of the Ubran Documents in France.
 [![Static Badge](https://img.shields.io/badge/Reddit-Functions%20Rules-orange)](https://www.reddit.com/r/reactjs/comments/fsw405/firebase_cloud_functions_cors_policy_error/?rdt=48891)
 
 In this project, only the *App Hosting* and *Cloud Functions* from **Firebase** were used. The storage of the data was done with **Supabase**. Lastly, for Firebase *gen2 functions*, refer to the reddit post on **Function Rules** to correctly update newly added rules in the Cloud Functions.
-
 
 ## Installation
 
@@ -33,9 +51,16 @@ Then setup your [Firebase CLI](https://firebase.google.com/docs/cli) on your loc
 
 After that you just have to init a project, select `App Hosting` and `Cloud Functions`. Then it will as you if you want to overwrite the scripts, **say No** to any overwrite. For Cloud Functions, chose **Python** and accept to install the dependencies.
 
-```bash
-  firebase init
+You should use a bundler such as webpack and install the Supabase library.
+
+```sh
+  npm i webpack webpack-cli -D
+  npm install @supabase/supabase-js
 ```
+
+Write first your JS modules in the `./src/` folder, add its name in the `./webpack.config.js`.
+
+**NOTE** : You have just installed the *developper* version of webpack, in production mode, you might want to switch to the [production version](https://webpack.js.org/guides/production/).
 
 ### Roadblocks
 
@@ -46,42 +71,46 @@ After that you just have to init a project, select `App Hosting` and `Cloud Func
   gcloud functions add-invoker-policy-binding $python_function_name --member=allUsers
 ```
 
-
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file
+To run this project, you will need to add the following environment variables to your ̀`./functions/.env` file :
 
-`SUPABASE_URL`
-
-`SUPABASE_KEY`
-
+```sh
+SUPABASE_PROJECT_URL={PROJECT_URL}
+SUPABASE_SERVICE_KEY={SERVICE_ROLE_KEY}
+```
 
 ## Run Locally
 
-Clone the project
+You will first need to create a Firebase project, this part is not covered and will be tested at a later date.
 
-```bash
-  git clone https://github.com/fllin1/urbandocs_app.git
-```
+1. Clone the project
 
-Go to the project directory
+    ```bash
+      git clone https://github.com/fllin1/urbandocs_webapp.git
+    ```
 
-```bash
-  cd urbandocs_app
-```
+2. Go to the project directory
 
-Install dependencies and then init your project
+    ```bash
+      cd urbandocs_webapp
+    ```
 
-```bash
-  firebase init
-```
+3. Firebase Init
 
-Start the emulator
+    ```bash
+      firebase init
+    ```
 
-```bash
- firebase emulators:start
-```
+    Choose to add the *Hosting* and *Cloud Functions* services. Do not rewrite the files, and install the dependencies for your Cloud Functions (the default init configuration should be the right ones).
 
+    NOTE : If you encounter issues while installing your dependencies, I invite you to check the [Roadblocks](#roadblocks) section.
+
+4. Start the emulator
+
+    ```bash
+    firebase emulators:start
+    ```
 
 ## Deployment
 
@@ -91,6 +120,76 @@ To deploy this project run
   firebase deploy
 ```
 
+## Code Structure
+
+### Frontend
+
+#### Development (JavaScript)
+
+```text
+src/
+├── auth/                     # Authentication modules
+│   ├── auth.js               # Common base functions
+│   ├── login.js              # Functions specific to login
+│   ├── signup.js             # Functions specific to signup
+│   └── confirmation.js       # Functions specific to confirmation
+│
+├── entries/                  # Entry points for webpack
+│   ├── auth.js               # General entry point for authentication
+│   ├── login.js              # Entry point for login.html
+│   ├── signup.js             # Entry point for signup.html
+│   └── confirmation.js       # Entry point for confirmation.html
+│
+├── api.js                    # API to communicate with the backend
+├── app.js                    # Main entry point
+├── mappings.js               # Mappings for the application
+└── ui.js                     # Common UI functions
+```
+
+#### Production (HTML, CSS and JavaScript with Webpack)
+
+```text
+public/
+├── js/
+│   ├── auth.js
+│   ├── login.js
+│   ├── signup.js
+│   ├── confirmation.js
+│   ├── api.bundle.js
+│   ├── app.bundle.js
+│   ├── mappings.bundle.js
+│   └── ui.bundle.js      
+│
+├── css/
+│   └── styles.css
+│
+├── index.html
+├── login.html
+├── signup.html
+└── confirmation.html
+```
+
+### Backend (Python)
+
+```text
+functions/
+├── main.py                      # Entry point for Firebase functions
+├── auth/                        # Functions related to authentication
+│   ├── handle_login.py          # Function to handle login
+│   ├── handle_signup.py         # Function to handle signup
+│   └── handle_confirmation.py   # Function to handle email confirmation
+│
+├── docs/                        # Functions related to documents
+│   ├── get_villes.py
+│   ├── get_zonages.py
+│   ├── get_zones.py
+│   ├── get_typologies.py
+│   └── get_document.py
+│
+└── utils/                       # Common utilities
+    ├── supabase_client.py       # Supabase client initialization
+    └── cors_config.py           # Common CORS configuration
+```
 
 ## Licence
 

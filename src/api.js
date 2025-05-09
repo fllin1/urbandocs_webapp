@@ -1,26 +1,46 @@
-// js/app.js
+// src/js/api.js
+/**
+ * Firebase API
+ * @module api
+ * @description This module handles API calls to fetch data for cities, zoning, zones, and typologies.
+ * @version 0.0.1
+ * @author GreyPanda
+ * @todo
+ *
+ * @changelog
+ * - 0.0.1 (2025-04-26): Separate module for API calls to improve code organization and maintainability.
+ */
 
-import { zoneNameMappings } from "./mappings.js";
+// Initialize the Firebase app
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "./firebase-config.js";
 
-// Éléments du DOM
-const villeSelect = document.getElementById("villeSelect");
-const zonageSelect = document.getElementById("zonageSelect");
-const zoneSelect = document.getElementById("zoneSelect");
-const typologieSelect = document.getElementById("typologieSelect");
-const downloadBtn = document.getElementById("downloadBtn");
-const statusMessage = document.getElementById("statusMessage");
+// Import UI functions and elements (will be defined in ui.js)
+import {
+  toggleSpinner,
+  showStatus,
+  populateSelect,
+  resetSelect,
+  formatApiName, // Assuming formatApiName moves to ui.js or a utils.js
+  villeSelect,
+  zonageSelect,
+  zoneSelect,
+  typologieSelect,
+  downloadBtn,
+  villeSpinner,
+  zonageSpinner,
+  zoneSpinner,
+  typologieSpinner,
+  documentSpinner,
+} from "./ui.js"; // Adjust path if needed
 
-// Éléments pour les spinners (à ajouter dans le HTML)
-const villeSpinner = document.getElementById("villeSpinner");
-const zonageSpinner = document.getElementById("zonageSpinner");
-const zoneSpinner = document.getElementById("zoneSpinner");
-const typologieSpinner = document.getElementById("typologieSpinner");
-const documentSpinner = document.getElementById("documentSpinner"); // Pour la recherche finale
+// Import the current user state from app.js
+import { currentUser } from "./app.js";
 
-// Variables pour stocker le document sélectionné
-let selectedDocument = null;
+// Initialize the Firebase app
+const app = initializeApp(firebaseConfig);
 
-// --- Updated URL Definitions ---
+// --- API URL Definitions ---
 const IS_LOCAL =
   location.hostname === "localhost" || location.hostname === "127.0.0.1";
 
@@ -43,90 +63,10 @@ const GET_TYPOLOGIES_URL = IS_LOCAL
 const GET_DOCUMENT_URL = IS_LOCAL
   ? "http://127.0.0.1:5001/urbandocs/us-central1/get_document"
   : "https://get-document-up3k3hddtq-uc.a.run.app";
-// --- End of Updated URL Definitions ---
+// --- End of API URL Definitions ---
 
-/**
- * Affiche un message de statut (et type: info, success, danger)
- */
-function showStatus(message, type = "info") {
-  statusMessage.textContent = message;
-  statusMessage.className = `status-message alert alert-${type}`; // Utilise les classes alert Bootstrap
-}
-
-/**
- * Affiche ou cache un spinner Bootstrap
- * @param spinnerElement L'élément SPAN du spinner
- * @param show True pour afficher, false pour cacher
- */
-function toggleSpinner(spinnerElement, show) {
-  if (spinnerElement) {
-    spinnerElement.classList.toggle("d-none", !show);
-  }
-}
-
-/**
- * Réinitialise un élément select avec une option par défaut
- */
-function resetSelect(selectElement, defaultText) {
-  selectElement.innerHTML = `<option value="">${
-    defaultText || "Sélectionnez une option"
-  }</option>`;
-  selectElement.disabled = true; // Désactiver par défaut lors de la réinitialisation
-}
-
-/**
- * Formate un nom reçu de l'API (enlève underscores, capitalise)
- * Utilisé comme fallback si le mappage spécifique n'existe pas.
- */
-function formatApiName(name) {
-  if (!name) return "";
-  return name.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
-}
-
-/**
- * Peuple un sélecteur avec des options
- * @param selectElement L'élément select à remplir
- * @param data Tableau d'objets {id, nom}
- * @param defaultOptionText Texte de la première option désactivée
- * @param emptyDataText Texte si le tableau data est vide
- * @param dataType 'ville', 'zonage', 'zone', ou 'typologie' pour le formatage conditionnel
- */
-function populateSelect(
-  selectElement,
-  data,
-  defaultOptionText,
-  emptyDataText,
-  dataType
-) {
-  resetSelect(selectElement, defaultOptionText);
-
-  if (!data || data.length === 0) {
-    selectElement.innerHTML = `<option value="">${emptyDataText}</option>`;
-    selectElement.disabled = true;
-    return false;
-  }
-
-  data.forEach((item) => {
-    const option = document.createElement("option");
-    option.value = item.id;
-
-    // --- Logique de formatage conditionnel ---
-    let displayText = "";
-    // Si c'est une zone ET qu'elle existe dans notre mappage
-    if (dataType === "zone" && zoneNameMappings.hasOwnProperty(item.nom)) {
-      displayText = zoneNameMappings[item.nom]; // Utilise le nom mappé
-    } else {
-      // Sinon, utilise la fonction de formatage générale
-      displayText = formatApiName(item.nom);
-    }
-    option.textContent = displayText; // Applique le texte choisi
-
-    selectElement.appendChild(option);
-  });
-
-  selectElement.disabled = false;
-  return true; // Indique qu'il y a des données
-}
+// Variable to store the fetched document details
+let selectedDocument = null;
 
 /**
  * Appelle l'API pour récupérer les villes
@@ -134,7 +74,7 @@ function populateSelect(
 async function loadVilles() {
   toggleSpinner(villeSpinner, true);
   showStatus("Chargement des villes...", "info");
-  villeSelect.disabled = true; // Désactive pendant le chargement
+  villeSelect.disabled = true;
 
   try {
     const url = GET_VILLES_URL;
@@ -149,7 +89,7 @@ async function loadVilles() {
       data,
       "Sélectionnez une ville",
       "Aucune ville disponible",
-      "ville"
+      "ville" // Pass dataType for formatting logic in populateSelect
     );
 
     if (hasData) {
@@ -166,7 +106,6 @@ async function loadVilles() {
     resetSelect(villeSelect, "Erreur chargement");
   } finally {
     toggleSpinner(villeSpinner, false);
-    // villeSelect est réactivé par populateSelect s'il y a des données
   }
 }
 
@@ -174,7 +113,6 @@ async function loadVilles() {
  * Appelle l'API pour récupérer les zonages pour une ville
  */
 async function loadZonages(villeId) {
-  // Réinitialiser les sélecteurs dépendants immédiatement
   resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
   resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
   resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
@@ -183,7 +121,7 @@ async function loadZonages(villeId) {
 
   if (!villeId) {
     showStatus("Veuillez sélectionner une ville.", "info");
-    return; // Ne rien faire si aucune ville n'est sélectionnée
+    return;
   }
 
   toggleSpinner(zonageSpinner, true);
@@ -191,7 +129,6 @@ async function loadZonages(villeId) {
   zonageSelect.disabled = true;
 
   try {
-    // ---- CORRECTION ICI ---- Utilisation de template literal correct
     const url = `${GET_ZONAGES_URL}?villeId=${villeId}`;
     console.log("Fetching Zonages from:", url);
     const response = await fetch(url);
@@ -218,7 +155,6 @@ async function loadZonages(villeId) {
     resetSelect(zonageSelect, "Erreur chargement");
   } finally {
     toggleSpinner(zonageSpinner, false);
-    // zonageSelect sera activé par populateSelect si data existe
   }
 }
 
@@ -241,7 +177,6 @@ async function loadZones(zonageId) {
   zoneSelect.disabled = true;
 
   try {
-    // ---- CORRECTION ICI ----
     const url = `${GET_ZONES_URL}?zonageId=${zonageId}`;
     console.log("Fetching Zones from:", url);
     const response = await fetch(url);
@@ -249,12 +184,13 @@ async function loadZones(zonageId) {
     if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
     const data = await response.json();
 
+    // Pass zoneNameMappings to populateSelect or handle mapping inside populateSelect
     const hasData = populateSelect(
       zoneSelect,
       data,
       "Sélectionnez une zone",
       "Aucune zone disponible",
-      "zone"
+      "zone" // Pass dataType for formatting logic
     );
 
     if (hasData) {
@@ -289,7 +225,6 @@ async function loadTypologies(zoneId, zonageId) {
   typologieSelect.disabled = true;
 
   try {
-    // ---- CORRECTION ICI ----
     const url = `${GET_TYPOLOGIES_URL}?zonageId=${zonageId}&zoneId=${zoneId}`;
     console.log("Fetching Typologies from:", url);
     const response = await fetch(url);
@@ -320,18 +255,29 @@ async function loadTypologies(zoneId, zonageId) {
 }
 
 /**
- * Recherche le document correspondant aux sélections
+ * Recherche le document correspondant aux sélections, only if authenticated
  */
 async function findDocument(zonageId, zoneId, typologieId) {
   downloadBtn.disabled = true;
-  selectedDocument = null;
+  selectedDocument = null; // Reset before search
 
-  if (!zonageId || !zoneId || !typologieId) {
-    showStatus("Sélection incomplète pour rechercher le document.", "info");
+  // Check authentication status FIRST
+  if (!currentUser) {
+    showStatus(
+      "Veuillez vous connecter pour rechercher et voir les documents.",
+      "warning"
+    );
+    // Keep button disabled, no need to toggle spinner as we are not fetching
     return;
   }
 
-  toggleSpinner(documentSpinner, true); // Spinner près du bouton ou message
+  // Proceed only if authenticated
+  if (!zonageId || !zoneId || !typologieId) {
+    showStatus("Sélection incomplète pour rechercher le document.", "info");
+    return; // Exit if selection is incomplete
+  }
+
+  toggleSpinner(documentSpinner, true);
   showStatus("Recherche du document...", "info");
 
   try {
@@ -342,15 +288,16 @@ async function findDocument(zonageId, zoneId, typologieId) {
     if (!response.ok) {
       if (response.status === 404) {
         showStatus("Aucun document trouvé pour cette combinaison.", "warning");
-        return; // Pas d'erreur critique, juste pas de document
+        return;
       }
       throw new Error(`Erreur HTTP: ${response.status}`);
     }
 
     const data = await response.json();
-    selectedDocument = data;
+    selectedDocument = data; // Store the found document details
 
-    if (data && data.plu_url) {
+    // Enable download button only if authenticated AND document URL exists
+    if (currentUser && data && data.plu_url) {
       downloadBtn.disabled = false;
       showStatus(
         `Document trouvé (Source: ${
@@ -359,7 +306,7 @@ async function findDocument(zonageId, zoneId, typologieId) {
         "success"
       );
     } else {
-      selectedDocument = null; // Assurer la cohérence
+      selectedDocument = null; // Ensure consistency if URL is missing
       showStatus("Document trouvé mais lien manquant.", "warning");
     }
   } catch (error) {
@@ -371,67 +318,16 @@ async function findDocument(zonageId, zoneId, typologieId) {
   }
 }
 
-/**
- * Ouvre le document sélectionné dans un nouvel onglet
- */
-function downloadDocument() {
-  if (selectedDocument && selectedDocument.plu_url) {
-    showStatus("Ouverture du document...", "info");
-    window.open(selectedDocument.plu_url, "_blank");
-    // Réaffiche le message de succès après un court délai
-    setTimeout(() => {
-      if (!downloadBtn.disabled) {
-        // Vérifie si le bouton est toujours actif
-        showStatus(
-          `Document trouvé (Source: ${
-            formatApiName(selectedDocument.source_plu_date) || "Non spécifiée"
-          }). Prêt à consulter.`,
-          "success"
-        );
-      }
-    }, 1500);
-  } else {
-    showStatus("Lien du document non disponible.", "warning");
-  }
+// Function to get the currently selected document (needed by app.js/main.js)
+function getSelectedDocument() {
+  return selectedDocument;
 }
 
-// === Event listeners ===
-villeSelect.addEventListener("change", (event) => {
-  const villeId = event.target.value;
-  loadZonages(villeId);
-});
-
-zonageSelect.addEventListener("change", (event) => {
-  const zonageId = event.target.value;
-  // On suppose que l'id de la ville est toujours sélectionné dans villeSelect
-  // Si ce n'est pas garanti, il faudrait le passer en argument ou le récupérer ici
-  loadZones(zonageId);
-});
-
-zoneSelect.addEventListener("change", (event) => {
-  const zoneId = event.target.value;
-  const zonageId = zonageSelect.value; // Récupère la valeur actuelle du zonage
-  loadTypologies(zoneId, zonageId);
-});
-
-typologieSelect.addEventListener("change", (event) => {
-  const typologieId = event.target.value;
-  const zoneId = zoneSelect.value;
-  const zonageId = zonageSelect.value;
-  findDocument(zonageId, zoneId, typologieId);
-});
-
-downloadBtn.addEventListener("click", downloadDocument);
-
-// === Initialisation ===
-document.addEventListener("DOMContentLoaded", () => {
-  // Initialise les selects dans un état désactivé propre
-  resetSelect(villeSelect, "Chargement...");
-  resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
-  resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
-  resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
-  downloadBtn.disabled = true;
-  showStatus("Prêt à charger les villes.", "info");
-
-  loadVilles(); // Lance le chargement initial
-});
+export {
+  loadVilles,
+  loadZonages,
+  loadZones,
+  loadTypologies,
+  findDocument,
+  getSelectedDocument,
+};
