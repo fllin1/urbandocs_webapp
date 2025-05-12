@@ -1,4 +1,4 @@
-// src/js/entries/signup.js
+// src/entries/signup.js
 /**
  * Login Entry Point
  *

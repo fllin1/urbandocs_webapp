@@ -1,12 +1,14 @@
-// src/js/confirmation.js
+// src/auth/confirmation.js
 /**
  * Confirmation Module
  * @module confirmation
  * @description Handles email confirmation after registration
- * @version 0.0.1
+ * @version 0.0.3
  *
  * @changelog
  * - 0.0.1 (2025-05-08): Created the confirmation module with basic functionality.
+ * - 0.0.2 (2025-05-10): Added terms of service and confirmation email.
+ * - 0.0.3 (2025-05-12): Added terms of service modal and confirmation email.
  */
 
 import {
@@ -26,6 +28,9 @@ export function initConfirmationPage() {
 
   const confirmButton = document.getElementById("confirmButton");
   const statusMessage = document.getElementById("statusMessage");
+  const tosCheckbox = document.getElementById("tosCheckbox");
+  const tosModalElement = document.getElementById("tosModal");
+  const tosModalBody = document.getElementById("tosModalBody");
 
   // Exit early if no confirmation URL is present
   if (!confirmationUrl) {
@@ -37,7 +42,60 @@ export function initConfirmationPage() {
     return;
   }
 
-  confirmButton.addEventListener("click", () => confirmEmail(confirmationUrl));
+  if (tosModalElement) {
+    tosModalElement.addEventListener("show.bs.modal", async () => {
+      if (tosModalBody.dataset.loaded !== "true") {
+        try {
+          const response = await fetch("terms.html"); // Assumes terms.html is in public/ directory
+          if (!response.ok) {
+            throw new Error(
+              `Failed to load Terms of Service: ${response.status}`
+            );
+          }
+          const tosHtml = await response.text();
+          tosModalBody.innerHTML = tosHtml;
+          tosModalBody.dataset.loaded = "true"; // Mark as loaded to prevent multiple fetches
+        } catch (error) {
+          console.error(error);
+          tosModalBody.innerHTML =
+            "<p class='text-danger'>Could not load Terms of Service. Please try again later.</p>";
+        }
+      }
+    });
+
+    tosModalBody.addEventListener("scroll", () => {
+      // Check if scrolled to the bottom (with a small tolerance)
+      if (
+        tosModalBody.scrollHeight - tosModalBody.scrollTop <=
+        tosModalBody.clientHeight + 2
+      ) {
+        // +2 for tolerance
+        tosCheckbox.disabled = false;
+      }
+    });
+  }
+
+  if (tosCheckbox) {
+    tosCheckbox.addEventListener("change", () => {
+      confirmButton.disabled = !tosCheckbox.checked;
+    });
+  }
+
+  confirmButton.addEventListener("click", () => {
+    if (!tosCheckbox.checked) {
+      showError(
+        "Veuillez accepter les Conditions d'Utilisation pour continuer."
+      );
+      // Ensure statusMessage is visible if showError doesn't handle it or if you want a specific style
+      if (statusMessage) {
+        statusMessage.innerHTML =
+          "<div class='alert alert-danger'>Veuillez accepter les Conditions d'Utilisation pour continuer.</div>";
+        statusMessage.classList.remove("d-none");
+      }
+      return;
+    }
+    confirmEmail(confirmationUrl);
+  });
 }
 
 /**
@@ -49,6 +107,19 @@ export async function confirmEmail(confirmationUrl) {
   const statusMessage = document.getElementById("statusMessage");
   const loading = document.getElementById("loading");
   const confirmSpinner = document.getElementById("confirmSpinner");
+  const tosCheckbox = document.getElementById("tosCheckbox"); // Get checkbox here too
+
+  // Ensure ToS is checked before proceeding (double-check, primary check is in click listener)
+  if (!tosCheckbox || !tosCheckbox.checked) {
+    showError("Les Conditions d'Utilisation doivent être acceptées.");
+    // Optionally, ensure the message is displayed prominently
+    if (statusMessage) {
+      statusMessage.innerHTML =
+        "<div class='alert alert-danger'>Les Conditions d'Utilisation doivent être acceptées.</div>";
+      statusMessage.classList.remove("d-none");
+    }
+    return;
+  }
 
   // Show loading indicator
   showLoading("confirmButton", "confirmSpinner");

@@ -3,10 +3,10 @@
 Email Confirmation Handler
 
 This module contains Firebase functions to handle email confirmation after
-user registration via Supabase.
+user registration via Supabase. It also sends a confirmation email to the user.
 
-Version: 0.0.1
-Last update: 2025-05-08
+Version: 0.0.2
+Last update: 2025-05-10
 """
 
 import json
@@ -53,14 +53,14 @@ def handle_confirmation(req: https_fn.Request) -> https_fn.Response:
         if resp.ok:  # .ok checks for status codes < 400
             return https_fn.Response(
                 response=json.dumps(
-                    {"message": "Email confirmed successfully. Please log in."}
+                    {"message": "Email confirmé avec succès. Veuillez vous connecter."}
                 ),
                 status=200,  # Or resp.status_code if you want to echo Supabase's specific success
                 mimetype="application/json",
             )
         else:
             # If Supabase itself returns an error (e.g., token expired, already used)
-            error_message = "Confirmation failed."
+            error_message = "La confirmation a échoué."
             try:
                 # Try to get a more specific error from Supabase response if it's JSON
                 sup_error = resp.json()
@@ -81,9 +81,7 @@ def handle_confirmation(req: https_fn.Request) -> https_fn.Response:
 
     except requests.exceptions.Timeout:
         return https_fn.Response(
-            response=json.dumps(
-                {"error": "Confirmation request to Supabase timed out"}
-            ),
+            response=json.dumps({"error": "La requête de confirmation a expiré"}),
             status=504,  # Gateway Timeout
             mimetype="application/json",
         )
@@ -96,30 +94,3 @@ def handle_confirmation(req: https_fn.Request) -> https_fn.Response:
             status=502,  # Bad Gateway
             mimetype="application/json",
         )
-
-
-# Renaming the old section to avoid confusion if we need to revert.
-# OLD_BEHAVIOR_handle_confirmation_REDIRECT_LOGIC = """
-#    # 3. Call Supabase without following redirects
-#    try:
-#        resp = requests.get(decoded_url, allow_redirects=False, timeout=10)
-#    except requests.RequestException:
-#        return https_fn.Response(
-#            response=json.dumps({"error": "Supabase unreachable"}),
-#            status=502,
-#            mimetype="application/json",
-#        )
-#
-#    # 4. If Supabase returns a Location (redirected to redirect_to)
-#    location = resp.headers.get("Location")
-#    if location:
-#        # Forward this redirection to the browser
-#        return https_fn.Response(status=302, headers={"Location": location})
-#
-#    # 5. Otherwise, confirmation error
-#    return https_fn.Response(
-#        response=json.dumps({"error": "Confirmation failed"}),
-#        status=400,
-#        mimetype="application/json",
-#    )
-# """

@@ -1,4 +1,4 @@
-// src/js/entries/auth.js
+// src/entries/auth.js
 /**
  * Authentication Entry Point
  *

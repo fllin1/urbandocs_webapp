@@ -1,4 +1,4 @@
-// src/js/auth.js
+// src/auth/auth.js
 /**
  * Authentication Module - Base
  * @module auth
@@ -92,7 +92,7 @@ export function isLoggedIn() {
 export function showError(message, elementId = "errorMessage") {
   const errorElement = document.getElementById(elementId);
   if (errorElement) {
-    errorElement.textContent = message;
+    errorElement.innerHTML = message;
     errorElement.classList.remove("d-none");
   } else {
     console.error("Error element not found:", elementId);

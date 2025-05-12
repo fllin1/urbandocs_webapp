@@ -4,9 +4,10 @@ User Signup Handler
 
 This module contains Firebase functions to handle user registration via Supabase.
 It interacts with Supabase's authentication API.
+You cannot signup using an email that is already in use.
 
-Version: 0.0.1
-Last update: 2025-05-08
+Version: 0.0.2
+Last update: 2025-05-11
 """
 
 import json
@@ -43,9 +44,9 @@ def handle_signup(req: https_fn.Request) -> https_fn.Response:
         request_data = req.get_json()
         email = request_data.get("email")
         password = request_data.get("password")
-    except Exception:
+    except json.JSONDecodeError:
         return https_fn.Response(
-            response=json.dumps({"error": "Invalid request format"}),
+            response=json.dumps({"error": "Invalid JSON format"}),
             status=400,
             mimetype="application/json",
         )
@@ -53,26 +54,7 @@ def handle_signup(req: https_fn.Request) -> https_fn.Response:
     # Validate required fields
     if not email or not password:
         return https_fn.Response(
-            response=json.dumps({"error": "Email and password are required"}),
-            status=400,
-            mimetype="application/json",
-        )
-
-    # Basic email format validation
-    email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-    if not re.match(email_pattern, email):
-        return https_fn.Response(
-            response=json.dumps({"error": "Invalid email format"}),
-            status=400,
-            mimetype="application/json",
-        )
-
-    # Password validation
-    if len(password) < 8:
-        return https_fn.Response(
-            response=json.dumps(
-                {"error": "Password must be at least 8 characters long"}
-            ),
+            response=json.dumps({"error": "Un email et un mot de passe sont requis"}),
             status=400,
             mimetype="application/json",
         )
@@ -80,6 +62,17 @@ def handle_signup(req: https_fn.Request) -> https_fn.Response:
     # Attempt registration
     try:
         signup_response = supabase.auth.sign_up({"email": email, "password": password})
+
+        if len(signup_response.user.identities) == 0:
+            return https_fn.Response(
+                response=json.dumps(
+                    {
+                        "error": "Cette adresse mail a déjà été utilisée. Veuillez utiliser une autre adresse mail."
+                    }
+                ),
+                status=400,
+                mimetype="application/json",
+            )
 
         # Prepare user data to return
         user_info = None
@@ -98,7 +91,7 @@ def handle_signup(req: https_fn.Request) -> https_fn.Response:
         return https_fn.Response(
             response=json.dumps(
                 {
-                    "message": "Account created successfully. Please check your email to confirm your registration.",
+                    "message": "Identifiants valides ! Veuillez vérifier votre email pour confirmer votre inscription.",
                     "user": user_info,
                 }
             ),
@@ -112,37 +105,16 @@ def handle_signup(req: https_fn.Request) -> https_fn.Response:
 
         if wait_time_match:
             wait_time = wait_time_match.group(1)
-            message = f"Please try again in {wait_time} seconds."
+            message = f"Veuillez réessayer dans {wait_time} secondes."
             return https_fn.Response(
                 response=json.dumps({"error": message, "wait_time": int(wait_time)}),
                 status=429,
                 mimetype="application/json",
             )
 
-        # Handle email already exists
-        if "already exists" in str(e).lower():
-            return https_fn.Response(
-                response=json.dumps({"error": "This email is already in use."}),
-                status=409,
-                mimetype="application/json",
-            )
-
-        # Handle weak password
-        if "password" in str(e).lower() and "weak" in str(e).lower():
-            return https_fn.Response(
-                response=json.dumps(
-                    {
-                        "error": "The password is too weak. \
-                            Use at least 8 characters with uppercase, lowercase, and numbers."
-                    }
-                ),
-                status=400,
-                mimetype="application/json",
-            )
-
         # Other authentication errors
         return https_fn.Response(
-            response=json.dumps({"error": f"Authentication error: {str(e)}"}),
+            response=json.dumps({"error": f"Erreur d'authentification: {str(e)}"}),
             status=400,
             mimetype="application/json",
         )
@@ -151,7 +123,9 @@ def handle_signup(req: https_fn.Request) -> https_fn.Response:
         # General errors
         print(f"Signup error: {str(e)}")
         return https_fn.Response(
-            response=json.dumps({"error": "An error occurred during signup"}),
+            response=json.dumps(
+                {"error": "Une erreur est survenue lors de l'inscription."}
+            ),
             status=500,
             mimetype="application/json",
         )

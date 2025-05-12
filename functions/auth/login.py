@@ -42,9 +42,9 @@ def handle_login(req: https_fn.Request) -> https_fn.Response:
         request_data = req.get_json()
         email = request_data.get("email")
         password = request_data.get("password")
-    except Exception:
+    except json.JSONDecodeError:
         return https_fn.Response(
-            response=json.dumps({"error": "Invalid request format"}),
+            response=json.dumps({"error": "Invalid JSON format"}),
             status=400,
             mimetype="application/json",
         )
@@ -52,7 +52,7 @@ def handle_login(req: https_fn.Request) -> https_fn.Response:
     # Validate required fields
     if not email or not password:
         return https_fn.Response(
-            response=json.dumps({"error": "Email and password are required"}),
+            response=json.dumps({"error": "Un email et un mot de passe sont requis"}),
             status=400,
             mimetype="application/json",
         )
@@ -90,7 +90,7 @@ def handle_login(req: https_fn.Request) -> https_fn.Response:
         return https_fn.Response(
             response=json.dumps(
                 {
-                    "message": "Login successful",
+                    "message": "Connexion réussie",
                     "user": user_data,
                     "session": token_data,
                 }
@@ -107,7 +107,8 @@ def handle_login(req: https_fn.Request) -> https_fn.Response:
             return https_fn.Response(
                 response=json.dumps(
                     {
-                        "error": "Your email has not been confirmed. Please check your inbox."
+                        "error": "Votre email n'a pas été confirmé. \
+                            Veuillez vérifier votre boîte de réception."
                     }
                 ),
                 status=401,
@@ -124,7 +125,7 @@ def handle_login(req: https_fn.Request) -> https_fn.Response:
 
         # Other authentication errors
         return https_fn.Response(
-            response=json.dumps({"error": f"Authentication error: {str(e)}"}),
+            response=json.dumps({"error": f"Erreur d'authentification: {str(e)}"}),
             status=400,
             mimetype="application/json",
         )
@@ -133,7 +134,9 @@ def handle_login(req: https_fn.Request) -> https_fn.Response:
         # General errors
         print(f"Login error: {str(e)}")
         return https_fn.Response(
-            response=json.dumps({"error": "An error occurred during login"}),
+            response=json.dumps(
+                {"error": "Une erreur est survenue lors de la connexion"}
+            ),
             status=500,
             mimetype="application/json",
         )

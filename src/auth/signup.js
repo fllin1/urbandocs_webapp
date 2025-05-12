@@ -1,4 +1,4 @@
-// src/js/signup.js
+// src/auth/signup.js
 /**
  * Signup Module
  * @module signup
@@ -6,7 +6,7 @@
  * @version 0.0.2
  *
  * @changelog
- * - 0.0.2 (2025-05-08): Added robust client-side email format and password complexity validation.
+ * - 0.0.2 (2025-05-10): Added robust client-side email format and password complexity validation.
  * - 0.0.1 (2025-05-08): Created the signup module with basic functionality.
  */
 
@@ -56,28 +56,17 @@ export function initSignupPage() {
       }
 
       // 3. Password Strength Validation
-      // Check if password contains at least one uppercase, one lowercase, and one digit
       const passwordComplexityPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
-      if (!passwordComplexityPattern.test(password)) {
-        validationErrors.push(
-          "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre."
-        );
-      }
-      // Keep the length check as it's also a good practice and was present
-      if (password.length < 8) {
-        validationErrors.push(
-          "Le mot de passe doit contenir au moins 8 caractères."
-        );
+      if (!passwordComplexityPattern.test(password) || password.length < 8) {
+        validationErrors.push("Le format du mot de passe est invalide.");
       }
 
       // --- Handle Validation Results ---
 
       if (validationErrors.length > 0) {
-        // Format errors into a list for display
-        const errorHtml = `<ul>${validationErrors
-          .map((err) => `<li>${err}</li>`)
-          .join("")}</ul>`;
-        showError(errorHtml); // Use your existing showError function
+        // NOTE: The \n is not working as expected
+        const errorText = validationErrors.join("<br>");
+        showError(errorText);
         return; // Stop the process if validation fails
       }
 
@@ -146,12 +135,12 @@ export async function signup(email, password) {
 
     // Success case
     showStatus(
-      "Compte créé avec succès ! Veuillez vérifier votre email pour confirmer votre inscription.",
+      "Identifiants valides ! Veuillez vérifier votre email pour confirmer votre inscription.",
       "success"
     );
 
     // Optionally hide form or redirect on success
-    // document.getElementById("signupForm").style.display = "none"; // Keep this if desired
+    document.getElementById("signupForm").style.display = "none"; // Keep this if desired
 
     return responseData; // Return data if needed by caller
   } catch (error) {

@@ -1,4 +1,4 @@
-// src/js/entries/confirmation.js
+// src/entries/confirmation.js
 /**
  * Confirmation Entry Point
  *

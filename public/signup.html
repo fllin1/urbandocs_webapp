@@ -79,10 +79,14 @@
                   type="password"
                   id="password"
                   class="form-control form-control-lg"
-                  placeholder="Créez un mot de passe sécurisé"
+                  placeholder="Créez un mot de passe"
+                  aria-describedby="passwordHelp"
                   required
                 />
               </div>
+              <small id="passwordHelp" class="form-text text-muted">
+                Plus de 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre.
+              </small>
             </div>
 
             <div class="mb-3">
@@ -126,13 +130,12 @@
                 <i class="bi bi-box-arrow-in-right me-1"></i>Se connecter
               </a>
             </div>
-
-            <div class="text-center mt-3">
-              <a href="index.html" class="text-decoration-none">
-                <i class="bi bi-arrow-left me-1"></i>Retour à l'accueil
-              </a>
-            </div>
           </form>
+          <div class="text-center mt-3">
+            <a href="index.html" class="text-decoration-none">
+              <i class="bi bi-arrow-left me-1"></i>Retour à l'accueil
+            </a>
+          </div>
 
           <div
             id="errorMessage"
