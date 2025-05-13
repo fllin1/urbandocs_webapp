@@ -67,7 +67,7 @@ body {
   margin-right: -50vw;
   padding: 10rem 0;
   margin-bottom: 3rem;
-  overflow: hidden; /* Assure que le masque ne déborde pas */
+  overflow: hidden;
 }
 
 .hero-section::before {
