@@ -141,7 +141,7 @@ body {
   font-size: 14px;
   padding: 1rem;
   border: none;
-  color: var(--primary-black);
+  webkit-text-fill-color: var(--primary-black);
   background: var(--accent-gray);
   border-radius: 0;
 }
