@@ -1,5 +1,6 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -18,38 +19,39 @@ module.exports = {
     confirmation: "./src/js/entries/confirmation.js",
   },
   output: {
-    filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "public/js"),
+    filename: "js/[name].bundle.js",
+    path: path.resolve(__dirname, "public"),
     clean: true,
-  },
-  resolve: {
-    extensions: [".js", ".json"],
-    alias: {
-      "@auth": path.resolve(__dirname, "src/js/auth/"),
-      "@entries": path.resolve(__dirname, "src/js/entries/"),
-    },
   },
   plugins: [
     new HtmlWebpackPlugin(), // by default index.html
     new HtmlWebpackPlugin({
-      filename: "../confirmation.html",
+      filename: "confirmation.html",
       template: "src/confirmation.html",
     }),
     new HtmlWebpackPlugin({
-      filename: "../login.html",
+      filename: "login.html",
       template: "src/login.html",
     }),
     new HtmlWebpackPlugin({
-      filename: "../signup.html",
+      filename: "signup.html",
       template: "src/signup.html",
     }),
     new HtmlWebpackPlugin({
-      filename: "../terms.html",
+      filename: "terms.html",
       template: "src/terms.html",
     }),
     new HtmlWebpackPlugin({
-      filename: "../404.html",
+      filename: "404.html",
       template: "src/404.html",
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "src/css",
+          to: "css",
+        },
+      ],
     }),
   ],
   optimization: {

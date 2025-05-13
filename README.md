@@ -52,10 +52,9 @@ Then setup your [Firebase CLI](https://firebase.google.com/docs/cli) on your loc
 You should use a bundler such as [webpack](https://webpack.js.org/guides/getting-started/) and install the Supabase library as it serves as our database.
 
 ```bash
-  npm i webpack webpack-cli -D
-  npm install @supabase/supabase-js
+  npm install -D webpack webpack-cli copy-webpack-plugin html-webpack-plugin
+  npm install @supabase/supabase-js firebase
   npm install -g firebase-tools  # Client firebase
-  npm install firebase
 ```
 
 Write first your JS modules in the `./src/` folder, add its name in the `./webpack.config.js`.

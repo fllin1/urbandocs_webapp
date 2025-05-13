@@ -24,7 +24,7 @@ The tasks in this section aim to implement complete features, requiring multiple
 
 * [ ] Connect Supabase Authentication to the table Users, and to the Frontend;
 * [ ] Add Google Signup/Signin and Phone number verification;
-* [ ] Use personal domain adress to send all the mails (*Resend*);
+* [x] Use personal domain adress to send all the mails;
 
 ### 🫁 Atomic Corrections
 
@@ -67,3 +67,4 @@ The tasks in this section should only concern specific features of the project/p
 
 * [ ] Remove the suffix ".html" from the different pages;
 * [x] Use webpack production mode;
+* [ ] Redo the 404.html page;
