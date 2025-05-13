@@ -17,6 +17,7 @@ Checklist for the Version 0.0.*
   4. Confirmation page;
 * [x] Connect your website to the Supabase Database;
 * [x] Assert that users are logged before they can download the documents;
+* [x] Create a minimalist style appearance;
 
 ### 🧠 Additional Features
 
@@ -41,6 +42,7 @@ The tasks in this section should only concern specific features of the project/p
    * [ ] Add RLS to the .pdf files to give access to authenticated users only;
    *Database* ([Tables Schemas](https://supabase.com/dashboard/project/ofeyssipibktmbfebibo/database/schemas)):
    * [ ] Modify the links in the [documents table](https://supabase.com/dashboard/project/ofeyssipibktmbfebibo/editor/39678) to redirect to the UrbanDocs Bucket instead of the current public "Documents" bucket;
+   * [ ] Correct the [Security Advisor](https://supabase.com/dashboard/project/ofeyssipibktmbfebibo/advisors/security) and [Performance Advisor](https://supabase.com/dashboard/project/ofeyssipibktmbfebibo/advisors/performance)
 2. **Signup**:
    *UX* :
    * [x] Add a notification that a confirmation email was sent;
@@ -54,14 +56,21 @@ The tasks in this section should only concern specific features of the project/p
    *Context* : When signing up, you will recieve an authentication email;
    * [x] You will be redirected to a user-confirmation page;
    * [x] Add term of services;
-   * [x] Force the user to read all the terms before confirmation;
+   * [ ] Force the user to read all the terms before confirmation;
    * [ ] After the user confirms, send him a mail saying his account was created;
 4. **Login** - Security and UX:
    *Security* :
    * [ ] Adding a limitation to the number of login trials;
    * [ ] Adding a CAPTCHA;
    *UX* :
-   * [ ] Redo the error messages;
+   * [ ] If the user confirmation link expired, it should display a specific message (currently just shows : *"Votre email n'a pas été confirmé. Veuillez vérifier votre boîte de réception."* which is inexact);
+5. **Profile** :
+   * [ ] Add the redirection to this page;
+6. **Change Password** :
+   * [ ] Create this page;
+7. **Index** :
+   * [ ] Add a type effect on the subtitle;
+   * [ ] Add the geometry background (check bolt.new or bootstrap for help);
 
 ## 🦯 Ergonomie
 

@@ -17,6 +17,30 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
+        "source": "/",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/index",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/signup",
+        "destination": "/signup.html"
+      },
+      {
+        "source": "/login",
+        "destination": "/login.html"
+      },
+      {
+        "source": "/profile",
+        "destination": "/profile.html"
+      },
+      {
+        "source": "/terms",
+        "destination": "/terms.html"
+      },
+      {
         "source": "/confirmation",
         "destination": "/confirmation.html"
       }

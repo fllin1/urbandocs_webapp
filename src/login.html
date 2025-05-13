@@ -3,144 +3,68 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UrbanDocs - Connexion</title>
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Bootstrap Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-    />
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css" />
-    <!-- FirebaseUI CSS -->
-    <link
-      type="text/css"
-      rel="stylesheet"
-      href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css"
-    />
-    <!-- Style supplémentaire pour cette page -->
-    <style>
-      .login-container {
-        max-width: 450px;
-      }
-      .login-header {
-        text-align: center;
-        margin-bottom: 2rem;
-      }
-      .login-icon {
-        font-size: 3rem;
-        color: #0d6efd;
-        margin-bottom: 1rem;
-      }
-    </style>
+    <title>MWPLU - Connexion</title>
+    <link rel="stylesheet" href="css/main.css" />
   </head>
   <body>
-    <div class="container login-container mt-5 mb-5">
-      <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h1 class="mb-0 h4 text-center">Connexion à UrbanDocs</h1>
-        </div>
-        <div class="card-body">
-          <div class="login-header">
-            <i class="bi bi-person-circle login-icon"></i>
-            <p class="text-muted">
-              Veuillez saisir vos identifiants pour accéder à votre compte
-            </p>
-          </div>
+    <div class="container">
+      <div class="auth-container">
+        <div class="auth-card">
+          <h1 class="auth-title">Connexion</h1>
+          <div class="auth-subtitle">Accédez à votre compte MWPLU</div>
 
-          <form id="loginForm">
-            <!-- Email -->
-            <div class="mb-3">
-              <label for="email" class="form-label select-label"> Email </label>
-              <div class="input-group">
-                <span class="input-group-text"
-                  ><i class="bi bi-envelope"></i
-                ></span>
+          <form id="loginForm" class="auth-form">
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <div class="input-wrapper">
                 <input
                   type="email"
                   id="email"
-                  class="form-control form-control-lg"
+                  class="form-input"
                   placeholder="exemple@mail.com"
                   required
                 />
               </div>
             </div>
 
-            <!-- Mot de passe -->
-            <div class="mb-3">
-              <label for="password" class="form-label select-label">
-                Mot de passe
-              </label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <div class="form-group">
+              <label for="password" class="form-label">Mot de passe</label>
+              <div class="input-wrapper">
                 <input
                   type="password"
                   id="password"
-                  class="form-control form-control-lg"
+                  class="form-input"
                   placeholder="Votre mot de passe"
                   required
                 />
                 <button
-                  class="btn btn-outline-secondary"
                   type="button"
                   id="togglePassword"
+                  class="toggle-password"
                 >
                   <i class="bi bi-eye-slash"></i>
                 </button>
               </div>
             </div>
 
-            <!-- Bouton Connexion -->
-            <div class="d-grid gap-2 mt-4">
-              <button
-                id="loginBtn"
-                class="btn btn-primary btn-lg"
-                type="submit"
-              >
-                <i class="bi bi-box-arrow-in-right me-2"></i>
-                Se connecter
-                <span
-                  class="spinner-border spinner-border-sm ms-2 d-none"
-                  role="status"
-                  aria-hidden="true"
-                  id="loginSpinner"
-                ></span>
-              </button>
-            </div>
-
-            <!-- TODO : Ajouter la page "Mot de passe oublié"-->
-            <!-- Lien pour mot de passe oublié -->
-            <div class="text-center mt-3">
-              <a href="forgotten-password.html" class="text-decoration-none">
-                <i class="bi bi-person-plus-fill me-1"></i>Mot de passe oublié ?
-              </a>
-            </div>
-
-            <!-- Lien pour revenir à l'accueil -->
-            <div class="text-center mt-3">
-              <a href="index.html" class="text-decoration-none">
-                <i class="bi bi-arrow-left me-1"></i>Retour à l'accueil
-              </a>
-            </div>
+            <button id="loginBtn" class="auth-button" type="submit">
+              Se connecter
+              <span id="loginSpinner" class="spinner hidden"></span>
+            </button>
           </form>
 
-          <!-- Zone de message d'erreur -->
-          <div
-            id="errorMessage"
-            class="alert alert-danger mt-4 d-none"
-            role="alert"
-          >
-            <!-- Messages d'erreur ajoutés par JS -->
+          <div class="auth-links">
+            <a href="/index" class="text-link">Retour à l'accueil</a>
+            <div class="auth-prompt margin-top-sm">Mot de passe oublié ?</div>
+            <a href="/forgotten-password" class="text-link"
+              >Changer de mot de passe</a
+            >
           </div>
+
+          <div id="errorMessage" class="error-message hidden"></div>
+          <div id="statusMessage" class="status-message alert hidden"></div>
         </div>
       </div>
     </div>
-
-    <!-- Firebase SDK -->
-    <script type="module" src="js/login.bundle.js"></script>
   </body>
 </html>

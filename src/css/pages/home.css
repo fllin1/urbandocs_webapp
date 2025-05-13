@@ -1,0 +1,80 @@
+/* Main content area */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
+
+/* Hero Section specific to homepage */
+.hero-section {
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    padding: 10rem 0;
+    margin-bottom: 3rem;
+    overflow: hidden;
+    text-align: center;
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, var(--accent-gray) 1px, transparent 1px) 0 0,
+        linear-gradient(var(--accent-gray) 1px, transparent 1px) 0 0;
+    background-size: 20px 20px;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.hero-section::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center,
+            transparent 50%,
+            var(--primary-white) 100%);
+    z-index: -1;
+}
+
+.hero-section h2 {
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.lead {
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--medium-gray);
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
+}
+
+/* Responsive for Home page elements */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1.5rem;
+    }
+
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+
+    .hero-section h2 {
+        font-size: 2rem;
+    }
+
+    .lead {
+        font-size: 1.3rem;
+    }
+}

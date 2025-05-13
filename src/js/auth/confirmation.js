@@ -46,7 +46,7 @@ export function initConfirmationPage() {
     tosModalElement.addEventListener("show.bs.modal", async () => {
       if (tosModalBody.dataset.loaded !== "true") {
         try {
-          const response = await fetch("terms.html"); // Assumes terms.html is in public/ directory
+          const response = await fetch("/terms"); // Use clean URL
           if (!response.ok) {
             throw new Error(
               `Failed to load Terms of Service: ${response.status}`
@@ -166,7 +166,7 @@ export async function confirmEmail(confirmationUrl) {
 
       // Redirect after a short delay
       setTimeout(() => {
-        window.location.href = "/login.html";
+        window.location.href = "/login";
       }, 2000);
     } else {
       // Handle non-successful responses

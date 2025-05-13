@@ -13,6 +13,7 @@ Detail list of tasks in the [TODO list](./TODO.md).
 ### Version Update
 
 ```markdown
+0.0.6 (May 13th 2025) - Complete redesign (base built with [Bolt](https://bolt.new/~/github-p2sgvptw))
 0.0.5 (May 9th 2025) - Moved to Supabase Authentication (login & signup)
 0.0.4 (May 3rd 2025) - Supabase Mail Confirmation
 0.0.3 (April 27th 2025) - Firebase Authentication system for login
@@ -125,23 +126,54 @@ The first step would be to use webpack in **production mode**. In this case, you
 #### Development (JavaScript)
 
 ```text
-src/
-├── auth/                     # Authentication modules
-│   ├── auth.js               # Common base functions
-│   ├── login.js              # Functions specific to login
-│   ├── signup.js             # Functions specific to signup
-│   └── confirmation.js       # Functions specific to confirmation
+public/
+├── js/
+│   ├── auth/                     # Authentication modules
+│   │   ├── auth.js               # Common base functions
+│   │   ├── login.js              # Functions specific to login
+│   │   ├── signup.js             # Functions specific to signup
+│   │   └── confirmation.js       # Functions specific to confirmation
+│   │
+│   ├── entries/                  # Entry points for webpack
+│   │   ├── auth.js               # General entry point for authentication
+│   │   ├── login.js              # Entry point for login.html
+│   │   ├── signup.js             # Entry point for signup.html
+│   │   └── confirmation.js       # Entry point for confirmation.html
+│   │
+│   ├── api.js                    # API to communicate with the backend
+│   ├── app.js                    # Main entry point
+│   ├── mappings.js               # Mappings for the application
+│   └── ui.js                     # Common UI functions
 │
-├── entries/                  # Entry points for webpack
-│   ├── auth.js               # General entry point for authentication
-│   ├── login.js              # Entry point for login.html
-│   ├── signup.js             # Entry point for signup.html
-│   └── confirmation.js       # Entry point for confirmation.html
+├── css/
+│   ├── base/
+│   │   └── base.css
+│   ├── components/
+│   │   ├── buttons.css
+│   │   ├── forms.css
+│   │   ├── messages.css
+│   │   ├── modal.css
+│   │   ├── spinner.css
+│   ├── layout/
+│   │   ├── footer.css
+│   │   ├── grid.css
+│   │   └── header.css
+│   ├── pages/
+│   │   ├── auth.css
+│   │   ├── error.css
+│   │   └── home.css
+│   ├── utils/
+│   │   ├── animations.css
+│   │   └── utilities.css
+│   └── main.css
 │
-├── api.js                    # API to communicate with the backend
-├── app.js                    # Main entry point
-├── mappings.js               # Mappings for the application
-└── ui.js                     # Common UI functions
+├── 404.html
+├── confirmation.html
+├── index.html
+├── login.html
+├── profile.html
+├── signup.html
+└── terms.html
 ```
 
 #### Production (HTML, CSS and JavaScript with Webpack)
@@ -149,22 +181,44 @@ src/
 ```text
 public/
 ├── js/
-│   ├── auth.js
-│   ├── login.js
-│   ├── signup.js
-│   ├── confirmation.js
 │   ├── api.bundle.js
 │   ├── app.bundle.js
 │   ├── mappings.bundle.js
-│   └── ui.bundle.js      
+│   ├── ui.bundle.js
+│   ├── auth.bundle.js
+│   ├── login.bundle.js
+│   ├── signup.bundle.js
+│   └── confirmation.bundle.js
 │
 ├── css/
-│   └── styles.css
+│   ├── base/
+│   │   └── base.css
+│   ├── components/
+│   │   ├── buttons.css
+│   │   ├── forms.css
+│   │   ├── messages.css
+│   │   ├── modal.css
+│   │   ├── spinner.css
+│   ├── layout/
+│   │   ├── footer.css
+│   │   ├── grid.css
+│   │   └── header.css
+│   ├── pages/
+│   │   ├── auth.css
+│   │   ├── error.css
+│   │   └── home.css
+│   ├── utils/
+│   │   ├── animations.css
+│   │   └── utilities.css
+│   └── main.css
 │
+├── 404.html
+├── confirmation.html
 ├── index.html
 ├── login.html
+├── profile.html
 ├── signup.html
-└── confirmation.html
+└── terms.html
 ```
 
 ### Backend (Python)

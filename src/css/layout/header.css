@@ -1,0 +1,42 @@
+/* Header */
+.site-header {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border-gray);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    color: var(--primary-black);
+    transition: opacity 0.2s ease;
+}
+
+.brand:hover {
+    opacity: 0.8;
+}
+
+/* Auth buttons in header */
+.auth-btn {
+    border: none;
+    background: transparent;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    text-decoration: none;
+    color: var(--primary-black);
+    display: inline-block;
+    cursor: pointer;
+}
+
+.auth-btn:hover {
+    background: transparent;
+    color: var(--primary-black);
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
+}

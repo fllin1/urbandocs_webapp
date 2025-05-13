@@ -24,7 +24,10 @@ module.exports = {
     clean: true,
   },
   plugins: [
-    new HtmlWebpackPlugin(), // by default index.html
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: "src/index.html",
+    }),
     new HtmlWebpackPlugin({
       filename: "confirmation.html",
       template: "src/confirmation.html",

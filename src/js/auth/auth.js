@@ -3,11 +3,12 @@
  * Authentication Module - Base
  * @module auth
  * @description Base module for authentication with common functions and configuration
- * @version 0.0.2
+ * @version 0.0.3
  *
  * @changelog
+ * - 0.0.3 (2025-05-13): Modified the authentication state management to use Supabase Auth system.
+ * - 0.0.2 (2025-05-13): Reorganization into separate modules
  * - 0.0.1 (2025-05-03): Initial creation
- * - 0.0.2 (2025-05-08): Reorganization into separate modules
  */
 
 // --- API URL Definitions ---
@@ -73,7 +74,7 @@ export function logout() {
   currentUser = null;
   localStorage.removeItem("currentUser");
   // Redirect to the home page after logout
-  window.location.href = "/index.html";
+  window.location.href = "/index";
 }
 
 /**
@@ -93,7 +94,7 @@ export function showError(message, elementId = "errorMessage") {
   const errorElement = document.getElementById(elementId);
   if (errorElement) {
     errorElement.innerHTML = message;
-    errorElement.classList.remove("d-none");
+    errorElement.classList.remove("hidden");
   } else {
     console.error("Error element not found:", elementId);
   }
@@ -123,7 +124,7 @@ export function showStatus(
 
     // Add the class corresponding to the type
     statusElement.classList.add(`alert-${type}`);
-    statusElement.classList.remove("d-none");
+    statusElement.classList.remove("hidden");
   } else {
     console.error("Status element not found:", elementId);
   }
@@ -136,7 +137,7 @@ export function showStatus(
 export function hideElement(elementId) {
   const element = document.getElementById(elementId);
   if (element) {
-    element.classList.add("d-none");
+    element.classList.add("hidden");
   }
 }
 
@@ -147,7 +148,7 @@ export function hideElement(elementId) {
 export function showElement(elementId) {
   const element = document.getElementById(elementId);
   if (element) {
-    element.classList.remove("d-none");
+    element.classList.remove("hidden");
   }
 }
 
@@ -161,7 +162,7 @@ export function showLoading(buttonId, spinnerId) {
   const spinner = document.getElementById(spinnerId);
 
   if (button) button.disabled = true;
-  if (spinner) spinner.classList.remove("d-none");
+  if (spinner) spinner.classList.remove("hidden");
 }
 
 /**
@@ -174,7 +175,7 @@ export function hideLoading(buttonId, spinnerId) {
   const spinner = document.getElementById(spinnerId);
 
   if (button) button.disabled = false;
-  if (spinner) spinner.classList.add("d-none");
+  if (spinner) spinner.classList.add("hidden");
 }
 
 // Export the necessary functions and variables

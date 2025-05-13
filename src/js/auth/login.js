@@ -3,14 +3,15 @@
  * Firebase Login
  * @module login
  * @description This module handles user login functionality using Supabase Authentication.
- * @version 0.0.3
+ * @version 0.0.4
  * @author GreyPanda
  * @todo Add phone number authentication & password reset functionality.
  *
  * @changelog
- * - 0.0.1 (2025-04-27): Login functionality implemented using Firebase Authentication.
- * - 0.0.2 (2025-05-08): Refactored to handle Supabase authentification.
+ * - 0.0.4 (2025-05-13): Ensure status message is also hidden on new submit.
  * - 0.0.3 (2025-05-08): Implemented actual login with Firebase function, added password visibility toggle.
+ * - 0.0.2 (2025-05-08): Refactored to handle Supabase authentification.
+ * - 0.0.1 (2025-04-27): Login functionality implemented using Firebase Authentication.
  */
 
 import {
@@ -57,8 +58,14 @@ export function initLoginPage() {
 
       // Reset messages
       if (errorMessage) {
-        errorMessage.classList.add("d-none");
+        errorMessage.classList.add("hidden");
         errorMessage.textContent = "";
+      }
+      // Ensure status message is also hidden on new submit
+      const statusMessageElement = document.getElementById("statusMessage");
+      if (statusMessageElement) {
+        statusMessageElement.classList.add("hidden");
+        statusMessageElement.textContent = "";
       }
 
       // Get form values
@@ -165,7 +172,7 @@ export async function login(email, password) {
 
     // Redirect to home page after a short delay
     setTimeout(() => {
-      window.location.href = "/index.html";
+      window.location.href = "/index";
     }, 1000);
 
     return responseData.user;

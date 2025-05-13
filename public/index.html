@@ -1,9 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
-    <meta charset="utf-8">
-    <title>Webpack App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"><script defer src="js/api.bundle.js"></script><script defer src="js/app.bundle.js"></script><script defer src="js/mappings.bundle.js"></script><script defer src="js/ui.bundle.js"></script><script defer src="js/auth.bundle.js"></script><script defer src="js/login.bundle.js"></script><script defer src="js/signup.bundle.js"></script><script defer src="js/confirmation.bundle.js"></script></head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MWPLU</title>
+    <link rel="stylesheet" href="css/main.css" />
+  <script defer src="js/api.bundle.js"></script><script defer src="js/app.bundle.js"></script><script defer src="js/mappings.bundle.js"></script><script defer src="js/ui.bundle.js"></script><script defer src="js/auth.bundle.js"></script><script defer src="js/login.bundle.js"></script><script defer src="js/signup.bundle.js"></script><script defer src="js/confirmation.bundle.js"></script></head>
   <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="flex-between">
+          <h1 class="brand animate-title no-margin">MWPLU</h1>
+          <div class="auth-section">
+            <a
+              href="/profile"
+              id="userStatus"
+              class="auth-btn margin-right-sm hidden"
+            ></a>
+            <a href="/login" id="loginLink" class="auth-btn margin-right-sm">
+              Se connecter
+            </a>
+            <a href="/signup" id="signupLink" class="auth-btn">
+              Créer un compte
+            </a>
+            <button id="logoutBtn" class="auth-btn hidden">
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="hero-section text-center">
+        <h2 class="animate-title margin-bottom-md">
+          Répertoire des synthèses de PLU
+        </h2>
+        <p class="lead">Faites ce qui compte</p>
+      </section>
+
+      <div class="container">
+        <form class="margin-bottom-lg">
+          <div class="grid">
+            <div class="grid-col-4">
+              <div class="form-group">
+                <label for="villeSelect" class="form-label"> Ville </label>
+                <select id="villeSelect" class="form-select" disabled>
+                  <!-- Options loaded by JS -->
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-col-4">
+              <div class="form-group">
+                <label for="zonageSelect" class="form-label"> Zonage </label>
+                <select id="zonageSelect" class="form-select" disabled>
+                  <option value="">Sélectionnez d'abord une ville</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-col-4">
+              <div class="form-group">
+                <label for="zoneSelect" class="form-label"> Zone </label>
+                <select id="zoneSelect" class="form-select" disabled>
+                  <option value="">Sélectionnez d'abord un zonage</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center margin-top-lg">
+            <button
+              id="downloadBtn"
+              class="download-btn btn"
+              type="button"
+              disabled
+            >
+              Voir le PDF
+            </button>
+          </div>
+        </form>
+
+        <div
+          id="loginPrompt"
+          class="alert alert-warning margin-top-lg hidden text-center"
+        >
+          Veuillez vous connecter pour télécharger les documents.
+        </div>
+
+        <div
+          id="statusMessage"
+          class="status-message alert alert-info margin-top-lg"
+        ></div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="grid">
+          <div class="grid-col-4">
+            <h3 class="heading-6 margin-bottom-md">Contact</h3>
+            <div class="contact-info">
+              <p>sift@mwplu.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

@@ -3,10 +3,11 @@
  * Firebase App
  * @module app
  * @description This module handles the main application logic.
- * @version 0.0.4
+ * @version 0.0.5
  * @author GreyPanda
  *
  * @changelog
+ * - 0.0.5 (2025-05-13): Adding account button to the profile page, correcting the login prompt.
  * - 0.0.4 (2025-05-09): Modified the authentication state management to use Supabase Auth system.
  * - 0.0.3 (2025-05-08): Moved Firebase configuration into a separate file.
  * - 0.0.2 (2025-04-27): Added authentication state management and document download functionality with Firebase Auth.
@@ -72,16 +73,18 @@ function updateUIForAuthState(user) {
   if (user) {
     console.log("[app.js] User is signed in. Updating UI for logged-in state.");
     // User is signed in
-    userStatus.textContent = `Connecté: ${user.email}`;
-    userStatus.style.display = "block";
-    loginPrompt.style.display = "none";
-    if (loginLink) loginLink.style.display = "none";
-    if (signupLink) signupLink.style.display = "none";
-    logoutBtn.style.display = "inline-block"; // Show logout button
+    if (userStatus) {
+      userStatus.textContent = `Connecté: ${user.email}`;
+      userStatus.classList.remove("hidden");
+    }
+    if (loginPrompt) loginPrompt.classList.add("hidden");
+    if (loginLink) loginLink.classList.add("hidden");
+    if (signupLink) signupLink.classList.add("hidden");
+    if (logoutBtn) logoutBtn.classList.remove("hidden");
 
     const selectedDocument = getSelectedDocument();
     if (selectedDocument && selectedDocument.plu_url) {
-      downloadBtn.disabled = false;
+      if (downloadBtn) downloadBtn.disabled = false;
       showStatus(
         `Document trouvé (Source: ${
           formatApiName(selectedDocument.source_plu_date) || "Non spécifiée"
@@ -89,23 +92,23 @@ function updateUIForAuthState(user) {
         "success"
       );
     } else {
-      downloadBtn.disabled = true;
+      if (downloadBtn) downloadBtn.disabled = true;
     }
   } else {
     console.log(
       "[app.js] User is signed out. Updating UI for logged-out state."
     );
     // User is signed out
-    userStatus.style.display = "none";
-    loginPrompt.style.display = "block"; // Show login prompt
-    if (loginLink) loginLink.style.display = "inline-block";
-    if (signupLink) signupLink.style.display = "inline-block";
-    logoutBtn.style.display = "none";
-    downloadBtn.disabled = true; // Always disable download if logged out
-    showStatus(
-      "Veuillez vous connecter pour télécharger les documents.",
-      "warning"
-    );
+    if (userStatus) userStatus.classList.add("hidden");
+    if (loginPrompt) {
+      // Check if the loginPrompt element exists on the current page
+      // It might not be on pages like login.html or signup.html
+      loginPrompt.classList.remove("hidden");
+    }
+    if (loginLink) loginLink.classList.remove("hidden");
+    if (signupLink) signupLink.classList.remove("hidden");
+    if (logoutBtn) logoutBtn.classList.add("hidden");
+    if (downloadBtn) downloadBtn.disabled = true; // Always disable download if logged out
   }
 }
 
@@ -125,7 +128,7 @@ supabase.auth.onAuthStateChange((event, session) => {
   if (event === "SIGNED_OUT") {
     console.log("[app.js] Event SIGNED_OUT received. Redirecting.");
     // localStorage.removeItem("currentUser"); // This is handled by authModule.setCurrentUser(null)
-    window.location.href = "/index.html";
+    window.location.href = "/index"; // Or just "/"
   } else if (event === "SIGNED_IN") {
     console.log("[app.js] Event SIGNED_IN received. User data:", user);
     // User is signed in. session.user has details.
@@ -233,11 +236,37 @@ document.addEventListener("DOMContentLoaded", async () => {
   resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
   resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
   // resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
-  downloadBtn.disabled = true;
-  showStatus("Initialisation...", "info");
+  if (downloadBtn) downloadBtn.disabled = true;
+  // showStatus("Initialisation...", "info"); // This might be premature or overridden
 
-  // Load initial data
-  await loadVilles(); // Start loading cities
+  // The onAuthStateChange listener is set up above and will call updateUIForAuthState.
+  // It handles INITIAL_SESSION, which should cover the user's state on page load.
+  // Explicitly calling getCurrentUser and updateUIForAuthState here might be redundant
+  // or could cause a flicker if onAuthStateChange hasn't fired yet with the true state.
+  // However, it can be a fallback. Let's ensure it only updates if elements exist.
+
+  const initiallyStoredUser = authModule.getCurrentUser();
+  console.log(
+    "[app.js] DOMContentLoaded: User from authModule.getCurrentUser():",
+    initiallyStoredUser
+  );
+  updateUIForAuthState(initiallyStoredUser); // This will set the initial UI based on localStorage
+
+  // Load initial data if on the main page
+  if (villeSelect && zonageSelect && zoneSelect) {
+    showStatus("Initialisation...", "info"); // Show this only when relevant selectors are present
+    resetSelect(villeSelect, "Chargement...");
+    resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
+    resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
+    // resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
+    await loadVilles(); // Start loading cities
+  } else {
+    // If not on the main page with selectors, ensure a relevant status or clear it
+    // For example, on login/signup pages, statusMessage might be used for other things.
+    // If statusMessage exists and isn't meant for auth state here, clear it or set appropriately.
+    // This depends on whether statusMessage is a shared element or page-specific.
+    // For now, we assume updateUIForAuthState handles its part of status messages related to login prompt.
+  }
 });
 
 // Export currentUser for use in api.js

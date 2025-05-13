@@ -1,0 +1,68 @@
+/* Auth Components */
+.auth-container {
+    max-width: 400px;
+    margin: 80px auto;
+}
+
+.auth-card {
+    background: var(--primary-white);
+    padding: 40px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.auth-title {
+    font-size: 22px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.auth-subtitle {
+    color: var(--medium-gray);
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-form {
+    margin-bottom: 24px;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.text-link {
+    display: inline-block;
+    color: var(--primary-black);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 15px;
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    margin: 5px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.text-link:hover {
+    background-color: var(--accent-gray);
+    border-color: var(--medium-gray);
+    color: var(--primary-black);
+    opacity: 1;
+}
+
+.auth-prompt {
+    color: var(--medium-gray);
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+/* Responsive for Auth page elements */
+@media (max-width: 768px) {
+    .auth-container {
+        margin: 40px auto;
+    }
+
+    .auth-card {
+        padding: 24px;
+    }
+}

@@ -3,9 +3,10 @@
  * Signup Module
  * @module signup
  * @description Handles user registration with client-side validation
- * @version 0.0.2
+ * @version 0.0.3
  *
  * @changelog
+ * - 0.0.3 (2025-05-13): Ensure status message is also hidden on new submit.
  * - 0.0.2 (2025-05-10): Added robust client-side email format and password complexity validation.
  * - 0.0.1 (2025-05-08): Created the signup module with basic functionality.
  */
@@ -31,9 +32,14 @@ export function initSignupPage() {
       e.preventDefault();
 
       // Reset messages
-      errorMessageDiv.classList.add("d-none"); // Use the renamed variable
-      errorMessageDiv.innerHTML = ""; // Clear previous messages
-      statusMessage.classList.add("d-none");
+      if (errorMessageDiv) {
+        errorMessageDiv.classList.add("hidden");
+        errorMessageDiv.innerHTML = "";
+      }
+      if (statusMessage) {
+        statusMessage.classList.add("hidden");
+        statusMessage.textContent = "";
+      }
 
       // Get form values
       const email = document.getElementById("email").value.trim(); // Trim whitespace from email

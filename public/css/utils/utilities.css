@@ -1,0 +1,82 @@
+/* Utilitaires de flexbox */
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+}
+
+/* Utilitaires de marge */
+.no-margin {
+    margin: 0 !important;
+}
+
+.margin-right-xs {
+    margin-right: 0.25rem;
+}
+
+.margin-right-sm {
+    margin-right: 0.5rem;
+}
+
+.margin-right-md {
+    margin-right: 1rem;
+}
+
+.margin-left-xs {
+    margin-left: 0.25rem;
+}
+
+.margin-left-sm {
+    margin-left: 0.5rem;
+}
+
+.margin-left-md {
+    margin-left: 1rem;
+}
+
+.margin-top-sm {
+    margin-top: 0.5rem;
+}
+
+.margin-top-md {
+    margin-top: 1rem;
+}
+
+.margin-top-lg {
+    margin-top: 2rem;
+}
+
+.margin-bottom-xs {
+    margin-bottom: 0.25rem;
+}
+
+.margin-bottom-sm {
+    margin-bottom: 0.5rem;
+}
+
+.margin-bottom-md {
+    margin-bottom: 1rem;
+}
+
+.margin-bottom-lg {
+    margin-bottom: 2rem;
+}
+
+/* Utilitaires d'affichage */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+/* Utilitaires de texte */
+.text-primary {
+    color: var(--primary-black);
+}

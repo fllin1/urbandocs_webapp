@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil Utilisateur - MWPLU</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="flex-between">
+          <a href="/index" class="brand-link"
+            ><h1 class="brand animate-title no-margin">MWPLU</h1></a
+          >
+          <div class="auth-section">
+            <!-- User status and logout might be dynamically added here by JS -->
+            <a href="/index" id="homeLink" class="auth-btn margin-right-sm"
+              >Accueil</a
+            >
+            <button id="logoutBtnProfile" class="auth-btn hidden">
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <section class="profile-section margin-top-lg">
+          <h2 class="text-center margin-bottom-md">Mon Profil</h2>
+          <div id="profileDetails" class="card">
+            <p>
+              <strong>Email:</strong> <span id="userEmail">Chargement...</span>
+            </p>
+            <!-- Add more profile details here as needed -->
+            <p>Cette page est en cours de construction.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p class="text-center">&copy; 2024 MWPLU. Tous droits réservés.</p>
+      </div>
+    </footer>
+
+    <!-- Link to your main JavaScript file if it handles auth state on this page -->
+    <!-- <script type="module" src="js/app.js"></script> -->
+    <!-- You might need a specific JS file for profile page logic -->
+    <!-- <script type="module" src="js/profile.js"></script> -->
+  </body>
+</html>
