@@ -11,6 +11,6 @@
     "firebase": "^11.7.1"
   },
   "devDependencies": {
-    "serve": "^14.2.1"
+    "servor": "^4.0.2"
   }
 }
