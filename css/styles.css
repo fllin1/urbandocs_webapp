@@ -237,7 +237,7 @@ body {
   white-space: nowrap;
   margin: 0 auto;
   width: 0;
-  animation: typewriter 2.5s steps(40, end) forwards;
+  animation: typewriter 2.5s steps(100, end) forwards;
   animation-delay: 1.1s; /* Begins after title's animation */
 }
 
