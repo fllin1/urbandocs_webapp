@@ -63,7 +63,7 @@
   
   /* Form elements */
   .form-select {
-    border: 1px solid var(--border-gray);
+    /* border: 1px solid var(--border-gray); */
     padding: 0.75rem;
     font-size: 14px;
     transition: border-color 0.2s ease;
