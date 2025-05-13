@@ -128,7 +128,7 @@ supabase.auth.onAuthStateChange((event, session) => {
   if (event === "SIGNED_OUT") {
     console.log("[app.js] Event SIGNED_OUT received. Redirecting.");
     // localStorage.removeItem("currentUser"); // This is handled by authModule.setCurrentUser(null)
-    window.location.href = "/index"; // Or just "/"
+    window.location.href = "/";
   } else if (event === "SIGNED_IN") {
     console.log("[app.js] Event SIGNED_IN received. User data:", user);
     // User is signed in. session.user has details.

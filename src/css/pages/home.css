@@ -1,3 +1,9 @@
+/* Define CSS variables if not already defined */
+:root {
+    --accent-gray: #e0e0e0;
+    --primary-white: #ffffff;
+}
+
 /* Main content area */
 .main-content {
     max-width: 1200px;

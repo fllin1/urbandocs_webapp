@@ -172,7 +172,7 @@ export async function login(email, password) {
 
     // Redirect to home page after a short delay
     setTimeout(() => {
-      window.location.href = "/index";
+      window.location.href = "/";
     }, 1000);
 
     return responseData.user;

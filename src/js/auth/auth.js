@@ -74,7 +74,7 @@ export function logout() {
   currentUser = null;
   localStorage.removeItem("currentUser");
   // Redirect to the home page after logout
-  window.location.href = "/index";
+  window.location.href = "/";
 }
 
 /**

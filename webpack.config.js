@@ -11,6 +11,7 @@ module.exports = {
     app: "./src/js/app.js",
     mappings: "./src/js/mappings.js",
     ui: "./src/js/ui.js",
+    typewriter: "./src/js/typewriter.js",
 
     // Authentification
     auth: "./src/js/entries/auth.js",
