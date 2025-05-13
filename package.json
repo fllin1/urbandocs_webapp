@@ -2,8 +2,8 @@
   "name": "urbandocs_webapp",
   "private": true,
   "scripts": {
-    "watch": "webpack --watch",
-    "build": "webpack --config webpack.prod.js"
+    "dev": "serve src -p 3000",
+    "preview": "serve src -p 3000"
   },
   "author": "Panda",
   "license": "MIT",
@@ -12,9 +12,6 @@
     "firebase": "^11.7.1"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^13.0.0",
-    "html-webpack-plugin": "^5.6.3",
-    "webpack": "^5.99.8",
-    "webpack-cli": "^6.0.1"
+    "serve": "^14.2.1"
   }
 }
