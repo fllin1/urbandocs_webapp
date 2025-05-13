@@ -71,9 +71,9 @@
     cursor: pointer;
   }
   
-  /* .form-select:hover {
+  .form-select:hover {
     border-color: var(--medium-gray);
-  } */
+  }
   
   .form-select:disabled {
     background-color: var(--accent-gray);
