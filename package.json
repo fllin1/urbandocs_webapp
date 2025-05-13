@@ -2,7 +2,7 @@
   "name": "urbandocs_webapp",
   "private": true,
   "scripts": {
-    "start": "server --reload"
+    "dev": "serve index.html",
   },
   "author": "Panda",
   "license": "MIT",
