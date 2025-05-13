@@ -128,7 +128,6 @@ body {
 }
 
 .form-group::after {
-  content: "▼";
   font-size: 10px;
   position: absolute;
   right: 10px;
