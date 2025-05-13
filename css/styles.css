@@ -238,13 +238,15 @@ body {
 }
 
 .typewriter {
-  display: inline-block;
+ display: inline-block;
   overflow: hidden;
   white-space: nowrap;
-  margin: 0 auto;
   width: 0;
-  animation: typewriter 2.5s steps(40, end) forwards;
-  animation-delay: 1.1s; /* Begins after title's animation */
+  border-right: 2px solid var(--primary-black);
+  animation: 
+    typewriter 2.5s steps(40, end) forwards,
+    blinkCursor 0.75s step-end infinite alternate;
+  animation-delay: 1.1s;  /* Begins after title's animation */
 }
 
 /* Override bootstrap styles */
