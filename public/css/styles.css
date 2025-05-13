@@ -1,72 +1,155 @@
+/* Base styles */
+:root {
+  --primary-black: #000000;
+  --primary-white: #FFFFFF;
+  --accent-gray: #F5F5F5;
+  --medium-gray: #AAAAAA;
+  --border-gray: #E0E0E0;
+}
+
 body {
-    /* Un fond légèrement différent pour contraster avec la card */
-    background-color: #e9ecef;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Police plus moderne */
+  font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--primary-black);
+  background-color: var(--primary-white);
 }
 
-.container {
-    max-width: 700px;
-    /* Légèrement plus petit peut-être */
+/* Header & Navigation */
+.site-header {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border-gray);
 }
 
-.card {
-    border: none;
-    /* Enlève la bordure par défaut si shadow est suffisant */
+.brand {
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  transition: transform 0.2s ease;
 }
 
-.card-header {
-    border-bottom: none;
-    /* Pas de ligne sous le header */
+.brand:hover {
+  transform: scale(1.02);
 }
 
-.card-body {
-    padding: 2rem;
-    /* Plus d'espace intérieur */
+/* Auth buttons */
+.auth-btn {
+  border: 1px solid var(--primary-black);
+  background: transparent;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
-.select-label {
-    font-weight: 600;
-    /* Un peu plus gras */
-    color: #495057;
-    margin-bottom: 0.5rem;
-    /* Espace standard Bootstap */
-    display: flex;
-    /* Pour aligner le spinner */
-    align-items: center;
-    /* Centrer verticalement le spinner avec le texte */
+.auth-btn:hover {
+  background: var(--primary-black);
+  color: var(--primary-white);
 }
 
-/* Amélioration du style des selects */
-.form-select-lg {
-    padding-top: 0.8rem;
-    padding-bottom: 0.8rem;
-    font-size: 1.1rem;
+/* Main content area */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
 }
 
-#downloadBtn i {
-    vertical-align: middle;
-    /* Mieux aligner l'icône */
+.hero-section {
+  background: linear-gradient(90deg, var(--accent-gray) 1px, transparent 1px) 0 0,
+              linear-gradient(var(--accent-gray) 1px, transparent 1px) 0 0;
+  background-size: 20px 20px;
+  padding: 4rem 0;
+  margin-bottom: 3rem;
 }
 
-/* Le style status-message est maintenant géré par les classes alert Bootstrap */
+/* Form elements */
+.form-select {
+  border: 1px solid var(--border-gray);
+  padding: 0.75rem;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+  background: var(--primary-white);
+  cursor: pointer;
+}
+
+.form-select:hover {
+  border-color: var(--medium-gray);
+}
+
+.form-select:disabled {
+  background-color: var(--accent-gray);
+  cursor: not-allowed;
+}
+
+/* Status messages */
 .status-message {
-    margin-top: 1.5rem;
-    /* Espace avant le message */
-    font-size: 0.95rem;
-    /* Les couleurs sont gérées par alert-info, alert-success, alert-danger, alert-warning */
+  font-size: 14px;
+  padding: 1rem;
+  border: none;
+  background: var(--accent-gray);
 }
 
-/* Spinner alignment (si display: flex sur label ne suffit pas) */
-.spinner-border-sm {
-    width: 1rem;
-    height: 1rem;
-    border-width: 0.2em;
+.alert-success { color: #155724; }
+.alert-info { color: #004085; }
+.alert-warning { color: #856404; }
+.alert-danger { color: #721c24; }
+
+/* Download button */
+.download-btn {
+  background: var(--primary-black);
+  color: var(--primary-white);
+  padding: 1rem 2rem;
+  font-size: 14px;
+  transition: transform 0.2s ease;
 }
 
-/* Style optionnel pour les selects désactivés */
-select:disabled {
-    background-color: #f8f9fa;
-    /* Fond légèrement grisé */
-    cursor: not-allowed;
+.download-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.download-btn:disabled {
+  background: var(--medium-gray);
+}
+
+/* Spinner */
+.spinner-border {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+/* Footer */
+.site-footer {
+  background: var(--accent-gray);
+  padding: 3rem 0;
+  margin-top: 4rem;
+}
+
+.contact-info {
+  font-size: 14px;
+  color: var(--medium-gray);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-section {
+    padding: 2rem 0;
+  }
+}
+
+/* Animation for title */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-title {
+  animation: fadeIn 0.8s ease-out forwards;
 }
