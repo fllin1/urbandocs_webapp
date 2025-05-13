@@ -59,17 +59,43 @@ body {
 }
 
 .hero-section {
-  background: linear-gradient(90deg, var(--accent-gray) 1px, transparent 1px) 0 0,
-              linear-gradient(var(--accent-gray) 1px, transparent 1px) 0 0;
-  background-size: 20px 20px;
-  padding: 4rem 0;
-  margin-bottom: 3rem;
-  width: 100vw;
   position: relative;
+  width: 100vw;
   left: 50%;
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
+  padding: 4rem 0;
+  margin-bottom: 3rem;
+  overflow: hidden; /* Assure que le masque ne déborde pas */
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, var(--accent-gray) 1px, transparent 1px) 0 0,
+              linear-gradient(var(--accent-gray) 1px, transparent 1px) 0 0;
+  background-size: 20px 20px;
+  z-index: -1;
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    var(--primary-white) 100%
+  );
+  z-index: -1;
 }
 
 /* Form elements */
