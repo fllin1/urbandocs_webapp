@@ -2,8 +2,7 @@
   "name": "urbandocs_webapp",
   "private": true,
   "scripts": {
-    "dev": "serve src -p 3000",
-    "preview": "serve src -p 3000"
+    "start": "servor --reload"
   },
   "author": "Panda",
   "license": "MIT",
