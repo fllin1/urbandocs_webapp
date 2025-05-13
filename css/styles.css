@@ -46,8 +46,8 @@ body {
 }
 
 .auth-btn:hover {
-   border-color: var(--medium-gray);
-  border: 1px;
+  border-color: var(--medium-gray);
+  border-width: 1px;
 }
 
 /* Main content area */
