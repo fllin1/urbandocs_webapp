@@ -46,7 +46,7 @@ body {
 }
 
 .auth-btn:hover {
-  border-color: var(--medium-gray);
+  border-color: var(--primary-black);
   border-width: 1px;
 }
 
