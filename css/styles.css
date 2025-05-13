@@ -150,7 +150,7 @@ body {
   border-radius: 0;
 }
 
-.alert-success { color: #155724; }
+.alert-success { color: var(--primary-black; }
 .alert-info { color: var(--primary-black); }
 .alert-warning { color: #856404; }
 .alert-danger { color: #721c24; }
