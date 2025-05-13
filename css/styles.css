@@ -218,7 +218,7 @@ body {
 /* Typewriter animation */
 @keyframes typewriter {
   from { width: 0; }
-  to { width: 50%; }
+  to { width: 100%; }
 }
 
 @keyframes blinkCursor {
@@ -231,6 +231,12 @@ body {
 }
 
 /* Typewriter for subtitle */
+.typewriter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .typewriter {
   display: inline-block;
   overflow: hidden;
