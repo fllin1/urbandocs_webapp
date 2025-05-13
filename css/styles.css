@@ -48,7 +48,7 @@ body {
 .auth-btn:hover {
   background: transparent;
   color: var(--primary-black);
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Main content area */
