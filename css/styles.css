@@ -54,6 +54,7 @@ body {
 /* Main content area */
 .main-content {
   max-width: 1200px;
+  height: 1000px;
   margin: 0 auto;
   padding: 3rem 1.5rem;
 }
