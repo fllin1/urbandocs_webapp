@@ -47,7 +47,7 @@ body {
 
 .auth-btn:hover {
   border-color: var(--primary-black);
-  border-width: 1px;
+  border-width: 1px solid var(--border-gray);
 }
 
 /* Main content area */
