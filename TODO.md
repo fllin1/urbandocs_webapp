@@ -2,11 +2,13 @@
 
 Checklist for the Version 0.0.*
 
-## Priorities
+## 🍖 Priorities
 
 🤖 Ask Claude First
 
 ![Perplexity](https://img.shields.io/badge/perplexity-000000?style=for-the-badge&logo=perplexity&logoColor=088F8F)
+
+### 🫀 Core Features
 
 * [x] Create the base website containing :
   1. Home page (with "Villes", "Zonages" and "Zones" selectors);
@@ -16,7 +18,7 @@ Checklist for the Version 0.0.*
 * [x] Connect your website to the Supabase Database;
 * [x] Assert that users are logged before they can download the documents;
 
-### Adding Features
+### 🧠 Additional Features
 
 The tasks in this section aim to implement complete features, requiring multiple level updates.
 
@@ -24,7 +26,7 @@ The tasks in this section aim to implement complete features, requiring multiple
 * [ ] Add Google Signup/Signin and Phone number verification;
 * [ ] Use personal domain adress to send all the mails (*Resend*);
 
-### Atomic Corrections
+### 🫁 Atomic Corrections
 
 The tasks in this section should only concern specific features of the project/pipeline, and should not involve the correction of 1 (or 2) files.
 
@@ -61,6 +63,7 @@ The tasks in this section should only concern specific features of the project/p
    *UX* :
    * [ ] Redo the error messages;
 
-## Optional
+## 🦯 Ergonomie
 
-1. Remove the suffix ".html" from the different pages.
+* [ ] Remove the suffix ".html" from the different pages;
+* [x] Use webpack production mode;

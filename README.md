@@ -1,6 +1,6 @@
 # UrbanDocs App
 
-Web platform to access the synthesis of the Ubran Documents in France.
+Web platform to access the synthesis of the Ubran Documents in France using Firebase as host.
 
 ## Patch Notes
 
@@ -22,7 +22,7 @@ Detail list of tasks in the [TODO list](./TODO.md).
 
 ## Author
 
-[![Static Badge](https://img.shields.io/badge/github-fllin1-blue)](https://github.com/fllin1)
+[![Static Badge](https://img.shields.io/badge/author-Panda-blue)](https://github.com/fllin1)
 
 ## Badges
 
@@ -49,13 +49,13 @@ You should make sure that you can Python and NodeJS.
 
 Then setup your [Firebase CLI](https://firebase.google.com/docs/cli) on your local machine.
 
-After that you just have to init a project, select `App Hosting` and `Cloud Functions`. Then it will as you if you want to overwrite the scripts, **say No** to any overwrite. For Cloud Functions, chose **Python** and accept to install the dependencies.
+You should use a bundler such as [webpack](https://webpack.js.org/guides/getting-started/) and install the Supabase library as it serves as our database.
 
-You should use a bundler such as webpack and install the Supabase library.
-
-```sh
+```bash
   npm i webpack webpack-cli -D
   npm install @supabase/supabase-js
+  npm install -g firebase-tools  # Client firebase
+  npm install firebase
 ```
 
 Write first your JS modules in the `./src/` folder, add its name in the `./webpack.config.js`.
@@ -67,9 +67,9 @@ Write first your JS modules in the `./src/` folder, add its name in the `./webpa
 1. If you encounter issues with your `pip` to install the dependencies, follow this [Youtube Tutorial](https://www.youtube.com/watch?v=q_sayYt50oM).
 2. **Set your [gcloud CLI](https://cloud.google.com/sdk/docs/install) account** (your gmail address should then appear on your terminal line). Then, after setting up your *Cloud Functions*, you should use the following terminal command to grand the necessary access to your functions.
 
-```bash
-  gcloud functions add-invoker-policy-binding $python_function_name --member=allUsers
-```
+    ```bash
+      gcloud functions add-invoker-policy-binding $python_function_name --member=allUsers
+    ```
 
 ## Environment Variables
 
@@ -84,39 +84,38 @@ SUPABASE_SERVICE_KEY={SERVICE_ROLE_KEY}
 
 You will first need to create a Firebase project, this part is not covered and will be tested at a later date.
 
-1. Clone the project
+1. Clone the project and go to the project directory
 
     ```bash
       git clone https://github.com/fllin1/urbandocs_webapp.git
-    ```
-
-2. Go to the project directory
-
-    ```bash
       cd urbandocs_webapp
     ```
 
-3. Firebase Init
+2. Firebase Init
 
     ```bash
       firebase init
     ```
 
-    Choose to add the *Hosting* and *Cloud Functions* services. Do not rewrite the files, and install the dependencies for your Cloud Functions (the default init configuration should be the right ones).
+    Choose to add the *Hosting* and *Cloud Functions* services.
+    - For Hosting : The default values should be the right ones.
+    - For Cloud Functions : Do not rewrite the files, and install the dependencies : Choose Python as the langagen then the default init configuration should be the right ones.
 
-    NOTE : If you encounter issues while installing your dependencies, I invite you to check the [Roadblocks](#roadblocks) section.
+    NOTE : If you encounter issues while installing your dependencies, I invite you to check the [Roadblocks](#roadblocks) section and refer to the Youtube Tutorial.
 
-4. Start the emulator
+3. If you wish to use webpack in development mode, the current `./webpack.config.js` is already configured for it. You can then start the emulator for a test run
 
     ```bash
-    firebase emulators:start
+      npx webpack  # for development mode
+      firebase emulators:start
     ```
 
 ## Deployment
 
-To deploy this project run
+The first step would be to use webpack in **production mode**. In this case, you can simply build your project, the commands are already set in your `./package.json` file. Right after that you can deploy your project :
 
 ```bash
+  npm run build
   firebase deploy
 ```
 
@@ -179,7 +178,7 @@ functions/
 │   ├── handle_signup.py         # Function to handle signup
 │   └── handle_confirmation.py   # Function to handle email confirmation
 │
-├── docs/                        # Functions related to documents
+├── docs/                        # Functions to retrieve Supabase data
 │   ├── get_villes.py
 │   ├── get_zonages.py
 │   ├── get_zones.py
