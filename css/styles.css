@@ -19,7 +19,7 @@
   /* Header & Navigation */
   .site-header {
     padding: 1.5rem 0;
-    border-bottom: 1px solid var(--border-gray);
+    /* border-bottom: 1px solid var(--border-gray); */
   }
   
   .brand {
@@ -34,7 +34,7 @@
   
   /* Auth buttons */
   .auth-btn {
-    border: 1px solid var(--primary-black);
+    /* border: 1px solid var(--primary-black); */
     background: transparent;
     padding: 0.5rem 1.25rem;
     transition: all 0.2s ease;
@@ -63,7 +63,7 @@
   
   /* Form elements */
   .form-select {
-    border: 1px solid var(--border-gray);
+    /* border: 1px solid var(--border-gray); */
     padding: 0.75rem;
     font-size: 14px;
     transition: border-color 0.2s ease;
