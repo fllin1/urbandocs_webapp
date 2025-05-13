@@ -241,7 +241,7 @@ body {
   animation: 
     typewriter 2.5s steps(40, end) 1.2s forwards,
     blinkCursor 0.75s step-end infinite alternate;
-  animation-delay: 1.1s; /* Démarre après la fin de l'animation du titre */
+  animation-delay: 1.1s; /* Begins after title's animation */
 }
 
 /* Override bootstrap styles */
