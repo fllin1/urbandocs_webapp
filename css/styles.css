@@ -238,7 +238,6 @@ body {
 }
 
 .typewriter {
- display: inline-block;
   overflow: hidden;
   white-space: nowrap;
   width: 0;
