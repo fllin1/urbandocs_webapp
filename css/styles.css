@@ -46,7 +46,6 @@ body {
 }
 
 .auth-btn:hover {
-  /* Remplacer le changement de couleur par une ombre */
   background: transparent;
   color: var(--primary-black);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
