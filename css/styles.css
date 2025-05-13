@@ -151,7 +151,7 @@ body {
 }
 
 .alert-success { color: #155724; }
-.alert-info { color: #004085; }
+.alert-info { color: var(--primary-black); }
 .alert-warning { color: #856404; }
 .alert-danger { color: #721c24; }
 
