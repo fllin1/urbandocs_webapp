@@ -11,9 +11,10 @@
  * - 0.0.1 (2025-04-26): Separate module for API calls to improve code organization and maintainability.
  */
 
-// Initialize the Firebase app
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./firebase-config.js";
+// TODO : Verify if Firebase is needed
+// // Initialize the Firebase app
+// import { initializeApp } from "firebase/app";
+// import { firebaseConfig } from "./firebase-config.js";
 
 // Import UI functions and elements (will be defined in ui.js)
 import {
@@ -37,8 +38,9 @@ import {
 // Import the current user state from app.js
 import { currentUser } from "./app.js";
 
-// Initialize the Firebase app
-const app = initializeApp(firebaseConfig);
+// TODO : Verify if Firebase is needed
+// // Initialize the Firebase app
+// const app = initializeApp(firebaseConfig);
 
 // --- API URL Definitions ---
 const IS_LOCAL =
@@ -102,7 +104,7 @@ async function loadVilles() {
     }
   } catch (error) {
     console.error("Erreur lors du chargement des villes:", error);
-    showStatus(`Erreur chargement villes: ${error.message}`, "danger");
+    // showStatus(`Erreur chargement villes: ${error.message}`, "danger");
     resetSelect(villeSelect, "Erreur chargement");
   } finally {
     toggleSpinner(villeSpinner, false);
@@ -151,7 +153,7 @@ async function loadZonages(villeId) {
     }
   } catch (error) {
     console.error("Erreur lors du chargement des zonages:", error);
-    showStatus(`Erreur chargement zonages: ${error.message}`, "danger");
+    // showStatus(`Erreur chargement zonages: ${error.message}`, "danger");
     resetSelect(zonageSelect, "Erreur chargement");
   } finally {
     toggleSpinner(zonageSpinner, false);
@@ -200,7 +202,7 @@ async function loadZones(zonageId) {
     }
   } catch (error) {
     console.error("Erreur lors du chargement des zones:", error);
-    showStatus(`Erreur chargement zones: ${error.message}`, "danger");
+    // showStatus(`Erreur chargement zones: ${error.message}`, "danger");
     resetSelect(zoneSelect, "Erreur chargement");
   } finally {
     toggleSpinner(zoneSpinner, false);
@@ -247,7 +249,7 @@ async function loadTypologies(zoneId, zonageId) {
     }
   } catch (error) {
     console.error("Erreur lors du chargement des typologies:", error);
-    showStatus(`Erreur chargement typologies: ${error.message}`, "danger");
+    // showStatus(`Erreur chargement typologies: ${error.message}`, "danger");
     resetSelect(typologieSelect, "Erreur chargement");
   } finally {
     toggleSpinner(typologieSpinner, false);
@@ -312,7 +314,7 @@ async function findDocument(zonageId, zoneId, typologieId) {
   } catch (error) {
     selectedDocument = null;
     console.error("Erreur lors de la recherche du document:", error);
-    showStatus(`Erreur recherche document: ${error.message}`, "danger");
+    // showStatus(`Erreur recherche document: ${error.message}`, "danger");
   } finally {
     toggleSpinner(documentSpinner, false);
   }
