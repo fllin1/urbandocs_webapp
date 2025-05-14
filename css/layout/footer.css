@@ -1,0 +1,11 @@
+/* Footer */
+.site-footer {
+    background: var(--accent-gray);
+    padding: 3rem 0;
+    margin-top: 4rem;
+}
+
+.contact-info {
+    font-size: 14px;
+    color: var(--medium-gray);
+}
