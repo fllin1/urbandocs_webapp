@@ -1,0 +1,19 @@
+/* Système de grille */
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -12px;
+}
+
+.grid-col-4 {
+    width: 33.333333%;
+    padding: 0 12px;
+    margin-bottom: 24px;
+}
+
+/* Responsive for grid */
+@media (max-width: 768px) {
+    .grid-col-4 {
+        width: 100%;
+    }
+}
