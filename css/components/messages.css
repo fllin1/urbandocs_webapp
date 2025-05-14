@@ -1,0 +1,45 @@
+/* Messages (General error/status for forms etc.) */
+.error-message,
+.status-message {
+    margin-top: 16px;
+    padding: 12px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.error-message {
+    color: var(--danger-color);
+    background: var(--danger-bg);
+}
+
+.status-message {
+    color: var(--primary-black);
+    background: var(--info-bg);
+}
+
+/* Alert classes */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+}
+
+.alert-success {
+    color: var(--primary-black);
+    background-color: #d4edda;
+}
+
+.alert-info {
+    color: var(--primary-black);
+    background-color: var(--info-bg);
+}
+
+.alert-warning {
+    color: var(--warning-color);
+    background-color: var(--warning-bg);
+}
+
+.alert-danger {
+    color: var(--danger-color);
+    background-color: var(--danger-bg);
+}
