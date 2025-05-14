@@ -1,0 +1,53 @@
+/* Animation Keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes typewriter {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blinkCursor {
+    from {
+        border-right-color: var(--primary-black);
+    }
+
+    to {
+        border-right-color: transparent;
+    }
+}
+
+/* Animation Utility Classes */
+.animate-title {
+    animation: fadeIn 1.1s ease-out forwards;
+}
+
+.typewriter-container {
+    display: flex;
+    justify-content: center;
+}
+
+.typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    border-right: 2px solid var(--primary-black);
+    animation:
+        typewriter 2.5s steps(40, end) forwards,
+        blinkCursor 0.75s step-end infinite alternate;
+    animation-delay: 1.1s;
+}
