@@ -1,12 +1,23 @@
 {
   "name": "urbandocs_webapp",
   "private": true,
+  "description": "mwplu.com",
+  "version": "0.0.6",
   "scripts": {
     "watch": "webpack --watch",
-    "build": "webpack --config webpack.prod.js"
+    "dev": "webpack --mode=development",
+    "prod": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fllin1/urbandocs_webapp.git"
   },
   "author": "Panda",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fllin1/urbandocs_webapp/issues"
+  },
+  "homepage": "https://github.com/fllin1/urbandocs_webapp#readme",
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
     "firebase": "^11.7.1"

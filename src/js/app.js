@@ -48,9 +48,10 @@ import {
 } from "./ui.js";
 
 import * as authModule from "./auth/auth.js";
-import { firebaseConfig } from "./firebase-config.js";
+// TODO : Verify if Firebase is needed
+// import { firebaseConfig } from "./firebase-config.js";
 
-const app = initializeApp(firebaseConfig);
+// const app = initializeApp(firebaseConfig);
 let currentUser = null; // Variable to hold the current user state
 
 console.log("[app.js] Top of app.js. Imported supabase object:", supabase);

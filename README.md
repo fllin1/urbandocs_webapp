@@ -8,7 +8,7 @@ Web platform to access the synthesis of the Ubran Documents in France using Fire
 
 Adding security layers, other methods of authentication and improving user experience.
 
-Detail list of tasks in the [TODO list](./TODO.md).
+Detail list of tasks in the [TODO list](./references/TODO.md).
 
 ### Version Update
 
@@ -106,7 +106,7 @@ You will first need to create a Firebase project, this part is not covered and w
 3. If you wish to use webpack in development mode, the current `./webpack.config.js` is already configured for it. You can then start the emulator for a test run
 
     ```bash
-      npx webpack  # for development mode
+      npm run dev
       firebase emulators:start
     ```
 
@@ -115,7 +115,7 @@ You will first need to create a Firebase project, this part is not covered and w
 The first step would be to use webpack in **production mode**. In this case, you can simply build your project, the commands are already set in your `./package.json` file. Right after that you can deploy your project :
 
 ```bash
-  npm run build
+  npm run prod
   firebase deploy
 ```
 
@@ -123,10 +123,46 @@ The first step would be to use webpack in **production mode**. In this case, you
 
 ### Frontend
 
-#### Development (JavaScript)
+#### Source (JavaScript)
 
 ```text
-public/
+src/
+│
+├── assets/
+│   ├── fonts/
+│   │   └── (...)                 # Font files used across the application
+│   │
+│   ├── icons/
+│   │   └── (...)                 # SVG and other icon files
+│   │
+│   └── images/
+│       └── (...)                 # Image assets for the site
+│
+├── css/
+│   ├── base/
+│   │   └── base.css              # Core styles and CSS resets
+│   │
+│   ├── components/
+│   │   ├── buttons.css           # Button styles and variants
+│   │   ├── forms.css             # Form elements and input styling
+│   │   ├── messages.css          # Notification and message styles
+│   │   └── spinner.css           # Loading spinners and animations
+│   │
+│   ├── layout/
+│   │   ├── footer.css            # Footer layout and styling
+│   │   ├── grid.css              # Grid system for page layouts
+│   │   └── header.css            # Header and navigation styling
+│   │
+│   ├── pages/
+│   │   ├── auth.css              # Styles specific to auth pages
+│   │   ├── error.css             # Error page styling
+│   │   └── home.css              # Homepage specific styles
+│   │
+│   ├── utils/
+│   │   ├── animations.css        # Reusable animation classes
+│   │   └── utilities.css         # Helper classes and utilities
+│   └── main.css                  # Main CSS file that imports all modules
+│
 ├── js/
 │   ├── auth/                     # Authentication modules
 │   │   ├── auth.js               # Common base functions
@@ -143,43 +179,26 @@ public/
 │   ├── api.js                    # API to communicate with the backend
 │   ├── app.js                    # Main entry point
 │   ├── mappings.js               # Mappings for the application
-│   └── ui.js                     # Common UI functions
+│   ├── ui.js                     # Common UI functions
+│   └── typewriter.js             # Text animation effects for landing page
 │
-├── css/
-│   ├── base/
-│   │   └── base.css
-│   ├── components/
-│   │   ├── buttons.css
-│   │   ├── forms.css
-│   │   ├── messages.css
-│   │   ├── modal.css
-│   │   ├── spinner.css
-│   ├── layout/
-│   │   ├── footer.css
-│   │   ├── grid.css
-│   │   └── header.css
-│   ├── pages/
-│   │   ├── auth.css
-│   │   ├── error.css
-│   │   └── home.css
-│   ├── utils/
-│   │   ├── animations.css
-│   │   └── utilities.css
-│   └── main.css
-│
-├── 404.html
-├── confirmation.html
-├── index.html
-├── login.html
-├── profile.html
-├── signup.html
-└── terms.html
+├── 404.html                      # Custom 404 error page
+├── confirmation.html             # Account confirmation page
+├── index.html                    # Main landing page
+├── login.html                    # User login page
+├── profile.html                  # User profile management
+├── signup.html                   # New user registration
+└── terms.html                    # Terms and conditions page
 ```
 
-#### Production (HTML, CSS and JavaScript with Webpack)
+#### Public (with `npm run dev`)
 
 ```text
 public/
+│
+├── assets/
+│   └── (same assets as dev)
+│
 ├── js/
 │   ├── api.bundle.js
 │   ├── app.bundle.js
@@ -191,34 +210,9 @@ public/
 │   └── confirmation.bundle.js
 │
 ├── css/
-│   ├── base/
-│   │   └── base.css
-│   ├── components/
-│   │   ├── buttons.css
-│   │   ├── forms.css
-│   │   ├── messages.css
-│   │   ├── modal.css
-│   │   ├── spinner.css
-│   ├── layout/
-│   │   ├── footer.css
-│   │   ├── grid.css
-│   │   └── header.css
-│   ├── pages/
-│   │   ├── auth.css
-│   │   ├── error.css
-│   │   └── home.css
-│   ├── utils/
-│   │   ├── animations.css
-│   │   └── utilities.css
-│   └── main.css
+│   └── (same .css as dev)
 │
-├── 404.html
-├── confirmation.html
-├── index.html
-├── login.html
-├── profile.html
-├── signup.html
-└── terms.html
+└── (same .html as dev)
 ```
 
 ### Backend (Python)

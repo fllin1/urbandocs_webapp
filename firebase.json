@@ -17,12 +17,16 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
-        "source": "/",
-        "destination": "/index.html"
+        "source": "/confirmation",
+        "destination": "/confirmation.html"
       },
       {
-        "source": "/signup",
-        "destination": "/signup.html"
+        "source": "/forgotten-password",
+        "destination": "/forgotten-password.html"
+      },
+      {
+        "source": "/",
+        "destination": "/index.html"
       },
       {
         "source": "/login",
@@ -33,12 +37,16 @@
         "destination": "/profile.html"
       },
       {
+        "source": "/signup",
+        "destination": "/signup.html"
+      },
+      {
         "source": "/terms",
         "destination": "/terms.html"
       },
       {
-        "source": "/confirmation",
-        "destination": "/confirmation.html"
+        "source": "/update-password",
+        "destination": "/update-password.html"
       }
     ]
   }
