@@ -1,0 +1,54 @@
+/* Base styles */
+:root {
+    --primary-black: #000000;
+    --primary-white: #FFFFFF;
+    --accent-gray: #F5F5F5;
+    --medium-gray: #AAAAAA;
+    --border-gray: #E0E0E0;
+    --warning-color: #856404;
+    --warning-bg: #fff3cd;
+    --danger-color: #721c24;
+    --danger-bg: #f8d7da;
+    --info-bg: #f5f5f5;
+}
+
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--primary-black);
+    background-color: var(--primary-white);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Styles des titres */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.heading-6 {
+    font-size: 1rem;
+}
