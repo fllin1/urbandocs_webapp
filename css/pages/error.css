@@ -1,0 +1,30 @@
+/* 404 Page Specific Styles */
+.error-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-card {
+    text-align: center;
+    padding: 48px;
+}
+
+.error-title {
+    font-size: 64px;
+    margin-bottom: 16px;
+    color: var(--primary-black);
+}
+
+.error-subtitle {
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: var(--medium-gray);
+}
+
+.error-page-message {
+    color: var(--medium-gray);
+    margin-bottom: 32px;
+    font-size: 16px;
+}
