@@ -48,7 +48,6 @@ import {
 
 import * as authModule from "./auth/auth.js";
 
-// const app = initializeApp(firebaseConfig);
 let currentUser = null; // Variable to hold the current user state
 
 console.log("[app.js] Top of app.js. Imported supabase object:", supabase);
