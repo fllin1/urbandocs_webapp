@@ -1,10 +1,13 @@
+// src/js/auth/forgotten-password.js
+// /**
+//  * Forgotten Password Module
+//  * @module forgottenPassword
+//  * @description Handles forgotten password functionality
+//  * @version 0.0.1
+
+
 import { supabase } from "../supabase-client.js";
-import {
-  showError,
-  showStatus,
-  showLoading,
-  hideLoading,
-} from "./auth.js";
+import { showError, showStatus, showLoading, hideLoading } from "./auth.js";
 
 export function initForgotPasswordPage() {
   const resetForm = document.getElementById("resetForm");
@@ -48,15 +51,12 @@ export function initForgotPasswordPage() {
           "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.",
           "success"
         );
-        
+
         // Hide the form
         resetForm.classList.add("hidden");
-
       } catch (error) {
         console.error("Password reset error:", error);
-        showError(
-          "Une erreur est survenue. Veuillez réessayer plus tard."
-        );
+        showError("Une erreur est survenue. Veuillez réessayer plus tard.");
       } finally {
         hideLoading("resetBtn", "resetSpinner");
       }
