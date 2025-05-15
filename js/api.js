@@ -11,8 +11,6 @@
  * - 0.0.1 (2025-04-26): Separate module for API calls to improve code organization and maintainability.
  */
 
-// TODO : Verify if Firebase is needed
-// // Initialize the Firebase app
 // import { initializeApp } from "firebase/app";
 // import { firebaseConfig } from "./firebase-config.js";
 
@@ -37,10 +35,6 @@ import {
 
 // Import the current user state from app.js
 import { currentUser } from "./app.js";
-
-// TODO : Verify if Firebase is needed
-// // Initialize the Firebase app
-// const app = initializeApp(firebaseConfig);
 
 // --- API URL Definitions ---
 const IS_LOCAL =
