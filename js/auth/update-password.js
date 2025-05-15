@@ -1,10 +1,5 @@
 import { supabase } from "../supabase-client.js";
-import {
-  showError,
-  showStatus,
-  showLoading,
-  hideLoading,
-} from "./auth.js";
+import { showError, showStatus, showLoading, hideLoading } from "./auth.js";
 
 export function initUpdatePasswordPage() {
   const updatePasswordForm = document.getElementById("updatePasswordForm");
@@ -45,7 +40,7 @@ export function initUpdatePasswordPage() {
 
       try {
         const { error } = await supabase.auth.updateUser({
-          password: password
+          password: password,
         });
 
         if (error) throw error;
@@ -55,7 +50,6 @@ export function initUpdatePasswordPage() {
         setTimeout(() => {
           window.location.href = "/login";
         }, 2000);
-
       } catch (error) {
         console.error("Password update error:", error);
         showError(
