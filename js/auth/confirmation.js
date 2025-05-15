@@ -1,195 +1,195 @@
-// src/auth/confirmation.js
+// src/auth/auth.js
 /**
- * Confirmation Module
- * @module confirmation
- * @description Handles email confirmation after registration
+ * Authentication Module - Base
+ * @module auth
+ * @description Base module for authentication with common functions and configuration
  * @version 0.0.3
  *
  * @changelog
- * - 0.0.1 (2025-05-08): Created the confirmation module with basic functionality.
- * - 0.0.2 (2025-05-10): Added terms of service and confirmation email.
- * - 0.0.3 (2025-05-12): Added terms of service modal and confirmation email.
+ * - 0.0.3 (2025-05-13): Modified the authentication state management to use Supabase Auth system.
+ * - 0.0.2 (2025-05-13): Reorganization into separate modules
+ * - 0.0.1 (2025-05-03): Initial creation
  */
 
-import {
+// --- API URL Definitions ---
+export const IS_LOCAL =
+  location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
+export const API_URLS = {
+  HANDLE_CONFIRMATION: IS_LOCAL
+    ? "http://127.0.0.1:5001/urbandocs/us-central1/handle_confirmation"
+    : "https://handle-confirmation-up3k3hddtq-uc.a.run.app",
+
+  HANDLE_SIGNUP: IS_LOCAL
+    ? "http://127.0.0.1:5001/urbandocs/us-central1/handle_signup"
+    : "https://handle-signup-up3k3hddtq-uc.a.run.app",
+
+  HANDLE_LOGIN: IS_LOCAL
+    ? "http://127.0.0.1:5001/urbandocs/us-central1/handle_login"
+    : "https://handle-login-up3k3hddtq-uc.a.run.app",
+};
+
+// Global authentication state
+let currentUser = null;
+
+/**
+ * Sets the current user
+ * @param {Object} user - User data
+ */
+export function setCurrentUser(user) {
+  currentUser = user;
+  // Possible storage in localStorage/sessionStorage
+  if (user) {
+    localStorage.setItem("currentUser", JSON.stringify(user));
+  } else {
+    localStorage.removeItem("currentUser");
+  }
+}
+
+/**
+ * Retrieves the current user
+ * @returns {Object|null} The current user or null
+ */
+export function getCurrentUser() {
+  // If no user in memory, try to retrieve it from storage
+  if (!currentUser) {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      try {
+        currentUser = JSON.parse(storedUser);
+      } catch (e) {
+        console.error("Error retrieving user:", e);
+        localStorage.removeItem("currentUser");
+      }
+    }
+  }
+
+  return currentUser;
+}
+
+/**
+ * Logs out the user
+ */
+export function logout() {
+  currentUser = null;
+  localStorage.removeItem("currentUser");
+  // Redirect to the home page after logout
+  window.location.href = "/";
+}
+
+/**
+ * Checks if the user is logged in
+ * @returns {boolean} True if the user is logged in
+ */
+export function isLoggedIn() {
+  return getCurrentUser() !== null;
+}
+
+/**
+ * Displays an error message
+ * @param {string} message - Error message to display
+ * @param {string} elementId - ID of the element where to display the error
+ */
+export function showError(message, elementId = "errorMessage") {
+  const errorElement = document.getElementById(elementId);
+  if (errorElement) {
+    errorElement.innerHTML = message;
+    errorElement.classList.remove("hidden");
+  } else {
+    console.error("Error element not found:", elementId);
+  }
+}
+
+/**
+ * Displays a status message
+ * @param {string} message - Message to display
+ * @param {string} type - Message type (success, info, warning, danger)
+ * @param {string} elementId - ID of the element where to display the message
+ */
+export function showStatus(
+  message,
+  type = "info",
+  elementId = "statusMessage"
+) {
+  const statusElement = document.getElementById(elementId);
+  if (statusElement) {
+    statusElement.textContent = message;
+
+    // Remove all alert-* classes
+    statusElement.classList.forEach((className) => {
+      if (className.startsWith("alert-")) {
+        statusElement.classList.remove(className);
+      }
+    });
+
+    // Add the class corresponding to the type
+    statusElement.classList.add(`alert-${type}`);
+    statusElement.classList.remove("hidden");
+  } else {
+    console.error("Status element not found:", elementId);
+  }
+}
+
+/**
+ * Hides an element
+ * @param {string} elementId - ID of the element to hide
+ */
+export function hideElement(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.classList.add("hidden");
+  }
+}
+
+/**
+ * Shows an element
+ * @param {string} elementId - ID of the element to show
+ */
+export function showElement(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.classList.remove("hidden");
+  }
+}
+
+/**
+ * Shows the loading indicator
+ * @param {string} buttonId - ID of the button
+ * @param {string} spinnerId - ID of the spinner
+ */
+export function showLoading(buttonId, spinnerId) {
+  const button = document.getElementById(buttonId);
+  const spinner = document.getElementById(spinnerId);
+
+  if (button) button.disabled = true;
+  if (spinner) spinner.classList.remove("hidden");
+}
+
+/**
+ * Hides the loading indicator
+ * @param {string} buttonId - ID of the button
+ * @param {string} spinnerId - ID of the spinner
+ */
+export function hideLoading(buttonId, spinnerId) {
+  const button = document.getElementById(buttonId);
+  const spinner = document.getElementById(spinnerId);
+
+  if (button) button.disabled = false;
+  if (spinner) spinner.classList.add("hidden");
+}
+
+// Export the necessary functions and variables
+export default {
   API_URLS,
-  showStatus,
+  IS_LOCAL,
+  getCurrentUser,
+  setCurrentUser,
+  logout,
+  isLoggedIn,
   showError,
+  showStatus,
+  hideElement,
+  showElement,
   showLoading,
   hideLoading,
-} from "./auth.js";
-
-/**
- * Initializes the email confirmation page
- */
-export function initConfirmationPage() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const confirmationUrl = urlParams.get("confirmation_url");
-
-  const confirmButton = document.getElementById("confirmButton");
-  const statusMessage = document.getElementById("statusMessage");
-  const tosCheckbox = document.getElementById("tosCheckbox");
-  const tosModalElement = document.getElementById("tosModal");
-  const tosModalBody = document.getElementById("tosModalBody");
-
-  // Exit early if no confirmation URL is present
-  if (!confirmationUrl) {
-    statusMessage.textContent =
-      "Error: Missing confirmation URL. Please check the link in your email.";
-    statusMessage.classList.add("alert-danger");
-    statusMessage.classList.remove("d-none");
-    confirmButton.disabled = true;
-    return;
-  }
-
-  if (tosModalElement) {
-    tosModalElement.addEventListener("show.bs.modal", async () => {
-      if (tosModalBody.dataset.loaded !== "true") {
-        try {
-          const response = await fetch("terms.html"); // Assumes terms.html is in public/ directory
-          if (!response.ok) {
-            throw new Error(
-              `Failed to load Terms of Service: ${response.status}`
-            );
-          }
-          const tosHtml = await response.text();
-          tosModalBody.innerHTML = tosHtml;
-          tosModalBody.dataset.loaded = "true"; // Mark as loaded to prevent multiple fetches
-        } catch (error) {
-          console.error(error);
-          tosModalBody.innerHTML =
-            "<p class='text-danger'>Could not load Terms of Service. Please try again later.</p>";
-        }
-      }
-    });
-
-    tosModalBody.addEventListener("scroll", () => {
-      // Check if scrolled to the bottom (with a small tolerance)
-      if (
-        tosModalBody.scrollHeight - tosModalBody.scrollTop <=
-        tosModalBody.clientHeight + 2
-      ) {
-        // +2 for tolerance
-        tosCheckbox.disabled = false;
-      }
-    });
-  }
-
-  if (tosCheckbox) {
-    tosCheckbox.addEventListener("change", () => {
-      confirmButton.disabled = !tosCheckbox.checked;
-    });
-  }
-
-  confirmButton.addEventListener("click", () => {
-    if (!tosCheckbox.checked) {
-      showError(
-        "Veuillez accepter les Conditions d'Utilisation pour continuer."
-      );
-      // Ensure statusMessage is visible if showError doesn't handle it or if you want a specific style
-      if (statusMessage) {
-        statusMessage.innerHTML =
-          "<div class='alert alert-danger'>Veuillez accepter les Conditions d'Utilisation pour continuer.</div>";
-        statusMessage.classList.remove("d-none");
-      }
-      return;
-    }
-    confirmEmail(confirmationUrl);
-  });
-}
-
-/**
- * Confirms the email address with the confirmation URL
- * @param {string} confirmationUrl - Confirmation URL received by email
- */
-export async function confirmEmail(confirmationUrl) {
-  const confirmButton = document.getElementById("confirmButton");
-  const statusMessage = document.getElementById("statusMessage");
-  const loading = document.getElementById("loading");
-  const confirmSpinner = document.getElementById("confirmSpinner");
-  const tosCheckbox = document.getElementById("tosCheckbox"); // Get checkbox here too
-
-  // Ensure ToS is checked before proceeding (double-check, primary check is in click listener)
-  if (!tosCheckbox || !tosCheckbox.checked) {
-    showError("Les Conditions d'Utilisation doivent être acceptées.");
-    // Optionally, ensure the message is displayed prominently
-    if (statusMessage) {
-      statusMessage.innerHTML =
-        "<div class='alert alert-danger'>Les Conditions d'Utilisation doivent être acceptées.</div>";
-      statusMessage.classList.remove("d-none");
-    }
-    return;
-  }
-
-  // Show loading indicator
-  showLoading("confirmButton", "confirmSpinner");
-
-  if (loading) loading.classList.remove("d-none");
-  if (statusMessage) statusMessage.classList.add("d-none");
-
-  try {
-    const url = `${
-      API_URLS.HANDLE_CONFIRMATION
-    }?confirmation_url=${encodeURIComponent(confirmationUrl)}`;
-
-    console.log("Confirming email with URL:", url);
-
-    const response = await fetch(url);
-
-    // Log the full response for debugging
-    console.log("Response status:", response.status);
-    console.log("Response headers:", [...response.headers.entries()]);
-
-    let responseData;
-    const contentType = response.headers.get("content-type");
-
-    if (contentType && contentType.includes("application/json")) {
-      responseData = await response.json();
-      console.log("Response JSON:", responseData);
-    } else {
-      responseData = await response.text();
-      console.log("Response text:", responseData);
-    }
-
-    // Don't throw error for successful responses
-    // Some servers return 200, 201, 202, 204 for success
-    if (response.ok || response.status === 204) {
-      // Hide loading
-      hideLoading("confirmButton", "confirmSpinner");
-      if (loading) loading.classList.add("d-none");
-
-      // Show success message
-      showStatus(
-        "Your email has been verified! Redirecting to the login page...",
-        "success"
-      );
-
-      // Redirect after a short delay
-      setTimeout(() => {
-        window.location.href = "/login.html";
-      }, 2000);
-    } else {
-      // Handle non-successful responses
-      throw new Error(`The server responded with status: ${response.status}`);
-    }
-  } catch (error) {
-    // Handle errors
-    console.error("Confirmation error:", error);
-    console.error("Error stack:", error.stack);
-
-    // Hide loading
-    hideLoading("confirmButton", "confirmSpinner");
-    if (loading) loading.classList.add("d-none");
-
-    // Show error message
-    showStatus(
-      `An error occurred during confirmation: ${error.message}`,
-      "danger"
-    );
-  }
-}
-
-export default {
-  initConfirmationPage,
-  confirmEmail,
 };
