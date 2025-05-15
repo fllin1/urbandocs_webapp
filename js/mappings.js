@@ -11,8 +11,8 @@
  * - 0.0.1 (2025-04-21): Mappings for Grenoble.
  */
 
-// Clés: noms de l'API (minuscules, underscore)
-// Valeurs: noms à afficher (format spécifié)
+// Keys: name in the database (lowercase, underscore)
+// Values: displayed named on web app (specific format)
 export const zoneNameMappings = {
   zone_au: "Zone AU",
   zone_auc1: "Zone AUC1",
