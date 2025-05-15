@@ -61,6 +61,11 @@ async function loadVilles() {
 
     if (hasData) {
       showStatus(`Villes chargées : ${data.length}`, "info");
+    } else if (currentUser === null) {
+      showStatus(
+        "Veuillez vous connecter pour accéder aux données.",
+        "warning"
+      );
     } else {
       showStatus("Aucune ville n'a été trouvée.", "warning");
     }
