@@ -16,6 +16,7 @@
 @import url('./pages/auth.css');
 @import url('./pages/error.css');
 @import url('./pages/home.css');
+@import url('./pages/profile.css');
 
 /* Import Utility Styles */
 @import url('./utils/animations.css');
