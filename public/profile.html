@@ -3,18 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MWPLU - Profil</title>
+    <title>Profil Utilisateur - MWPLU</title>
     <link rel="stylesheet" href="css/main.css" />
-  <script defer src="js/api.bundle.js"></script><script defer src="js/app.bundle.js"></script><script defer src="js/mappings.bundle.js"></script><script defer src="js/typewriter.bundle.js"></script><script defer src="js/ui.bundle.js"></script><script defer src="js/auth.bundle.js"></script><script defer src="js/confirmation.bundle.js"></script><script defer src="js/forgottenPassword.bundle.js"></script><script defer src="js/login.bundle.js"></script><script defer src="js/signup.bundle.js"></script><script defer src="js/updatePassword.bundle.js"></script></head>
+  <script defer src="js/ui.bundle.js"></script><script defer src="js/profile.bundle.js"></script></head>
   <body>
     <header class="site-header">
       <div class="container">
         <div class="flex-between">
-          <a href="/" class="brand-link"
-            ><h1 class="brand animate-title no-margin">MWPLU</h1></a
-          >
+          <h1 class="brand animate-title no-margin">MWPLU</h1>
           <div class="auth-section">
-            <!-- User status and logout might be dynamically added here by JS -->
             <a href="/" id="homeLink" class="auth-btn margin-right-sm"
               >Accueil</a
             >
@@ -31,11 +28,11 @@
         <section class="profile-section margin-top-lg">
           <h2 class="text-center margin-bottom-md">Mon Profil</h2>
           <div id="profileDetails" class="card">
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <p><strong>Statut:</strong> <span>Actif</span></p>
             <p>
-              <strong>Email:</strong> <span id="userEmail">Chargement...</span>
+              <strong>Membre depuis:</strong> <span id="memberSince">-</span>
             </p>
-            <!-- Add more profile details here as needed -->
-            <p>Cette page est en cours de construction.</p>
           </div>
         </section>
       </div>
@@ -43,13 +40,8 @@
 
     <footer class="site-footer">
       <div class="container">
-        <p class="text-center">&copy; 2025 MWPLU. Tous droits réservés.</p>
+        <p class="text-center">&copy; 2024 MWPLU. Tous droits réservés.</p>
       </div>
     </footer>
-
-    <!-- Link to your main JavaScript file if it handles auth state on this page -->
-    <!-- <script type="module" src="js/app.js"></script> -->
-    <!-- You might need a specific JS file for profile page logic -->
-    <!-- <script type="module" src="js/profile.js"></script> -->
   </body>
 </html>

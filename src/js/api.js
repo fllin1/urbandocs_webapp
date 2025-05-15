@@ -2,76 +2,41 @@
 /**
  * Firebase API
  * @module api
- * @description This module handles API calls to fetch data for cities, zoning, zones, and typologies.
- * @version 0.0.1
+ * @description This module handles API calls to fetch data for villes, zoning, zones, and typologies.
+ * @version 0.1.0
  * @author GreyPanda
  * @todo
  *
  * @changelog
+ * - 0.1.0 (2025-05-15): Migrating Supabase API calls for improved performance.
  * - 0.0.1 (2025-04-26): Separate module for API calls to improve code organization and maintainability.
  */
 
-// TODO : Verify if Firebase is needed
-// // Initialize the Firebase app
-// import { initializeApp } from "firebase/app";
-// import { firebaseConfig } from "./firebase-config.js";
-
 // Import UI functions and elements (will be defined in ui.js)
+import { supabase } from "./supabase-client.js";
 import {
   toggleSpinner,
   showStatus,
   populateSelect,
   resetSelect,
-  formatApiName, // Assuming formatApiName moves to ui.js or a utils.js
+  formatApiName,
   villeSelect,
   zonageSelect,
   zoneSelect,
-  typologieSelect,
   downloadBtn,
   villeSpinner,
   zonageSpinner,
   zoneSpinner,
-  typologieSpinner,
   documentSpinner,
-} from "./ui.js"; // Adjust path if needed
+} from "./ui.js";
 
-// Import the current user state from app.js
 import { currentUser } from "./app.js";
-
-// TODO : Verify if Firebase is needed
-// // Initialize the Firebase app
-// const app = initializeApp(firebaseConfig);
-
-// --- API URL Definitions ---
-const IS_LOCAL =
-  location.hostname === "localhost" || location.hostname === "127.0.0.1";
-
-const GET_VILLES_URL = IS_LOCAL
-  ? "http://127.0.0.1:5001/urbandocs/us-central1/get_villes"
-  : "https://get-villes-up3k3hddtq-uc.a.run.app";
-
-const GET_ZONAGES_URL = IS_LOCAL
-  ? "http://127.0.0.1:5001/urbandocs/us-central1/get_zonages"
-  : "https://get-zonages-up3k3hddtq-uc.a.run.app";
-
-const GET_ZONES_URL = IS_LOCAL
-  ? "http://127.0.0.1:5001/urbandocs/us-central1/get_zones"
-  : "https://get-zones-up3k3hddtq-uc.a.run.app";
-
-const GET_TYPOLOGIES_URL = IS_LOCAL
-  ? "http://127.0.0.1:5001/urbandocs/us-central1/get_typologies"
-  : "https://get-typologies-up3k3hddtq-uc.a.run.app";
-
-const GET_DOCUMENT_URL = IS_LOCAL
-  ? "http://127.0.0.1:5001/urbandocs/us-central1/get_document"
-  : "https://get-document-up3k3hddtq-uc.a.run.app";
-// --- End of API URL Definitions ---
 
 // Variable to store the fetched document details
 let selectedDocument = null;
 
 /**
- * Appelle l'API pour récupérer les villes
+ * Fetches villes from Supabase
  */
 async function loadVilles() {
   toggleSpinner(villeSpinner, true);
@@ -79,32 +44,28 @@ async function loadVilles() {
   villeSelect.disabled = true;
 
   try {
-    const url = GET_VILLES_URL;
-    console.log("Fetching Villes from:", url);
-    const response = await fetch(url);
+    const { data, error } = await supabase
+      .from("villes")
+      .select("id, nom")
+      .order("nom");
 
-    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-    const data = await response.json();
+    if (error) throw error;
 
     const hasData = populateSelect(
       villeSelect,
-      data,
+      data.map((city) => ({ id: city.id, nom: city.nom })),
       "Sélectionnez une ville",
       "Aucune ville disponible",
-      "ville" // Pass dataType for formatting logic in populateSelect
+      "ville"
     );
 
     if (hasData) {
-      showStatus(
-        `${data.length} villes chargées. Veuillez en sélectionner une.`,
-        "success"
-      );
+      showStatus(`Villes chargées : ${data.length}`, "info");
     } else {
       showStatus("Aucune ville n'a été trouvée.", "warning");
     }
   } catch (error) {
     console.error("Erreur lors du chargement des villes:", error);
-    // showStatus(`Erreur chargement villes: ${error.message}`, "danger");
     resetSelect(villeSelect, "Erreur chargement");
   } finally {
     toggleSpinner(villeSpinner, false);
@@ -112,12 +73,11 @@ async function loadVilles() {
 }
 
 /**
- * Appelle l'API pour récupérer les zonages pour une ville
+ * Fetches zonages for a city from Supabase
  */
 async function loadZonages(villeId) {
   resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
   resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
-  resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
   downloadBtn.disabled = true;
   selectedDocument = null;
 
@@ -131,29 +91,29 @@ async function loadZonages(villeId) {
   zonageSelect.disabled = true;
 
   try {
-    const url = `${GET_ZONAGES_URL}?villeId=${villeId}`;
-    console.log("Fetching Zonages from:", url);
-    const response = await fetch(url);
+    const { data, error } = await supabase
+      .from("zonages")
+      .select("id, nom")
+      .eq("ville_id", villeId)
+      .order("nom");
 
-    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-    const data = await response.json();
+    if (error) throw error;
 
     const hasData = populateSelect(
       zonageSelect,
-      data,
+      data.map((zoning) => ({ id: zoning.id, nom: zoning.nom })),
       "Sélectionnez un zonage",
       "Aucun zonage disponible",
       "zonage"
     );
 
     if (hasData) {
-      showStatus(`${data.length} zonages chargés pour cette ville.`, "success");
+      showStatus(`Zonages chargés : ${data.length}`, "info");
     } else {
       showStatus("Aucun zonage trouvé pour cette ville.", "warning");
     }
   } catch (error) {
     console.error("Erreur lors du chargement des zonages:", error);
-    // showStatus(`Erreur chargement zonages: ${error.message}`, "danger");
     resetSelect(zonageSelect, "Erreur chargement");
   } finally {
     toggleSpinner(zonageSpinner, false);
@@ -161,11 +121,10 @@ async function loadZonages(villeId) {
 }
 
 /**
- * Appelle l'API pour récupérer les zones pour un zonage
+ * Fetches zones for a zoning from Supabase
  */
 async function loadZones(zonageId) {
   resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
-  resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
   downloadBtn.disabled = true;
   selectedDocument = null;
 
@@ -179,30 +138,29 @@ async function loadZones(zonageId) {
   zoneSelect.disabled = true;
 
   try {
-    const url = `${GET_ZONES_URL}?zonageId=${zonageId}`;
-    console.log("Fetching Zones from:", url);
-    const response = await fetch(url);
+    const { data, error } = await supabase
+      .from("zones")
+      .select("id, nom")
+      .eq("zonage_id", zonageId)
+      .order("nom");
 
-    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-    const data = await response.json();
+    if (error) throw error;
 
-    // Pass zoneNameMappings to populateSelect or handle mapping inside populateSelect
     const hasData = populateSelect(
       zoneSelect,
-      data,
+      data.map((zone) => ({ id: zone.id, nom: zone.nom })),
       "Sélectionnez une zone",
       "Aucune zone disponible",
-      "zone" // Pass dataType for formatting logic
+      "zone"
     );
 
     if (hasData) {
-      showStatus(`${data.length} zones chargées pour ce zonage.`, "success");
+      showStatus(`Zones chargées : ${data.length}`, "info");
     } else {
       showStatus("Aucune zone trouvée pour ce zonage.", "warning");
     }
   } catch (error) {
     console.error("Erreur lors du chargement des zones:", error);
-    // showStatus(`Erreur chargement zones: ${error.message}`, "danger");
     resetSelect(zoneSelect, "Erreur chargement");
   } finally {
     toggleSpinner(zoneSpinner, false);
@@ -210,96 +168,48 @@ async function loadZones(zonageId) {
 }
 
 /**
- * Appelle l'API pour récupérer les typologies pour une zone/zonage
- */
-async function loadTypologies(zoneId, zonageId) {
-  resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
-  downloadBtn.disabled = true;
-  selectedDocument = null;
-
-  if (!zoneId || !zonageId) {
-    showStatus("Veuillez sélectionner un zonage et une zone.", "info");
-    return;
-  }
-
-  toggleSpinner(typologieSpinner, true);
-  showStatus("Chargement des typologies...", "info");
-  typologieSelect.disabled = true;
-
-  try {
-    const url = `${GET_TYPOLOGIES_URL}?zonageId=${zonageId}&zoneId=${zoneId}`;
-    console.log("Fetching Typologies from:", url);
-    const response = await fetch(url);
-
-    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-    const data = await response.json();
-
-    const hasData = populateSelect(
-      typologieSelect,
-      data,
-      "Sélectionnez une typologie",
-      "Aucune typologie disponible",
-      "typologie"
-    );
-
-    if (hasData) {
-      showStatus(`${data.length} typologies chargées.`, "success");
-    } else {
-      showStatus("Aucune typologie trouvée pour cette sélection.", "warning");
-    }
-  } catch (error) {
-    console.error("Erreur lors du chargement des typologies:", error);
-    // showStatus(`Erreur chargement typologies: ${error.message}`, "danger");
-    resetSelect(typologieSelect, "Erreur chargement");
-  } finally {
-    toggleSpinner(typologieSpinner, false);
-  }
-}
-
-/**
- * Recherche le document correspondant aux sélections, only if authenticated
+ * Fetches document for a zone from Supabase
  */
 async function findDocument(zonageId, zoneId, typologieId) {
   downloadBtn.disabled = true;
-  selectedDocument = null; // Reset before search
+  selectedDocument = null;
 
-  // Check authentication status FIRST
   if (!currentUser) {
     showStatus(
-      "Veuillez vous connecter pour rechercher et voir les documents.",
+      "Veuillez vous connecter pour accéder aux documents.",
       "warning"
     );
-    // Keep button disabled, no need to toggle spinner as we are not fetching
     return;
   }
 
-  // Proceed only if authenticated
-  if (!zonageId || !zoneId || !typologieId) {
+  if (!zonageId || !zoneId) {
     showStatus("Sélection incomplète pour rechercher le document.", "info");
-    return; // Exit if selection is incomplete
+    return;
   }
 
   toggleSpinner(documentSpinner, true);
   showStatus("Recherche du document...", "info");
 
   try {
-    const url = `${GET_DOCUMENT_URL}?zonageId=${zonageId}&zoneId=${zoneId}&typologieId=${typologieId}`;
-    console.log("Fetching Document from:", url);
-    const response = await fetch(url);
+    const { data, error } = await supabase
+      .from("documents")
+      .select("id, plu_url, source_plu_date")
+      .eq("zonage_id", zonageId)
+      .eq("zone_id", zoneId)
+      .eq("typologie_id", typologieId)
+      .single();
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        showStatus("Aucun document trouvé pour cette combinaison.", "warning");
+    if (error) {
+      if (error.code === "PGRST116") {
+        showStatus("Aucun document trouvé pour cette zone.", "warning");
         return;
       }
-      throw new Error(`Erreur HTTP: ${response.status}`);
+      throw error;
     }
 
-    const data = await response.json();
-    selectedDocument = data; // Store the found document details
+    selectedDocument = data;
 
-    // Enable download button only if authenticated AND document URL exists
-    if (currentUser && data && data.plu_url) {
+    if (currentUser && data?.plu_url) {
       downloadBtn.disabled = false;
       showStatus(
         `Document trouvé (Source: ${
@@ -308,19 +218,17 @@ async function findDocument(zonageId, zoneId, typologieId) {
         "success"
       );
     } else {
-      selectedDocument = null; // Ensure consistency if URL is missing
+      selectedDocument = null;
       showStatus("Document trouvé mais lien manquant.", "warning");
     }
   } catch (error) {
-    selectedDocument = null;
     console.error("Erreur lors de la recherche du document:", error);
-    // showStatus(`Erreur recherche document: ${error.message}`, "danger");
+    selectedDocument = null;
   } finally {
     toggleSpinner(documentSpinner, false);
   }
 }
 
-// Function to get the currently selected document (needed by app.js/main.js)
 function getSelectedDocument() {
   return selectedDocument;
 }
@@ -329,7 +237,6 @@ export {
   loadVilles,
   loadZonages,
   loadZones,
-  loadTypologies,
   findDocument,
   getSelectedDocument,
 };

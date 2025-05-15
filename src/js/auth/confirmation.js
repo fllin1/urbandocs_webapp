@@ -2,22 +2,17 @@
 /**
  * Confirmation Module
  * @module confirmation
- * @description Handles email confirmation after registration
- * @version 0.0.3
+ * @description Handles email confirmation with Supabase API
+ * @version 0.1.0
  *
  * @changelog
- * - 0.0.1 (2025-05-08): Created the confirmation module with basic functionality.
+ * - 0.1.0 (2025-05-15): Converted to use direct Supabase API calls instead of Firebase Cloud Functions.
+ * - 0.0.3 (2025-05-12): Updated terms of service modal and confirmation email.
  * - 0.0.2 (2025-05-10): Added terms of service and confirmation email.
- * - 0.0.3 (2025-05-12): Added terms of service modal and confirmation email.
+ * - 0.0.1 (2025-05-08): Created the confirmation module with basic functionality.
  */
 
-import {
-  API_URLS,
-  showStatus,
-  showError,
-  showLoading,
-  hideLoading,
-} from "./auth.js";
+import { showStatus, showError, showLoading, hideLoading } from "./auth.js";
 
 /**
  * Initializes the email confirmation page
@@ -99,7 +94,7 @@ export function initConfirmationPage() {
 }
 
 /**
- * Confirms the email address with the confirmation URL
+ * Confirms the email address directly with Supabase using the confirmation URL
  * @param {string} confirmationUrl - Confirmation URL received by email
  */
 export async function confirmEmail(confirmationUrl) {
@@ -107,12 +102,11 @@ export async function confirmEmail(confirmationUrl) {
   const statusMessage = document.getElementById("statusMessage");
   const loading = document.getElementById("loading");
   const confirmSpinner = document.getElementById("confirmSpinner");
-  const tosCheckbox = document.getElementById("tosCheckbox"); // Get checkbox here too
+  const tosCheckbox = document.getElementById("tosCheckbox");
 
-  // Ensure ToS is checked before proceeding (double-check, primary check is in click listener)
+  // Ensure ToS is checked before proceeding
   if (!tosCheckbox || !tosCheckbox.checked) {
     showError("Les Conditions d'Utilisation doivent être acceptées.");
-    // Optionally, ensure the message is displayed prominently
     if (statusMessage) {
       statusMessage.innerHTML =
         "<div class='alert alert-danger'>Les Conditions d'Utilisation doivent être acceptées.</div>";
@@ -128,13 +122,13 @@ export async function confirmEmail(confirmationUrl) {
   if (statusMessage) statusMessage.classList.add("d-none");
 
   try {
-    const url = `${
-      API_URLS.HANDLE_CONFIRMATION
-    }?confirmation_url=${encodeURIComponent(confirmationUrl)}`;
+    // Decode the URL if it's encoded
+    const decodedUrl = decodeURIComponent(confirmationUrl);
 
-    console.log("Confirming email with URL:", url);
+    console.log("Confirming email with URL:", decodedUrl);
 
-    const response = await fetch(url);
+    // Direct request to Supabase confirmation URL
+    const response = await fetch(decodedUrl);
 
     // Log the full response for debugging
     console.log("Response status:", response.status);
@@ -151,9 +145,8 @@ export async function confirmEmail(confirmationUrl) {
       console.log("Response text:", responseData);
     }
 
-    // Don't throw error for successful responses
-    // Some servers return 200, 201, 202, 204 for success
-    if (response.ok || response.status === 204) {
+    // Parse the response from Supabase
+    if (response.ok) {
       // Hide loading
       hideLoading("confirmButton", "confirmSpinner");
       if (loading) loading.classList.add("d-none");
@@ -169,8 +162,21 @@ export async function confirmEmail(confirmationUrl) {
         window.location.href = "/login";
       }, 2000);
     } else {
-      // Handle non-successful responses
-      throw new Error(`The server responded with status: ${response.status}`);
+      // Handle specific Supabase error messages
+      let errorMessage = "La confirmation a échoué.";
+
+      if (responseData && typeof responseData === "object") {
+        // Try to extract error message from Supabase response format
+        if (responseData.error_description) {
+          errorMessage = responseData.error_description;
+        } else if (responseData.msg) {
+          errorMessage = responseData.msg;
+        } else if (responseData.error) {
+          errorMessage = responseData.error;
+        }
+      }
+
+      throw new Error(errorMessage);
     }
   } catch (error) {
     // Handle errors

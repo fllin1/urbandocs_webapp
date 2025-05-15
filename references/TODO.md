@@ -2,6 +2,8 @@
 
 Checklist for the Version 0.0.*
 
+_For version 0.1.*, we'll aim to imrove the UX, and our main focus will be to increase the speed (switch to Europe hosting, remove the firebase functions and implement supabase directrly on the user client)._
+
 ## 🍖 Priorities
 
 🤖 Ask Claude First
@@ -29,6 +31,7 @@ The tasks in this section aim to implement complete features, requiring multiple
 * [ ] Connect Supabase Authentication to the table Users, and to the Frontend;
 * [ ] Add Google Signup/Signin and Phone number verification;
 * [x] Use personal domain adress to send all the mails;
+* [ ] Add Firebase Function that display compiled markdown of the selected PLU;
 
 ### 🫁 Atomic Corrections
 

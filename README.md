@@ -12,14 +12,21 @@ Detail list of tasks in the [TODO list](./references/TODO.md).
 
 ### Version Update
 
-```markdown
-0.0.6 (May 13th 2025) - Complete redesign (base built with [Bolt](https://bolt.new/~/github-p2sgvptw))
+Version 0.0.* aims to create the first version of the website, making it presentable.
+
+```md
+0.0.7 (May 14th 2025) - Update password feature
+0.0.6 (May 13th 2025) - Complete redesign, base built with [Bolt](https://bolt.new/~/github-p2sgvptw)
 0.0.5 (May 9th 2025) - Moved to Supabase Authentication (login & signup)
 0.0.4 (May 3rd 2025) - Supabase Mail Confirmation
 0.0.3 (April 27th 2025) - Firebase Authentication system for login
 0.0.2 (April 26th 2025) - Update on the UI
 0.0.1 (April 21st 2025) - Initial commit of the website
 ```
+
+_For version 0.1.*, we'll aim to imrove the UX, and our main focus will be to increase the speed (switch to Europe hosting, remove the firebase functions and implement supabase directrly on the user client)._
+
+_For version 1.0.*, we'll aim to have a fixed solution, that is complete in features, UI and UX, with a well thought expendable base._
 
 ## Author
 
