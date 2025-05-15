@@ -14,8 +14,7 @@
  * - 0.0.1 (2025-04-21): Initial version with basic document download functionality.
  */
 
-// Import Firebase Auth functions
-import { initializeApp } from "firebase/app";
+// Import Supabase Client
 import { supabase } from "./supabase-client.js";
 
 // Import API functions
@@ -48,8 +47,6 @@ import {
 } from "./ui.js";
 
 import * as authModule from "./auth/auth.js";
-// TODO : Verify if Firebase is needed
-// import { firebaseConfig } from "./firebase-config.js";
 
 // const app = initializeApp(firebaseConfig);
 let currentUser = null; // Variable to hold the current user state
