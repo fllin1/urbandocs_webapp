@@ -1,4 +1,15 @@
 // src/js/typewriter.js
+/**
+ * Typewriter Effect
+ * @module typewriter
+ * @description This module handles the typewriter effect for the subtitle element.
+ * @version 0.0.1
+ * @author GreyPanda
+ *
+ * @changelog
+ * - 0.0.1 (2025-05-15): Initial version with basic typewriter effect.
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
   const subtitleElement = document.getElementById("typewriter-subtitle");
   // Text to animate
