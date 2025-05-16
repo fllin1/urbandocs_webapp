@@ -1,3 +1,14 @@
+// src/js/auth/forgotten-password.js
+/**
+ * Forgotten Password Module
+ * @module forgottenPassword
+ * @description Handles forgotten password functionality
+ * @version 0.0.1
+ *
+ * @changelog
+ * - 0.0.1 (2025-05-14): Creation of the forgotten password module with basic functionality.
+ */
+
 import { supabase } from "../supabase-client.js";
 import { showError, showStatus, showLoading, hideLoading } from "./auth.js";
 
