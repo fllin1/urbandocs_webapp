@@ -1,13 +1,14 @@
 // src/js/login.js
 /**
- * Firebase Login
+ * Login Module
  * @module login
  * @description This module handles user login functionality using Supabase Authentication.
- * @version 0.0.4
+ * @version 0.1.0
  * @author GreyPanda
  * @todo Add phone number authentication & password reset functionality.
  *
  * @changelog
+ * - 0.1.0 (2025-05-15): Migrated to Supabase client-side auth
  * - 0.0.4 (2025-05-13): Ensure status message is also hidden on new submit.
  * - 0.0.3 (2025-05-08): Implemented actual login with Firebase function, added password visibility toggle.
  * - 0.0.2 (2025-05-08): Refactored to handle Supabase authentification.
@@ -15,7 +16,6 @@
  */
 
 import {
-  API_URLS,
   setCurrentUser,
   showError,
   showStatus,
@@ -98,73 +98,48 @@ export function initLoginPage() {
 }
 
 /**
- * Logs in a user with email and password
+ * Logs in a user with email and password directly with Supabase
  * @param {string} email - User's email
  * @param {string} password - User's password
  * @returns {Promise} - Promise resolved with the user data on success
  */
 export async function login(email, password) {
   try {
-    // Create request data
-    const requestData = {
-      email: email,
-      password: password,
-    };
-
-    // Call Firebase function
-    const response = await fetch(API_URLS.HANDLE_LOGIN, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
+    // Call Supabase authentication directly
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    // Parse response
-    const responseData = await response.json();
-
-    // Check for error in response
-    if (!response.ok) {
-      if (responseData.error) {
-        throw new Error(responseData.error);
+    // Check for errors
+    if (error) {
+      // Handle specific error cases
+      if (error.message.toLowerCase().includes("email not confirmed")) {
+        throw new Error(
+          "Votre email n'a pas été confirmé. Veuillez vérifier votre boîte de réception."
+        );
+      } else if (
+        error.message.toLowerCase().includes("invalid login credentials")
+      ) {
+        throw new Error("Email ou mot de passe incorrect.");
+      } else {
+        throw new Error(error.message);
       }
-      throw new Error(`Erreur serveur: ${response.status}`);
     }
 
-    // Store user data and session tokens
-    if (
-      responseData.session &&
-      responseData.session.access_token &&
-      responseData.session.refresh_token
-    ) {
-      console.log(
-        "[login.js] Attempting to set Supabase session with tokens:",
-        responseData.session
-      );
-      const { error: sessionError } = await supabase.auth.setSession({
-        access_token: responseData.session.access_token,
-        refresh_token: responseData.session.refresh_token,
-      });
-      if (sessionError) {
-        console.error(
-          "[login.js] Error setting Supabase session:",
-          sessionError
-        );
-        throw new Error("La session utilisateur n'a pas pu être initialisée.");
-      }
-      console.log("[login.js] Supabase session set successfully.");
-    } else if (responseData.user && !responseData.session) {
-      console.warn(
-        "Login response contained user data but no session. User will not be logged in on client-side Supabase."
-      );
-      setCurrentUser(responseData.user);
-      throw new Error("Données de session manquantes après la connexion.");
-    } else {
+    // No session data
+    if (!data.session) {
       console.error(
-        "Login error: Missing session data from backend response",
-        responseData
+        "Login error: Missing session data from Supabase response",
+        data
       );
       throw new Error("Données de session manquantes après la connexion.");
+    }
+
+    // Save user data locally if needed
+    if (data.user) {
+      setCurrentUser(data.user);
+      console.log("[login.js] User data saved locally");
     }
 
     // Show success message before redirect
@@ -175,10 +150,15 @@ export async function login(email, password) {
       window.location.href = "/";
     }, 1000);
 
-    return responseData.user;
+    return data.user;
   } catch (error) {
     // Log and re-throw the error to be handled by the caller
     console.error("Login error:", error);
     throw error;
   }
 }
+
+export default {
+  initLoginPage,
+  login,
+};
