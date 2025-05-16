@@ -2,29 +2,25 @@
 /**
  * Signup Module
  * @module signup
- * @description Handles user registration with client-side validation
- * @version 0.0.3
+ * @description Handles user registration with client-side validation using Supabase
+ * @version 0.1.0
  *
  * @changelog
+ * - 0.1.0 (2025-05-15): Migrated to Supabase client-side auth
  * - 0.0.3 (2025-05-13): Ensure status message is also hidden on new submit.
  * - 0.0.2 (2025-05-10): Added robust client-side email format and password complexity validation.
  * - 0.0.1 (2025-05-08): Created the signup module with basic functionality.
  */
 
-import {
-  API_URLS,
-  showError,
-  showStatus,
-  showLoading,
-  hideLoading,
-} from "./auth.js";
+import { showError, showStatus, showLoading, hideLoading } from "./auth.js";
+import { supabase } from "../supabase-client.js";
 
 /**
  * Initializes the signup page
  */
 export function initSignupPage() {
   const signupForm = document.getElementById("signupForm");
-  const errorMessageDiv = document.getElementById("errorMessage"); // Renamed for clarity
+  const errorMessageDiv = document.getElementById("errorMessage");
   const statusMessage = document.getElementById("statusMessage");
 
   if (signupForm) {
@@ -42,16 +38,15 @@ export function initSignupPage() {
       }
 
       // Get form values
-      const email = document.getElementById("email").value.trim(); // Trim whitespace from email
+      const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
 
-      let validationErrors = []; // Array to collect all validation errors
+      let validationErrors = [];
 
       // --- Client-side Validation ---
-
       // 1. Email Format Validation
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex for email format
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(email)) {
         validationErrors.push("L'adresse email n'est pas valide.");
       }
@@ -68,15 +63,11 @@ export function initSignupPage() {
       }
 
       // --- Handle Validation Results ---
-
       if (validationErrors.length > 0) {
-        // NOTE: The \n is not working as expected
         const errorText = validationErrors.join("<br>");
         showError(errorText);
-        return; // Stop the process if validation fails
+        return;
       }
-
-      // If validation passes, proceed with the original logic
 
       // Show loading state
       showLoading("signupBtn", "signupSpinner");
@@ -86,7 +77,6 @@ export function initSignupPage() {
         await signup(email, password);
       } catch (error) {
         console.error("Signup error:", error);
-        // showError expects a string, extract message or provide a default
         showError(
           error.message || "Une erreur est survenue lors de l'inscription."
         );
@@ -103,40 +93,27 @@ export function initSignupPage() {
 }
 
 /**
- * Registers a user with email and password
+ * Registers a user with email and password using Supabase
  * @param {string} email - User's email
  * @param {string} password - User's password
  * @returns {Promise} - Promise resolved on success
  */
 export async function signup(email, password) {
   try {
-    // Create request data
-    const requestData = {
-      email: email,
-      password: password,
-    };
-
-    // Call Firebase function (assuming this calls a Firebase Function or similar backend)
-    const response = await fetch(API_URLS.HANDLE_SIGNUP, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
+    // Call Supabase signup
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
     });
 
-    // Parse response
-    const responseData = await response.json();
+    // Check for errors
+    if (error) throw new Error(error.message);
 
-    // Check for error in response
-    if (!response.ok) {
-      // Handle known error cases from backend
-      if (responseData.error) {
-        // Re-throw the specific backend error message
-        throw new Error(responseData.error);
-      }
-      // Fallback for unexpected server errors
-      throw new Error(`Erreur du serveur: ${response.status}`);
+    // Check if user was created (similar to checking identities length in Python code)
+    if (!data.user || data.user.identities?.length === 0) {
+      throw new Error(
+        "Cette adresse mail a déjà été utilisée. Veuillez utiliser une autre adresse mail."
+      );
     }
 
     // Success case
@@ -146,13 +123,23 @@ export async function signup(email, password) {
     );
 
     // Optionally hide form or redirect on success
-    document.getElementById("signupForm").style.display = "none"; // Keep this if desired
+    document.getElementById("signupForm").style.display = "none";
 
-    return responseData; // Return data if needed by caller
+    return data;
   } catch (error) {
-    // Log and re-throw the error to be handled by the caller (in the submit listener)
+    // Handle rate limiting similar to the Python code
+    if (error.message.includes("only request this after")) {
+      const waitTimeMatch = error.message.match(
+        /only request this after (\d+) seconds/
+      );
+      if (waitTimeMatch) {
+        const waitTime = waitTimeMatch[1];
+        throw new Error(`Veuillez réessayer dans ${waitTime} secondes.`);
+      }
+    }
+
     console.error("Signup error:", error);
-    throw error; // The submit listener's catch block will handle displaying this error
+    throw error;
   }
 }
 
