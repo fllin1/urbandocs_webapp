@@ -8,7 +8,8 @@
   "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
-    "firebase": "^11.7.1"
+    "firebase": "^11.7.1",
+    "marked": "^12.0.0"
   },
   "devDependencies": {
     "servor": "^4.0.2"
