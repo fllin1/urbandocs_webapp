@@ -31,7 +31,6 @@ const documentSpinner = document.getElementById("documentSpinner"); // For the f
 
 // New elements for Auth UI
 const userStatus = document.getElementById("userStatus");
-const loginPrompt = document.getElementById("loginPrompt");
 const logoutBtn = document.getElementById("logoutBtn");
 const loginLink = document.getElementById("loginLink"); // Reference to the login link/button
 const signupLink = document.getElementById("signupLink"); // Reference to the signup link/button
@@ -162,7 +161,6 @@ export {
   populateSelect,
   // Export new auth-related elements
   userStatus,
-  loginPrompt,
   logoutBtn,
   loginLink,
   signupLink,
