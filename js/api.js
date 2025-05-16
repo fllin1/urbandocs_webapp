@@ -1,6 +1,6 @@
 // src/js/api.js
 /**
- * Firebase API
+ * Supabase API
  * @module api
  * @description This module handles API calls to fetch data for villes, zoning, zones, and typologies.
  * @version 0.1.0
