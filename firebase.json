@@ -1,0 +1,53 @@
+{
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "venv",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ],
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/confirmation",
+        "destination": "/confirmation.html"
+      },
+      {
+        "source": "/forgotten-password",
+        "destination": "/forgotten-password.html"
+      },
+      {
+        "source": "/",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/login",
+        "destination": "/login.html"
+      },
+      {
+        "source": "/profile",
+        "destination": "/profile.html"
+      },
+      {
+        "source": "/signup",
+        "destination": "/signup.html"
+      },
+      {
+        "source": "/terms",
+        "destination": "/terms.html"
+      },
+      {
+        "source": "/update-password",
+        "destination": "/update-password.html"
+      }
+    ]
+  }
+}
