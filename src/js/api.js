@@ -1,6 +1,6 @@
 // src/js/api.js
 /**
- * Firebase API
+ * Supabase API
  * @module api
  * @description This module handles API calls to fetch data for villes, zoning, zones, and typologies.
  * @version 0.1.0
@@ -23,7 +23,7 @@ import {
   villeSelect,
   zonageSelect,
   zoneSelect,
-  downloadBtn,
+  synthesisBtn,
   villeSpinner,
   zonageSpinner,
   zoneSpinner,
@@ -83,7 +83,7 @@ async function loadVilles() {
 async function loadZonages(villeId) {
   resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
   resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
-  downloadBtn.disabled = true;
+  synthesisBtn.disabled = true;
   selectedDocument = null;
 
   if (!villeId) {
@@ -130,7 +130,7 @@ async function loadZonages(villeId) {
  */
 async function loadZones(zonageId) {
   resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
-  downloadBtn.disabled = true;
+  synthesisBtn.disabled = true;
   selectedDocument = null;
 
   if (!zonageId) {
@@ -176,7 +176,7 @@ async function loadZones(zonageId) {
  * Fetches document for a zone from Supabase
  */
 async function findDocument(zonageId, zoneId, typologieId) {
-  downloadBtn.disabled = true;
+  synthesisBtn.disabled = true;
   selectedDocument = null;
 
   if (!currentUser) {
@@ -198,7 +198,8 @@ async function findDocument(zonageId, zoneId, typologieId) {
   try {
     const { data, error } = await supabase
       .from("documents")
-      .select("id, plu_url, source_plu_date")
+      // TODO: add plu_path and plu_markdown_content to the query
+      .select("id, source_plu_date")
       .eq("zonage_id", zonageId)
       .eq("zone_id", zoneId)
       .eq("typologie_id", typologieId)
@@ -214,8 +215,8 @@ async function findDocument(zonageId, zoneId, typologieId) {
 
     selectedDocument = data;
 
-    if (currentUser && data?.plu_url) {
-      downloadBtn.disabled = false;
+    if (currentUser && data?.id) {
+      synthesisBtn.disabled = false;
       showStatus(
         `Document trouvé (Source: ${
           formatApiName(data.source_plu_date) || "Non spécifiée"

@@ -31,7 +31,7 @@ import {
   villeSelect,
   zonageSelect,
   zoneSelect,
-  downloadBtn,
+  synthesisBtn,
   showStatus,
   resetSelect,
   formatApiName,
@@ -52,7 +52,6 @@ function updateUIForAuthState(user) {
   if (user) {
     // User is signed in
     if (userStatus) {
-      userStatus.textContent = `Connecté: ${user.email}`;
       userStatus.classList.remove("hidden");
     }
     if (loginLink) loginLink.classList.add("hidden");
@@ -60,8 +59,8 @@ function updateUIForAuthState(user) {
     if (logoutBtn) logoutBtn.classList.remove("hidden");
 
     const selectedDocument = getSelectedDocument();
-    if (selectedDocument && selectedDocument.plu_url) {
-      if (downloadBtn) downloadBtn.disabled = false;
+    if (selectedDocument && selectedDocument.id) {
+      if (synthesisBtn) synthesisBtn.disabled = false;
       showStatus(
         `Document trouvé (Source: ${
           formatApiName(selectedDocument.source_plu_date) || "Non spécifiée"
@@ -69,7 +68,7 @@ function updateUIForAuthState(user) {
         "success"
       );
     } else {
-      if (downloadBtn) downloadBtn.disabled = true;
+      if (synthesisBtn) synthesisBtn.disabled = true;
     }
   } else {
     // User is signed out
@@ -77,7 +76,7 @@ function updateUIForAuthState(user) {
     if (loginLink) loginLink.classList.remove("hidden");
     if (signupLink) signupLink.classList.remove("hidden");
     if (logoutBtn) logoutBtn.classList.add("hidden");
-    if (downloadBtn) downloadBtn.disabled = true; // Always disable download if logged out
+    if (synthesisBtn) synthesisBtn.disabled = true; // Always disable download if logged out
   }
 }
 
@@ -121,18 +120,18 @@ logoutBtn.addEventListener("click", async () => {
 function downloadDocument() {
   if (!currentUser) {
     showStatus("Authentification requise pour télécharger.", "warning");
-    downloadBtn.disabled = true;
+    synthesisBtn.disabled = true;
     return; // Exit if not authenticated
   }
 
   const selectedDocument = getSelectedDocument(); // Get from api.js
-  if (selectedDocument && selectedDocument.plu_url) {
+  if (selectedDocument && selectedDocument.id) {
     showStatus("Ouverture du document...", "info");
-    window.open(selectedDocument.plu_url, "_blank");
+    window.open(`/plu-summary?id=${selectedDocument.id}`, "_blank");
     // Re-display success message after a delay
     setTimeout(() => {
       // Check if button is still enabled (i.e., document is still considered valid)
-      if (!downloadBtn.disabled) {
+      if (!synthesisBtn.disabled) {
         showStatus(
           `Document trouvé (Source: ${
             formatApiName(selectedDocument.source_plu_date) || "Non spécifiée"
@@ -143,7 +142,7 @@ function downloadDocument() {
     }, 1500);
   } else {
     showStatus("Lien du document non disponible.", "warning");
-    downloadBtn.disabled = true; // Ensure button is disabled if no URL
+    synthesisBtn.disabled = true; // Ensure button is disabled if no URL
   }
 }
 
@@ -188,7 +187,7 @@ zoneSelect.addEventListener("change", (event) => {
 //   }
 // });
 
-downloadBtn.addEventListener("click", downloadDocument);
+synthesisBtn.addEventListener("click", downloadDocument);
 
 // === Initialisation ===
 document.addEventListener("DOMContentLoaded", async () => {
@@ -197,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
   resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
   // resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
-  if (downloadBtn) downloadBtn.disabled = true;
+  if (synthesisBtn) synthesisBtn.disabled = true;
   // showStatus("Initialisation...", "info"); // This might be premature or overridden
 
   // The onAuthStateChange listener is set up above and will call updateUIForAuthState.

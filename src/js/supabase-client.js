@@ -1,3 +1,4 @@
+// src/js/supabase-client.js
 /**
  * Supabase Client
  * @module supabase-client

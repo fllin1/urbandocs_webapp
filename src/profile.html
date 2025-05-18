@@ -10,14 +10,11 @@
     <header class="site-header">
       <div class="container">
         <div class="flex-between">
-          <h1 class="brand animate-title no-margin">MWPLU</h1>
+          <a href="/" class="header-logo">
+            <img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo" />
+          </a>
           <div class="auth-section">
-            <a href="/" id="homeLink" class="auth-btn margin-right-sm"
-              >Accueil</a
-            >
-            <button id="logoutBtnProfile" class="auth-btn hidden">
-              Se déconnecter
-            </button>
+            <a href="/" class="auth-btn">Accueil</a>
           </div>
         </div>
       </div>
@@ -34,7 +31,90 @@
               <strong>Membre depuis:</strong> <span id="memberSince">-</span>
             </p>
           </div>
+
+          <div id="profileFormSection" class="card margin-top-md">
+            <h3 class="margin-bottom-md">Mes informations personnelles</h3>
+            <form id="profileForm">
+              <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label for="prenom">Prénom :</label>
+                <input
+                  type="text"
+                  id="prenom"
+                  name="prenom"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group">
+                <label for="adresse">Adresse :</label>
+                <input
+                  type="text"
+                  id="adresse"
+                  name="adresse"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group">
+                <label for="ville">Ville :</label>
+                <input
+                  type="text"
+                  id="ville"
+                  name="ville"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group">
+                <label for="codePostal">Code Postal :</label>
+                <input
+                  type="text"
+                  id="codePostal"
+                  name="codePostal"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group">
+                <label for="occupation">Occupation :</label>
+                <input
+                  type="text"
+                  id="occupation"
+                  name="occupation"
+                  class="form-control"
+                />
+              </div>
+              <button
+                type="submit"
+                id="saveProfileBtn"
+                class="btn btn-primary margin-top-sm"
+              >
+                Enregistrer les modifications
+              </button>
+              <div
+                id="profileFormStatus"
+                class="status-message hidden margin-top-sm"
+              ></div>
+            </form>
+          </div>
+
+          <div id="deleteAccountSection" class="card margin-top-md">
+            <h3 class="margin-bottom-sm">Supprimer le compte</h3>
+            <p class="margin-bottom-sm">
+              Attention : Cette action est irréversible. Toutes vos données
+              seront définitivement perdues.
+            </p>
+            <button id="deleteAccountBtn" class="btn btn-danger">
+              Supprimer mon compte
+            </button>
+            <div
+              id="deleteStatusMessage"
+              class="status-message hidden margin-top-sm"
+            ></div>
+          </div>
         </section>
+        <!-- TODO: Add a section to change the password -->
+        <!-- TODO : Add status message -->
       </div>
     </main>
 

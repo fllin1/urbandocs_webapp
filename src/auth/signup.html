@@ -5,8 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MWPLU - Création de compte</title>
     <link rel="stylesheet" href="css/main.css" />
+    <!-- <script
+      src="https://js.hcaptcha.com/1/api.js?render=explicit&onload=hCaptchaLoadedCallback"
+      async
+      defer
+    ></script> -->
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback"
+      async
+      defer
+    ></script>
   </head>
   <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="flex-between">
+          <a href="/" class="header-logo">
+            <img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo" />
+          </a>
+          <div class="auth-section">
+            <a href="/login" id="loginLink" class="auth-btn"> Se connecter </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
     <div class="container">
       <div class="auth-container">
         <div class="auth-card">
@@ -56,21 +79,65 @@
                   required
                 />
               </div>
+              <div class="form-hint">
+                Format attendu: 0612345678 ou +33612345678.
+              </div>
             </div>
+
+            <div class="form-group">
+              <label for="phone" class="form-label"
+                >Numéro de téléphone (pour vérification)</label
+              >
+              <div class="input-wrapper">
+                <input
+                  type="tel"
+                  id="phone"
+                  class="form-input"
+                  placeholder="+33612345678"
+                  required
+                />
+              </div>
+              <div class="form-hint">
+                Un code de vérification vous sera envoyé par SMS.
+              </div>
+            </div>
+
+            <!-- hCaptcha Placeholder -->
+            <!-- <div class="form-group">
+              <div id="hcaptcha-container" class="h-captcha"></div>
+            </div> -->
+            <!-- End hCaptcha Placeholder -->
+
+            <!-- Cloudflare Turnstile Placeholder -->
+            <div class="form-group">
+              <div id="turnstile-container"></div>
+              <!-- This is where Turnstile will be rendered -->
+            </div>
+            <!-- End Cloudflare Turnstile Placeholder -->
 
             <button id="signupBtn" class="auth-button" type="submit">
               Créer un compte
               <span id="signupSpinner" class="spinner hidden"></span>
             </button>
           </form>
+
+          <button
+            id="googleSignUpBtn"
+            class="auth-button social-button google-button"
+            type="button"
+          >
+            <img
+              src="assets/icons/google.png"
+              alt="Google logo"
+              class="social-icon"
+            />
+            S'inscrire avec Google
+          </button>
+
           <div id="statusMessage" class="status-message hidden"></div>
 
           <div class="auth-links">
             <a href="/" class="text-link">Retour à l'accueil</a>
-            <div class="auth-prompt margin-top-sm">
-              Vous avez déjà un compte ?
-            </div>
-            <a href="/login" class="text-link">Se connecter</a>
           </div>
 
           <div id="errorMessage" class="error-message hidden"></div>

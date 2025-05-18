@@ -19,7 +19,7 @@ const villeSelect = document.getElementById("villeSelect");
 const zonageSelect = document.getElementById("zonageSelect");
 const zoneSelect = document.getElementById("zoneSelect");
 const typologieSelect = document.getElementById("typologieSelect");
-const downloadBtn = document.getElementById("downloadBtn");
+const synthesisBtn = document.getElementById("synthesisBtn");
 const statusMessage = document.getElementById("statusMessage");
 
 // Spinners (ensure these IDs exist in your index.html)
@@ -147,7 +147,7 @@ export {
   zonageSelect,
   zoneSelect,
   typologieSelect,
-  downloadBtn,
+  synthesisBtn,
   statusMessage,
   villeSpinner,
   zonageSpinner,

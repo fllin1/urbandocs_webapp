@@ -24,6 +24,71 @@ import {
 } from "./auth.js";
 import { supabase } from "../supabase-client.js";
 
+let captchaLoginToken = null; // To store the captcha token for login
+let turnstileLoginWidgetId = null; // To store Turnstile widget ID for login
+
+// This function will be called by the Cloudflare Turnstile script once it's loaded
+// (due to &onload=onloadTurnstileLoginCallback in the script tag in login.html)
+window.onloadTurnstileLoginCallback = function () {
+  console.log(
+    "Turnstile Login API ready (onloadTurnstileLoginCallback executed)."
+  );
+  const turnstileContainer = document.getElementById(
+    "turnstile-login-container"
+  );
+
+  if (turnstileContainer && window.turnstile && !turnstileLoginWidgetId) {
+    console.log("Rendering Turnstile widget for login...");
+    try {
+      turnstileLoginWidgetId = window.turnstile.render(turnstileContainer, {
+        sitekey: "YOUR_CLOUDFLARE_SITE_KEY", // TODO: Replace with your actual Cloudflare Turnstile Site Key
+        callback: function (token) {
+          captchaLoginToken = token;
+          console.log("Turnstile login token obtained:", token);
+        },
+        "expired-callback": () => {
+          captchaLoginToken = null;
+          turnstileLoginWidgetId = null;
+          console.log("Turnstile login token expired. Widget reset.");
+        },
+        "error-callback": (err) => {
+          captchaLoginToken = null;
+          console.error("Turnstile login error callback:", err);
+          showError(`Erreur CAPTCHA (login): ${err}. Veuillez réessayer.`);
+        },
+      });
+      if (turnstileLoginWidgetId === undefined) {
+        console.error(
+          "Turnstile.render (login) did not return a widgetId. Sitekey or container issue?"
+        );
+        showError(
+          "Erreur initialisation CAPTCHA (login, ID widget non retourné)."
+        );
+      } else {
+        console.log(
+          "Turnstile login widget rendered. ID:",
+          turnstileLoginWidgetId
+        );
+      }
+    } catch (e) {
+      console.error("Error rendering Turnstile for login:", e);
+      showError("Impossible d'afficher le CAPTCHA (login).");
+    }
+  } else if (!turnstileContainer) {
+    console.error(
+      "onloadTurnstileLoginCallback: #turnstile-login-container not found."
+    );
+  } else if (!window.turnstile) {
+    console.error(
+      "onloadTurnstileLoginCallback: window.turnstile API not found."
+    );
+  } else if (turnstileLoginWidgetId) {
+    console.log(
+      "onloadTurnstileLoginCallback: Login widget already seems rendered."
+    );
+  }
+};
+
 /**
  * Initializes the login page
  */
@@ -32,6 +97,7 @@ export function initLoginPage() {
   const errorMessage = document.getElementById("errorMessage");
   const togglePasswordBtn = document.getElementById("togglePassword");
   const passwordInput = document.getElementById("password");
+  const googleSignInBtn = document.getElementById("googleSignInBtn");
 
   // Set up password visibility toggle
   if (togglePasswordBtn && passwordInput) {
@@ -78,6 +144,11 @@ export function initLoginPage() {
         return;
       }
 
+      if (!captchaLoginToken) {
+        showError("Veuillez compléter le CAPTCHA.");
+        return;
+      }
+
       // Show loading state
       showLoading("loginBtn", "loginSpinner");
 
@@ -92,8 +163,45 @@ export function initLoginPage() {
       } finally {
         // Reset button state
         hideLoading("loginBtn", "loginSpinner");
+        if (window.turnstile && turnstileLoginWidgetId) {
+          window.turnstile.reset(turnstileLoginWidgetId);
+          console.log("Turnstile login widget has been reset.");
+        }
+        captchaLoginToken = null; // Clear token after use
       }
     });
+  }
+
+  // Event listener for Google Sign-In button
+  if (googleSignInBtn) {
+    googleSignInBtn.addEventListener("click", async () => {
+      showLoading("googleSignInBtn", "googleSignInSpinner");
+      try {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            // Optional: redirectTo can be used to specify where users are sent after sign-in.
+            // redirectTo: `${window.location.origin}/profile.html`
+          },
+        });
+        if (error) {
+          console.error("Error signing in with Google:", error);
+          showError(
+            error.message || "Erreur lors de la connexion avec Google."
+          );
+        }
+        // On success, Supabase handles the redirect.
+      } catch (error) {
+        console.error("Exception during Google sign-in:", error);
+        showError(
+          "Une exception est survenue lors de la connexion avec Google."
+        );
+      } finally {
+        hideLoading("googleSignInBtn", "googleSignInSpinner");
+      }
+    });
+  } else {
+    console.warn("Google Sign-In button (googleSignInBtn) not found.");
   }
 }
 
@@ -109,6 +217,7 @@ export async function login(email, password) {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
+      options: { captchaToken: captchaLoginToken }, // Pass captcha token
     });
 
     // Check for errors
@@ -148,7 +257,7 @@ export async function login(email, password) {
     // Redirect to home page after a short delay
     setTimeout(() => {
       window.location.href = "/";
-    }, 1000);
+    }, 500);
 
     return data.user;
   } catch (error) {

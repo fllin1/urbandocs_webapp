@@ -9,7 +9,8 @@
         "firebase-debug.log",
         "firebase-debug.*.log",
         "*.local"
-      ]
+      ],
+      "runtime": "python313"
     }
   ],
   "hosting": {
@@ -25,28 +26,40 @@
         "destination": "/forgotten-password.html"
       },
       {
-        "source": "/",
-        "destination": "/index.html"
-      },
-      {
         "source": "/login",
         "destination": "/login.html"
-      },
-      {
-        "source": "/profile",
-        "destination": "/profile.html"
       },
       {
         "source": "/signup",
         "destination": "/signup.html"
       },
       {
+        "source": "/update-password",
+        "destination": "/update-password.html"
+      },
+      {
+        "source": "/cookies",
+        "destination": "/cookies.html"
+      },
+      {
+        "source": "/politiques-de-ventes",
+        "destination": "/politiques-de-ventes.html"
+      },
+      {
         "source": "/terms",
         "destination": "/terms.html"
       },
       {
-        "source": "/update-password",
-        "destination": "/update-password.html"
+        "source": "/",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/plu-summary",
+        "destination": "/plu-summary-template.html"
+      },
+      {
+        "source": "/profile",
+        "destination": "/profile.html"
       }
     ]
   }

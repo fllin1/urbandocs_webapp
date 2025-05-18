@@ -65,11 +65,11 @@ The tasks in this section should only concern specific features of the project/p
    * [x] Email message : Magic link _(v 0.0.*)_;
    * [x] Email message : Invite user _(v 0.0.*)_;
    * [x] Email message : Change email address _(v 0.0.*)_;
-   * [ ] Add RLS to the .pdf files to give access to authenticated users only _(v 0.0.*)_;
-   * [ ] Modify the links in the [documents table](https://supabase.com/dashboard/project/ofeyssipibktmbfebibo/editor/39678) to redirect to the UrbanDocs Bucket instead of the current public "Documents" bucket _(v 0.0.*)_;
+   * [x] Add RLS to the .pdf files to give access to authenticated users only _(v 0.0.*)_;
+   * [x] Remove the links in the [documents table](https://supabase.com/dashboard/project/ofeyssipibktmbfebibo/editor/39678) _(v 0.0.*)_;
    * [ ] Correct the [Security Advisor](https://supabase.com/dashboard/project/ofeyssipibktmbfebibo/advisors/security) and [Performance Advisor](https://supabase.com/dashboard/project/ofeyssipibktmbfebibo/advisors/performance) _(v 0.0.*)_;
    * [ ] Retrieve user info _(v 0.1.*)_;
-   * [ ] Improve all email message _(v 0.2.*)_;
+   * [x] Improve all email message _(v 0.2.*)_;
 2. **Signup**:
    * [x] Add a status message that a confirmation email was sent _(v 0.0.*)_;
    * [x] Add indications on the required format of the passwords _(v 0.0.*)_;
@@ -81,7 +81,7 @@ The tasks in this section should only concern specific features of the project/p
    * [x] Status Message _(v 0.0.*)_;;
    * [x] Add term of services _(v 0.0.*)_;;
    * [x] Force the user to read all the terms before confirmation _(v 0.0.*)_;;
-   * [ ] IMPORTANT : Redirection to the login page after confirmation is BROKEN _(v 0.0.*)_;
+   * [x] IMPORTANT : Redirection to the login page after confirmation is BROKEN (FIXED) _(v 0.0.*)_;
    * [ ] After the user confirms, send him a mail saying his account was created _(v 0.4.*)_;
 4. **Login** - Security and UX:
    * [ ] Adding a limitation to the number of login trials _(v 0.3.*)_;
