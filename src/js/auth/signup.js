@@ -3,11 +3,12 @@
  * Signup Module
  * @module signup
  * @description Handles user registration with client-side validation, Google OAuth, and phone verification using Supabase.
- * @version 0.2.0
+ * @version 0.2.1
  *
  * @changelog
- * - 0.2.0 (2024-05-16): Added phone number input, OTP sending and verification for email/password signup.
- * - 0.1.1 (2024-05-16): Added Google Sign-Up functionality.
+ * - 0.2.1 (2025-05-18): Added captcha with Cloudflare Turnstile.
+ * - 0.2.0 (2025-05-18): Added phone number input, OTP sending and verification for email/password signup.
+ * - 0.1.1 (2025-05-18): Added Google Sign-Up functionality.
  * - 0.1.0 (2025-05-15): Migrated to Supabase client-side auth (versioning adjusted)
  */
 
@@ -28,17 +29,21 @@ window.onloadTurnstileCallback = function () {
     console.log("Rendering Turnstile widget from onloadTurnstileCallback...");
     try {
       turnstileWidgetId = window.turnstile.render(turnstileContainer, {
-        sitekey: "YOUR_CLOUDFLARE_SITE_KEY", // TODO: Replace with your actual Cloudflare Turnstile Site Key
+        sitekey: "0x4AAAAAABdzY3InOU2_In99",
         callback: function (token) {
           captchaToken = token;
           console.log("Turnstile token obtained:", token);
         },
         "expired-callback": () => {
-          captchaToken = null;
-          turnstileWidgetId = null; // Widget needs to be re-rendered or reset explicitly
-          console.log("Turnstile token expired. Widget reset.");
-          // Optionally re-render or show a message
-          // window.turnstile.reset(); // Or handle re-rendering if necessary
+          console.log(
+            "Turnstile token expired. Resetting widget. ID:",
+            turnstileWidgetId
+          );
+          if (window.turnstile && turnstileWidgetId) {
+            window.turnstile.reset(turnstileWidgetId);
+          }
+          captchaToken = null; // Clear the token
+          // Widget should be ready for a new challenge after reset.
         },
         "error-callback": (err) => {
           captchaToken = null;
@@ -88,29 +93,10 @@ export function initSignupPage() {
     );
   }
 
-  // Attempt to render if API is already available (e.g. cached script, fast load)
-  // This logic might need adjustment based on how Turnstile's onload callback behaves
-  // compared to hCaptcha's. Generally, relying on the script's onload is best.
-  if (
-    window.turnstile && // Check for turnstile API
-    typeof window.onloadTurnstileCallback === "function" &&
-    !turnstileWidgetId // Check our widget ID
-  ) {
-    console.log(
-      "initSignupPage: Turnstile API seems available and callback defined, attempting render if not already done."
-    );
-    // The `onloadTurnstileCallback` is the primary way it should be rendered via script tag.
-    // This is a safety net, but direct call here might conflict if onload is also firing.
-    // Consider removing this block if onloadTurnstileCallback reliably handles rendering.
-    const turnstileContainer = document.getElementById("turnstile-container");
-    if (turnstileContainer && !turnstileWidgetId) {
-      console.log(
-        "initSignupPage: Turnstile container present, widget not rendered. Expecting script's onload."
-      );
-    } else if (turnstileWidgetId) {
-      console.log("initSignupPage: Turnstile widget already rendered.");
-    }
-  }
+  // The onloadTurnstileCallback is the primary way the widget should be rendered.
+  // The redundant block previously here has been removed.
+  // If window.turnstile is already available and the callback hasn't fired yet (e.g. script loaded from cache before DOM ready for container),
+  // the `onloadTurnstileCallback` will still execute once the script fully processes its `onload` parameter.
 
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
@@ -152,8 +138,6 @@ export function initSignupPage() {
 
       showLoading("signupBtn", "signupSpinner");
       try {
-        // Normalize phone to E.164 for Supabase
-        let e164Phone = phone;
         if (phone.startsWith("0")) {
           e164Phone = `+33${phone.substring(1)}`;
         }
@@ -169,39 +153,16 @@ export function initSignupPage() {
         if (!data.user)
           throw new Error("Erreur lors de la création de l'utilisateur.");
 
-        // User created. Now update their profile with the phone number.
-        // This assumes a profile is created via a trigger when auth.users gets a new entry.
-        if (e164Phone && data.user.id) {
-          const { error: profileError } = await supabase
-            .from("profiles")
-            .update({ phone: e164Phone })
-            .eq("id", data.user.id);
+        // User created. Now update their profile with the phone number if provided.
+        let successMessage =
+          "Compte créé ! Un email de confirmation a été envoyé.";
+        showStatus(successMessage, "success");
 
-          if (profileError) {
-            console.warn("Erreur MAJ profil avec téléphone:", profileError);
-            showStatus(
-              `Compte créé pour ${email}. Veuillez vérifier votre email. Erreur lors de l'enregistrement du téléphone.`,
-              "warning"
-            );
-          } else {
-            showStatus(
-              `Compte créé avec succès pour ${email}. Veuillez vérifier votre email. Téléphone enregistré.`,
-              "success"
-            );
-          }
-        } else if (!e164Phone && data.user.id) {
-          // Phone not provided, but user created
-          showStatus(
-            `Compte créé pour ${email}. Veuillez vérifier votre email. Pas de numéro de téléphone fourni.`,
-            "success"
-          );
-        } else {
-          showStatus(
-            `Compte créé pour ${email}. Veuillez vérifier votre email.`,
-            "success"
-          );
+        // Hide the form and reset it
+        if (signupForm) {
+          signupForm.classList.add("hidden"); // Hide the form
+          signupForm.reset();
         }
-        signupForm.reset();
       } catch (error) {
         console.error("Email/Password Signup error:", error);
         let displayError = error.message || "Une erreur est survenue.";
@@ -267,9 +228,6 @@ export function initSignupPage() {
   }
 }
 
-// Note: The old 'signup(email, password)' function is removed as its logic is now in the form event listener.
-
 export default {
   initSignupPage,
-  // signup function is no longer exported directly as the flow is more complex
 };

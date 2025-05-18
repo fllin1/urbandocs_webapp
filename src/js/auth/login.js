@@ -41,15 +41,20 @@ window.onloadTurnstileLoginCallback = function () {
     console.log("Rendering Turnstile widget for login...");
     try {
       turnstileLoginWidgetId = window.turnstile.render(turnstileContainer, {
-        sitekey: "YOUR_CLOUDFLARE_SITE_KEY", // TODO: Replace with your actual Cloudflare Turnstile Site Key
+        sitekey: "0x4AAAAAABdzY3InOU2_In99",
         callback: function (token) {
           captchaLoginToken = token;
           console.log("Turnstile login token obtained:", token);
         },
         "expired-callback": () => {
-          captchaLoginToken = null;
-          turnstileLoginWidgetId = null;
-          console.log("Turnstile login token expired. Widget reset.");
+          console.log(
+            "Turnstile login token expired. Resetting widget. ID:",
+            turnstileLoginWidgetId
+          );
+          if (window.turnstile && turnstileLoginWidgetId) {
+            window.turnstile.reset(turnstileLoginWidgetId);
+          }
+          captchaLoginToken = null; // Clear the token
         },
         "error-callback": (err) => {
           captchaLoginToken = null;
