@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Turnstile Example</title>
+    <style>
+      .cf-turnstile {
+        margin: 20px auto;
+        display: flex;
+        justify-content: center;
+      }
+      .cf-turnstile + button {
+        margin-top: 15px;
+      }
+    </style>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer
+    ></script>
+  </head>
+  <body>
+    <form id="auth-form">
+      <!-- Your existing form fields -->
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+
+      <!-- Turnstile widget -->
+      <div
+        class="cf-turnstile"
+        data-sitekey="YOUR_SITE_KEY"
+        data-callback="turnstileCallback"
+      ></div>
+
+      <button type="submit">Sign Up</button>
+    </form>
+    <script src="./tunstile.js" type="module"></script>
+  </body>
+</html>

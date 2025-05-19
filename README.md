@@ -12,9 +12,13 @@ Detail list of tasks in the [TODO list](./references/TODO.md).
 
 ### Version Update
 
-Version 0.0.* aims to create the first version of the website.
+Versions 0.0.* aims to create the first version of the website.
+
+Version 0.*.0 aims to improve the UX.
 
 ```md
+0.0.10 (May 18th 2025) - Google Sign, Turnstil CAPTCHA, User Table
+0.0.9 (May 16th 2025) - PLU Synthesis template page, access only for auth
 0.0.8 (May 15th 2025) - Migrate all Firebase Cloud Functions to client side
 0.0.7 (May 14th 2025) - Update password feature
 0.0.6 (May 13th 2025) - Complete redesign, base built with [Bolt](https://bolt.new/~/github-p2sgvptw)
@@ -24,8 +28,6 @@ Version 0.0.* aims to create the first version of the website.
 0.0.2 (April 26th 2025) - Update on the UI
 0.0.1 (April 21st 2025) - Initial commit of the website
 ```
-
-_For version 0.*.0, we'll aim to improve the UX._
 
 _For version 1.0.*, we'll aim to have a fixed solution, that is complete in features, UI and UX, with a well thought expendable base._
 
@@ -40,6 +42,7 @@ _For version 1.0.*, we'll aim to have a fixed solution, that is complete in feat
 ![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?style=for-the-badge&logo=Webpack&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white)
 
 ## Documentation
 
@@ -49,8 +52,13 @@ _For version 1.0.*, we'll aim to have a fixed solution, that is complete in feat
 [![Static Badge](https://img.shields.io/badge/Firebase-Cloud%20Functions-red)](https://firebase.google.com/docs/functions)
 [![Static Badge](https://img.shields.io/badge/Supabase-Documentation-light_green)](https://supabase.com/docs)
 [![Static Badge](https://img.shields.io/badge/Reddit-Functions%20Rules-orange)](https://www.reddit.com/r/reactjs/comments/fsw405/firebase_cloud_functions_cors_policy_error/?rdt=48891)
+[![Static Badge](https://img.shields.io/badge/Cloudfare-Turnstile%20Widget-orange)](https://developers.cloudflare.com/turnstile/concepts/widget/)
 
-In this project, only the *App Hosting* and *Cloud Functions* from **Firebase** were used. The storage of the data was done with **Supabase**. Lastly, for Firebase *gen2 functions*, refer to the reddit post on **Function Rules** to correctly update newly added rules in the Cloud Functions.
+In this project, only the *App Hosting* and *Cloud Functions* from **Firebase** were used. The storage of the data was done with **Supabase**. 
+
+For Firebase *gen2 functions*, refer to the reddit post on **Function Rules** to correctly update newly added rules in the Cloud Functions.
+
+To setup the CAPTCHA with **Cloudfare**, you will need to set the Turnstile widget.
 
 ## Installation
 

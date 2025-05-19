@@ -101,8 +101,6 @@ export function initSignupPage() {
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      if (errorMessageDiv) errorMessageDiv.classList.add("hidden");
-      if (statusMessage) statusMessage.classList.add("hidden");
 
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
@@ -138,6 +136,7 @@ export function initSignupPage() {
 
       showLoading("signupBtn", "signupSpinner");
       try {
+        let e164Phone = phone;
         if (phone.startsWith("0")) {
           e164Phone = `+33${phone.substring(1)}`;
         }
@@ -152,6 +151,13 @@ export function initSignupPage() {
         if (signUpError) throw signUpError;
         if (!data.user)
           throw new Error("Erreur lors de la création de l'utilisateur.");
+
+        if (e164Phone && data.user.id) {
+          await supabase
+            .from("profiles")
+            .update({ phone: e164Phone })
+            .eq("id", data.user.id);
+        }
 
         // User created. Now update their profile with the phone number if provided.
         let successMessage =

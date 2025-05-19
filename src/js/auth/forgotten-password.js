@@ -12,6 +12,18 @@
 import { supabase } from "../supabase-client.js";
 import { showError, showStatus, showLoading, hideLoading } from "./auth.js";
 
+let turnstileToken = null;
+
+// Initialize Turnstile
+window.onloadTurnstileResetCallback = function () {
+  turnstile.render("#turnstile-reset-container", {
+    sitekey: "0x4AAAAAABdzY3InOU2_In99",
+    callback: function (token) {
+      turnstileToken = token;
+    },
+  });
+};
+
 export function initForgotPasswordPage() {
   const resetForm = document.getElementById("resetForm");
   const errorMessage = document.getElementById("errorMessage");
@@ -39,12 +51,19 @@ export function initForgotPasswordPage() {
         return;
       }
 
+      // Check if Turnstile token exists
+      if (!turnstileToken) {
+        showError("Veuillez compléter la vérification Turnstile.");
+        return;
+      }
+
       // Show loading state
       showLoading("resetBtn", "resetSpinner");
 
       try {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/update-password`,
+          captchaToken: turnstileToken,
         });
 
         if (error) throw error;
@@ -60,6 +79,9 @@ export function initForgotPasswordPage() {
       } catch (error) {
         console.error("Password reset error:", error);
         showError("Une erreur est survenue. Veuillez réessayer plus tard.");
+        // Reset Turnstile on error
+        turnstile.reset();
+        turnstileToken = null;
       } finally {
         hideLoading("resetBtn", "resetSpinner");
       }
