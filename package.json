@@ -22,7 +22,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
     "firebase": "^11.7.1",
-    "marked": "^12.0.0"
+    "marked": "^12.0.2"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^13.0.0",
