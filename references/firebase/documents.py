@@ -1,0 +1,279 @@
+def json_to_html(json_data):
+    """
+    Convertit la structure JSON des documents en HTML.
+
+    Args:
+        json_data (dict): Structure JSON du document
+
+    Returns:
+        str: HTML formaté pour la section synthèse
+    """
+    html = '<div class="disposition-section" id="disposition-generales"><h1 class="disposition-title">DISPOSITION GENERALES</h1>'
+    table = '<div class="table-of-contents"><h3 class="toc-title">Table des matières</h3><ahref="#disposition-generales" class="toc-link">DISPOSITION GENERALES</a><ul class="toc-list">'
+
+    # Parcourir les chapitres
+    for chapter_key, chapter_value in json_data["DISPOSITION GENERALES"].items():
+        chapter_id = f"{chapter_key.split(' - ')[0].strip().lower()}"
+        html += f'<div class="chapter-section" id="{chapter_id}">'
+        html += f'<h2 class="chapter-title">{chapter_key}</h2>'
+
+        table += f'<li class="toc-item"><a href="#{chapter_id}" class="toc-link toc-chapter">{chapter_key}</a><ul class="toc-list">'
+
+        # Parcourir les sections numérotées
+        for chapter_entry in chapter_value:
+            for section_key, section_value in chapter_entry.items():
+                section_num = section_key.split("-")[0].strip()
+                section_id = f"section{section_num}"
+                html += f'<div class="numbered-section" id="{section_id}">'
+                html += f'<h3 class="section-title">{section_key}</h3>'
+
+                table += f'<li class="toc-item"><a href="#{section_id}" class="toc-link toc-section">{section_key}</a></li>'
+
+                for section_entry in section_value:
+                    html += '<div class="subsection">'
+                    if isinstance(section_entry, dict):
+                        for (
+                            subsection_key,
+                            subsection_value,
+                        ) in section_entry.items():
+                            html += (
+                                f'<h4 class="subsection-title">{subsection_key}</h4>'
+                            )
+                            html += '<ul class="rules-list">'
+                            for rule in subsection_value:
+                                html += f'<li class="rule-item">{rule}</li>'
+                            html += "</ul>"
+
+                    else:
+                        html += '<ul class="rules-list">'
+                        for rule in section_value:
+                            html += f'<li class="rule-item">{rule}</li>'
+                        html += "</ul>"
+
+                    html += "</div><!-- .subsection -->"
+
+                html += "</div><!-- .numbered-section -->"
+
+        html += "</div><!-- .chapter-section -->"
+        table += "</ul></li>"
+
+    html += "</div><!-- .disposition-section -->"
+    table += "</ul></div><!-- .table-of-contents -->"
+
+    return html, table
+
+
+if __name__ == "__main__":
+    # Exemple de structure JSON
+    json_data = {
+        "DISPOSITION GENERALES": {
+            "CHAPITRE 1 - DESTINATION DES CONSTRUCTIONS, USAGE DES SOLS, ACTIVITÉS ET INSTALLATIONS, MIXITÉ FONCTIONNELLE ET SOCIALE": [
+                {
+                    "1 - CONSTRUCTIONS, USAGES ET AFFECTATIONS DES SOLS, ACTIVITÉS ET INSTALLATIONS INTERDITS ": [
+                        {
+                            "1.1. CONSTRUCTIONS INTERDITES ": [
+                                "Interdiction des constructions destinées à l'exploitation forestière, au commerce de gros et aux entrepôts. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 203)",
+                                "Interdictions spécifiques dans les périmètres de protection des captages (immédiats, rapprochés, éloignés) s'appliquant en complément. (Source: Règles communes, Page 7-8)",
+                            ],
+                            "1.2. USAGES ET AFFECTATIONS DES SOLS INTERDITS ": [
+                                "Interdiction de : Camping, parcs résidentiels de loisirs, parcs d'attraction, terrains pour sports/loisirs motorisés, golf, garages collectifs caravanes/résidences mobiles, dépôts véhicules, habitations légères de loisirs. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 203)",
+                                "Interdictions spécifiques dans les périmètres de protection des captages s'appliquant en complément. (Source: Règles communes, Page 8-9)",
+                            ],
+                            "1.3. ACTIVITÉS ET INSTALLATIONS INTERDITES": [
+                                "Interdiction des carrières. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 203)",
+                                "Interdictions spécifiques dans les périmètres de protection des captages et sur/dans les éléments patrimoniaux protégés (pylônes, antennes...) s'appliquant en complément. (Source: Règles communes, Page 9)",
+                            ],
+                        }
+                    ],
+                    "2 - CONSTRUCTIONS, USAGES ET AFFECTATIONS DES SOLS, ACTIVITÉS ET INSTALLATIONS SOUMISES À CONDITIONS PARTICULIÈRES ": [
+                        {
+                            "2.1. CONSTRUCTIONS SOUMISES À DES CONDITIONS PARTICULIÈRES ": [
+                                "Exploitation agricole : autorisée si pas de nuisance (accès, bruit) pour le voisinage. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 204)",
+                                "Artisanat/Commerce de détail : autorisés si situés en Espace de Développement Commercial (EDC) ou Centralité Urbaine Commerciale (CUC), sans nuisance (accès, bruit) et respectant la surface de vente max. fixée par l'Atlas C1. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 204)",
+                                "Industrie : autorisée si pas de nuisance (accès, bruit) pour le voisinage. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 204)",
+                                "Bureaux (nouvelles constructions) : autorisés dans la limite de 1000 m² SP/UF et si intégrés dans un bâtiment avec min 50% SP logement (sauf OAE). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 204)",
+                                "Conditions spécifiques pour constructions dans les périmètres de protection des captages et PAPA. (Source: Règles communes, Page 9-11)",
+                            ],
+                            "2.2. USAGES ET AFFECTATIONS DES SOLS SOUMIS À DES CONDITIONS PARTICULIÈRES ": [
+                                "Affouillements et exhaussements du sol : autorisés si nécessaires aux constructions/usages/activités/installations autorisés. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 205)",
+                                "Dépôts en plein air de matériaux ou déchets : autorisés s'ils sont rendus invisibles depuis l'espace public et les terrains adjacents. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 205)",
+                                "Conditions spécifiques pour usages/affectations dans les périmètres de protection des captages. (Source: Règles communes, Page 11-12)",
+                            ],
+                            "2.3. ACTIVITÉS ET INSTALLATIONS SOUMISES À DES CONDITIONS PARTICULIÈRES": [
+                                "Activité commerciale de détail/proximité : autorisée en CUC (respectant surface max. Atlas C1) ou en EDC (extensions limitées à 400m² total, ou nouvelle implantation <25m d'existante et max 400m²). Des règles spécifiques existent pour relocalisation/extension de commerces existants > surface max. dans CUC. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 205-206)",
+                                "Conditions spécifiques pour activités/installations dans les périmètres de protection des captages (ouvrages énergie, antennes). (Source: Règles communes, Page 12)",
+                            ],
+                        }
+                    ],
+                    "3 - MIXITÉ FONCTIONNELLE ET SOCIALE ": [
+                        {
+                            "3.1. DISPOSITIONS EN FAVEUR DE LA MIXITÉ COMMERCIALE ET FONCTIONNELLE": [
+                                "Le long des linéaires L1 (Atlas C1), RDC côté rue dédiés à artisanat/commerce détail/restauration. Le long de L2, idem + services clientèle/EICSP. Le long de L3, logements et stationnement interdits en RDC côté rue (hors accès/locaux techniques). (Source: Règles communes, Page 13)"
+                            ],
+                            "3.2. RÈGLES DIFFÉRENCIÉES ENTRE REZ-DE-CHAUSSÉE ET ÉTAGES SUPÉRIEURS ": [
+                                "Hauteur sous dalle minimale de 3,5m pour RDC accueillant artisanat/commerce/restauration/services clientèle (ou égale aux adjacents si > 3,5m). (Source: Règles communes, Page 13)"
+                            ],
+                            "3.3. DISPOSITIONS EN FAVEUR DE LA MIXITÉ SOCIALE": [
+                                "Dans les Secteurs de Mixité Sociale (SMS) définis par l'Atlas C2, obligation de réaliser un pourcentage de logements sociaux (selon seuil de déclenchement et taux fixés par C2) pour les opérations d'habitation (construction, extension, réhabilitation, changement de destination). (Source: Règles communes, Page 14-15)",
+                                "Dans les Emplacements Réservés pour l'Habitat Social (ERS) définis par l'Atlas C2, obligation de respecter le programme de logements indiqué (Tome 6_2). (Source: Règles communes, Page 16)",
+                            ],
+                        }
+                    ],
+                }
+            ],
+            "CHAPITRE 2 - CARACTÉRISTIQUES URBAINES, ARCHITECTURALES, ENVIRONNEMENTALES ET PAYSAGÈRES": [
+                {
+                    "4 - IMPLANTATION ET VOLUMÉTRIE DES CONSTRUCTIONS ET DES INSTALLATIONS ": [
+                        {
+                            "4.1. IMPLANTATION PAR RAPPORT AUX VOIES ET EMPRISES PUBLIQUES ": [
+                                "Règle générale : La distance horizontale (L) de tout point de la construction à l'alignement opposé doit être au moins égale à la différence d'altitude (H) entre ces deux points (L ≥ H). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 207)",
+                                "Alternative : Les EIC et SP peuvent s'implanter librement. Une nouvelle construction/extension peut s'implanter dans le prolongement et à l'alignement d'une construction existante sur la même UF. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 207)",
+                                "Les règles de l'Atlas D1 (lignes d'implantation, alignement continu/discontinu) prévalent sur la règle générale de la zone. (Source: Règles communes, Page 20)",
+                                "Les piscines doivent être implantées à min 3m de l'alignement. (Source: Règles communes, Page 17)",
+                            ],
+                            "4.2. IMPLANTATION DES CONSTRUCTIONS PAR RAPPORT AUX LIMITES SÉPARATIVES ": [
+                                "RDC : implantation autorisée sur limites latérales (H ≤ 3m). Au-delà du RDC/3m ou en recul : distance (L) à la limite ≥ moitié de la différence d'altitude (H/2), avec un minimum de 4m (L ≥ H/2 et L ≥ 4m). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 207-208)",
+                                "Alternative : Les EIC et SP peuvent s'implanter librement. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 208)",
+                                "Les règles de l'Atlas D1 (implantation continue/discontinue) prévalent sur la règle générale de la zone. (Source: Règles communes, Page 20)",
+                                "Les piscines doivent être implantées à min 3m des limites séparatives. (Source: Règles communes, Page 17)",
+                            ],
+                            "4.3. IMPLANTATION DES CONSTRUCTIONS LES UNES PAR RAPPORT AUX AUTRES SUR UNE MÊME PROPRIÉTÉ ": [
+                                "L'implantation doit préserver la salubrité et l'éclairement des constructions et permettre l'accès des services de sécurité. (Source: Règles communes, Page 21)"
+                            ],
+                            "4.4. EMPRISE AU SOL DES CONSTRUCTIONS ": [
+                                "L'emprise au sol maximale des constructions ne doit pas dépasser 35% de la superficie de l'unité foncière. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 208)",
+                                "La définition et le calcul de l'emprise au sol suivent les règles communes (projection verticale incluant débords, piscines, parties émergentes > terrain naturel). (Source: Règles communes, Page 21-22)",
+                            ],
+                            "4.5. COEFFICIENT D’EMPRISE AU SOL MINIMUM ET HAUTEUR MINIMUM AU SEIN DES PÉRIMÈTRES D’INTENSIFICATION URBAINE ": [
+                                "Sans objet pour la zone UCRU2. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 208)"
+                            ],
+                            "4.6. HAUTEUR DES CONSTRUCTIONS ET DES INSTALLATIONS": [
+                                "Hauteur maximale générale : 14m (R+3), mais cette hauteur ne peut occuper plus d'1/3 de l'emprise au sol réalisable. Au moins 1/3 de l'emprise doit atteindre 7,5m (R+1). Le reste est limité à 10m (R+2). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 209)",
+                                "Hauteur maximale des annexes : 4m (ou 2,50m si en limite séparative). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 209)",
+                                "Hauteur par rapport aux voies : H ≤ L (distance horizontale à l'alignement opposé). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 209)",
+                                "Hauteur par rapport aux limites séparatives : H ≤ 3m si implanté en limite ; H ≤ 2L si implanté en recul (L = distance à la limite). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 210)",
+                                "Les règles de l'Atlas D2 (hauteurs spécifiques par traits/hachures) prévalent sur les règles générales de la zone. (Source: Règles communes, Page 25)",
+                                "Dépassement possible pour prise en compte des risques d'inondation. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 210)",
+                            ],
+                        }
+                    ],
+                    "5 - QUALITÉ URBAINE, ARCHITECTURALE, ENVIRONNEMENTALE ET PAYSAGÈRE": [
+                        {
+                            "5.1. INSERTION DES CONSTRUCTIONS ET DES INSTALLATIONS DANS LEUR ENVIRONNEMENT ": [
+                                "L'implantation doit être adaptée au terrain naturel et à la pente. Les terrassements dégradant fortement le modelé naturel et les talus préfabriqués/béton sont interdits. (Source: Règles communes, Page 26-27)"
+                            ],
+                            "5.2. CARACTÉRISTIQUES ARCHITECTURALES DES FAÇADES ET TOITURES ": [
+                                "Interdiction des pastiches et imitations d'architectures d'autres régions/époques ou de matériaux (fausses pierres, etc.). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 211)",
+                                "Matériaux de façade : Utilisation de nuancier communal si existant ; matériaux bruts destinés à être recouverts interdits si laissés apparents. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 211)",
+                                "Toitures terrasses autorisées si min 50% végétalisées (sauf impossibilité technique : solaire, usage spécifique). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 212)",
+                                "Intégration harmonieuse des éléments techniques (souches, clim, antennes, panneaux solaires) en minimisant l'impact visuel. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 212)",
+                                "Fermeture de loggias / création de vérandas encadrées (harmonie, projet global). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 213)",
+                                "Coffrets réseaux et boîtes aux lettres dissimulés dans l'épaisseur des constructions/clôtures (sauf groupées). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 213)",
+                            ],
+                            "5.3. CARACTÉRISTIQUES DES CLÔTURES ": [
+                                "Clôture sur rue limitée à 1,80m (muret max 1m si surmonté d'éléments ajourés). (Source: Règles communes, Page 28)",
+                                "Clôture sur limite séparative limitée à 2m, perméable à la base pour petite faune. (Source: Règles communes, Page 29)",
+                                "En limite séparative, si bâtiment implanté en limite, un mur plein autorisé dans son prolongement (avant ou arrière) sur max 5m de long. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 213)",
+                                "Interdiction des murs pleins >1m (sauf exceptions), palissades, brise-vents opaques, matériaux hétéroclites, haies monospécifiques ou majoritairement persistantes, bambous sans protection. (Source: Règles communes, Page 28)",
+                            ],
+                            "5.4. PRESCRIPTIONS RELATIVES AU PATRIMOINE BÂTI ET PAYSAGER À PROTÉGER, À CONSERVER, À RESTAURER, À METTRE EN VALEUR OU À REQUALIFIER": [
+                                "Les constructions et installations doivent s'intégrer et valoriser le caractère des lieux, sites, paysages et perspectives. (Source: Règles communes, Page 30)",
+                                "Les éléments bâtis et végétaux protégés (Plan F2) font l'objet de règles particulières (cf. règlement du patrimoine Tome 1.3). (Source: Règles communes, Page 30)",
+                            ],
+                        }
+                    ],
+                    "6 - TRAITEMENT ENVIRONNEMENTAL ET PAYSAGER DES ESPACES NON BÂTIS, DES CONSTRUCTIONS ET DE LEURS ABORDS ": [
+                        {
+                            "6.1. OBLIGATIONS EN MATIÈRE DE RÉALISATION D’ESPACES LIBRES ET DE PLANTATIONS, D’AIRES DE JEUX ET DE LOISIRS ": [
+                                "Non réglementé spécifiquement pour la zone UCRU2. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 213)"
+                            ],
+                            "6.2. SURFACES VÉGÉTALISÉES OU PERMÉABLES ": [
+                                "Au moins 25% de la superficie de l'unité foncière doivent être traités en espaces de pleine terre. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 214)",
+                                "Au moins 35% de la superficie de l'unité foncière doivent être traités en surfaces végétalisées ou perméables (calcul selon coefficients de pondération). (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 214)",
+                                "Ces pourcentages peuvent être différents si indication contraire sur l'Atlas D1. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 214)",
+                                "Pour tout espace de pleine terre ≥ 100m², planter au moins 1 arbre haute tige / 100m² (sauf zones A, AL, N, NL). (Source: Règles communes, Page 32)",
+                            ],
+                            "6.3. MAINTIEN OU REMISE EN ÉTAT DES CONTINUITÉS ÉCOLOGIQUES ": [
+                                "Interdictions spécifiques (drainage, remblai, constructions sauf exceptions) dans les zones humides (Plan F2). (Source: Règles communes, Page 35)",
+                                "Recul minimum de 5m par rapport au haut de berge des cours d'eau ou fossés en zone U. (Source: Règles communes, Page 36)",
+                            ],
+                            "6.4. GESTION DES EAUX PLUVIALES ET DU RUISSELLEMENT ": [
+                                "Gestion des eaux pluviales sur le terrain d'assiette privilégiée (noues, toitures végétalisées...). (Source: Règles communes, Page 51)",
+                                "Si rejet au réseau/exutoire nécessaire (après justification), rétention préalable et débit de fuite régulé (max 5 l/ha/s) après abattement des 15 premiers mm sur la parcelle. (Source: Règles communes, Page 51)",
+                                "Dans les espaces de bon fonctionnement des zones humides (Plan F2), les constructions autorisées ne doivent pas détourner les eaux reçues. (Source: Règles communes, Page 36)",
+                            ],
+                            "6.5. AMÉNAGEMENT D’EMPLACEMENTS SPÉCIFIQUES DÉDIÉS À LA COLLECTE DES DÉCHETS MÉNAGERS ET ASSIMILÉS": [
+                                "Obligation d'aménager un emplacement de présentation des conteneurs accessible depuis le domaine public pour les projets en collecte porte-à-porte (sauf impossibilités ou mutualisation). (Source: Règles communes, Page 36)",
+                                "L'emplacement doit être dimensionné selon les préconisations techniques de la Métropole et son impact visuel réduit si stockage permanent. (Source: Règles communes, Page 37)",
+                            ],
+                        }
+                    ],
+                }
+            ],
+            "CHAPITRE 3 - EQUIPEMENTS ET RÉSEAUX": [
+                {
+                    "7 - STATIONNEMENT ": [
+                        {
+                            "7.1. STATIONNEMENT DES VÉHICULES MOTORISÉS ": [
+                                "Les normes spécifiques (nombre de places) pour la zone UCRU2 sont définies par référence aux règles de la zone UC1, qui ne sont pas fournies dans les documents analysés. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 215)",
+                                "Caractéristiques générales: places hors voies publiques (sur site ou à proximité), dimensions minimales (2.5x5m cloisonnée, 2.3x5m sinon), accès sécurisés, traitement paysager pour aires extérieures (>30% surface perméable/végétalisée, 1 arbre haute tige/3 places sauf ALv6), production d'EnR si >1000m², 5% places PMR pour habitat collectif. (Source: Règles communes, Page 38-39)",
+                            ],
+                            "7.2. STATIONNEMENT DES CYCLES": [
+                                "Les normes spécifiques (nombre de places) pour la zone UCRU2 sont définies par référence aux règles de la zone UC1, qui ne sont pas fournies dans les documents analysés. (Source: Zones Urbaines Mixtes - Zone_UCRU2, Page 215)",
+                                "Caractéristiques générales: places hors voies publiques, sur site, <50m entrée principale, de préférence RDC, accès aisé, sécurisé (cf. CCH), dimension min 1,5m²/place hors dégagement. (Source: Règles communes, Page 44-45)",
+                            ],
+                        }
+                    ],
+                    "8 - DESSERTE PAR LES VOIES PUBLIQUES ET PRIVÉES ": [
+                        {
+                            "8.1. ACCÈS ": [
+                                "Les accès doivent être adaptés à l'opération (sécurité, commodité, secours), leur nombre limité au strict nécessaire, et localisés en tenant compte de la topographie, sécurité viaire, et type de trafic généré. (Source: Règles communes, Page 49)"
+                            ],
+                            "8.2. VOIRIES": [
+                                "Pour les opérations d'aménagement d'ensemble, voirie interne adaptée (largeur min 3m roulante / 4m utile, H libre min 3,5m, pente max 15% sauf exceptions). Voies en impasse >30m doivent permettre retournement. (Source: Règles communes, Page 49-50)",
+                                "Restrictions sur création/modification de voiries dans les périmètres de protection des captages. (Source: Règles communes, Page 50)",
+                            ],
+                        }
+                    ],
+                    "9 - DESSERTE PAR LES RÉSEAUX ": [
+                        {
+                            "9.1. ALIMENTATION EN EAU POTABLE ": [
+                                "Raccordement obligatoire au réseau public ou alimentation par source/puits/forage agréé pour toute construction le nécessitant. (Source: Règles communes, Page 50)"
+                            ],
+                            "9.2. GESTION DES EAUX USÉES DOMESTIQUES ": [
+                                "En zone d'assainissement collectif : raccordement obligatoire au réseau public (eaux usées seules). (Source: Règles communes, Page 50)",
+                                "En zone d'assainissement non-collectif : système ANC conforme à la réglementation et adapté au site. (Source: Règles communes, Page 50)",
+                                "Rejets en milieu naturel interdits dans les périmètres de captages. (Source: Règles communes, Page 50)",
+                            ],
+                            "9.3. GESTION DES EAUX USÉES NON DOMESTIQUE ": [
+                                "Installations/ouvrages/travaux/activités doivent se conformer à la réglementation en vigueur. (Source: Règles communes, Page 51)",
+                                "Rejets en milieu naturel interdits dans les périmètres de captages. (Source: Règles communes, Page 51)",
+                            ],
+                            "9.4. UTILISATION DU RÉSEAU D’EAUX PLUVIALES ": [
+                                "Gestion à la parcelle privilégiée. Si rejet nécessaire après justification et abattement des 15 premiers mm, stockage et débit régulé (max 5l/ha/s). (Source: Règles communes, Page 51)",
+                                "Raccordements avec stagnation d'eau à l'air libre interdits hors dispositifs végétalisés. (Source: Règles communes, Page 51)",
+                                "Infiltration directe interdite dans les périmètres de captages (sauf superficielle/aérienne si non aggravante). (Source: Règles communes, Page 51)",
+                            ],
+                            "9.5. RÉSEAUX ÉLECTRIQUES ET TÉLÉPHONIQUES ": [
+                                "Raccordement par câbles souterrains ou dissimulés privilégié jusqu'au réseau public. (Source: Règles communes, Page 51)"
+                            ],
+                            "9.6. DÉPLOIEMENT DE LA FIBRE OPTIQUE": [
+                                "Nouvelles opérations d'aménagement doivent intégrer gaines pour desserte fibre. Raccordement obligatoire pour nouvelles constructions (hab, bur, com, hôtel...) si réseau existant. (Source: Règles communes, Page 52)"
+                            ],
+                        }
+                    ],
+                    "10 - ENERGIE ET PERFORMANCES ÉNERGÉTIQUES": [
+                        "Raccordement obligatoire aux réseaux de chaleur classés dans les périmètres de développement prioritaire. (Source: Règles communes, Page 52)",
+                        "Constructions nouvelles RT2012 : performances renforcées de 20% (Bbio, Cep). Projets RE2020 : objectif ICénergie_max 2028. Conception bioclimatique encouragée. (Source: Règles communes, Page 52)",
+                        "Constructions neuves ≥ 1000m² SP : production minimale d'EnR (20 kWhEF/m² emprise/an pour habitat/commerces/EIC ; 40 kWhEF/m² pour bureaux). (Source: Règles communes, Page 52)",
+                        "Rénovation/réhabilitation : respect de performances énergétiques (type CEE ou BBC Rénovation selon cas) pour travaux d'isolation obligatoires ou rénovations importantes. (Source: Règles communes, Page 53)",
+                    ],
+                }
+            ],
+        }
+    }
+
+    # Convertir en HTML
+    html_output, table_output = json_to_html(json_data)
+    open("output.html", "w", encoding="utf-8").write(html_output)
+    open("table_of_contents.html", "w", encoding="utf-8").write(table_output)

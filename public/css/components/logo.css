@@ -1,0 +1,26 @@
+/* Logo in header */
+.site-header .header-logo img {
+    height: 40px;
+    width: auto;
+    max-width: 200px;
+    display: block;
+}
+
+.social-button {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+    text-align: center;
+    padding-left: 30px;
+}
+
+.social-button img {
+    height: 18px;
+    width: auto;
+    max-width: 20px;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}

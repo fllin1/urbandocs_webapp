@@ -1,0 +1,29 @@
+user=User(
+    id='748d61be-4a0f-4cec-a0b0-e0fd3606d908', 
+    app_metadata={
+        'provider': 'email', 
+        'providers': ['email']
+    }, 
+    user_metadata={}, 
+    aud='authenticated', 
+    confirmation_sent_at=datetime.datetime(2025, 4, 30, 5, 56, 50, 92925, tzinfo=TzInfo(UTC)), 
+    recovery_sent_at=None, 
+    email_change_sent_at=None, 
+    new_email=None, 
+    new_phone=None, 
+    invited_at=None, 
+    action_link=None, 
+    email='linflorent@hotmail.fr', 
+    phone='', 
+    created_at=datetime.datetime(2025, 4, 30, 5, 56, 50, 92925, tzinfo=TzInfo(UTC)), 
+    confirmed_at=None, 
+    email_confirmed_at=None, 
+    phone_confirmed_at=None, 
+    last_sign_in_at=None, 
+    role='', 
+    updated_at=datetime.datetime(2025, 4, 30, 5, 56, 50, 92925, tzinfo=TzInfo(UTC)), 
+    identities=[], 
+    is_anonymous=False, 
+    factors=None
+    ) 
+session=None
