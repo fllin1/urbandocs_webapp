@@ -1,4 +1,12 @@
-<!doctype html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>MWPLU</title><link rel="stylesheet" href="css/main.css"/><style>.site-header {
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MWPLU</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <style>
+      .site-header {
         position: sticky;
         top: 0;
         z-index: 1000;
@@ -14,11 +22,115 @@
         background-color: rgba(255, 255, 255, 0.9);
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         border-bottom: 1px solid var(--border-gray);
-      }</style><script>window.addEventListener("scroll", function () {
+      }
+    </style>
+    <script>
+      window.addEventListener("scroll", function () {
         const header = document.querySelector(".site-header");
         if (window.scrollY > 10) {
           header.classList.add("scrolled");
         } else {
           header.classList.remove("scrolled");
         }
-      });</script><script defer="defer" src="js/303.bundle.js"></script><script defer="defer" src="js/app.bundle.js"></script><script defer="defer" src="js/mappings.bundle.js"></script><script defer="defer" src="js/typewriter.bundle.js"></script></head><body><header class="site-header"><div class="container"><div class="flex-between"><a href="index.html" class="header-logo animate-title"><img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo"/></a><div class="auth-section"><a href="/profile" id="userStatus" class="auth-btn margin-right-sm hidden">Votre compte</a> <a href="/login" id="loginLink" class="auth-btn margin-right-sm">Se connecter </a><a href="/signup" id="signupLink" class="auth-btn">Créer un compte </a><button id="logoutBtn" class="auth-btn hidden">Se déconnecter</button></div></div></div></header><main class="main-content"><section class="hero-section text-center"><h2 class="animate-title margin-bottom-md">Répertoire des synthèses de PLU</h2><p class="lead" id="typewriter-subtitle"></p></section><div class="container"><form class="margin-bottom-lg"><div class="grid"><div class="grid-col-4"><div class="form-group"><label for="villeSelect" class="form-label">Ville</label> <select id="villeSelect" class="form-select" disabled="disabled"></select></div></div><div class="grid-col-4"><div class="form-group"><label for="zonageSelect" class="form-label">Zonage</label> <select id="zonageSelect" class="form-select" disabled="disabled"><option value="">Sélectionnez d'abord une ville</option></select></div></div><div class="grid-col-4"><div class="form-group"><label for="zoneSelect" class="form-label">Zone</label> <select id="zoneSelect" class="form-select" disabled="disabled"><option value="">Sélectionnez d'abord un zonage</option></select></div></div></div><div class="text-center margin-top-lg"><button id="synthesisBtn" class="download-btn btn" type="button" disabled="disabled">Voir la synthèse</button></div></form><div id="statusMessage" class="status-message alert alert-info margin-top-lg"></div></div></main><footer class="site-footer"><div class="container"><div class="grid"><div class="grid-col-4"><h3 class="heading-6 margin-bottom-md">Contact</h3><div class="contact-info"><p>sift@mwplu.com</p></div></div></div></div></footer></body></html>
+      });
+    </script>
+    <script defer="defer" src="js/303.bundle.js"></script>
+    <script defer="defer" src="js/app.bundle.js"></script>
+    <script defer="defer" src="js/mappings.bundle.js"></script>
+    <script defer="defer" src="js/typewriter.bundle.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="flex-between">
+          <a href="index.html" class="header-logo animate-title"
+            ><img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo"
+          /></a>
+          <div class="auth-section">
+            <a
+              href="/profile"
+              id="userStatus"
+              class="auth-btn margin-right-sm hidden"
+              >Votre compte</a
+            >
+            <a href="/login" id="loginLink" class="auth-btn margin-right-sm"
+              >Se connecter </a
+            ><a href="/signup" id="signupLink" class="auth-btn"
+              >Créer un compte </a
+            ><button id="logoutBtn" class="auth-btn hidden">
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="main-content">
+      <section class="hero-section text-center">
+        <h2 class="animate-title margin-bottom-md">
+          Répertoire des synthèses de PLU
+        </h2>
+        <p class="lead" id="typewriter-subtitle"></p>
+      </section>
+      <div class="container">
+        <form class="margin-bottom-lg">
+          <div class="grid">
+            <div class="grid-col-4">
+              <div class="form-group">
+                <label for="villeSelect" class="form-label">Ville</label>
+                <select
+                  id="villeSelect"
+                  class="form-select"
+                  disabled="disabled"
+                ></select>
+              </div>
+            </div>
+            <div class="grid-col-4">
+              <div class="form-group">
+                <label for="zonageSelect" class="form-label">Zonage</label>
+                <select
+                  id="zonageSelect"
+                  class="form-select"
+                  disabled="disabled"
+                >
+                  <option value="">Sélectionnez d'abord une ville</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid-col-4">
+              <div class="form-group">
+                <label for="zoneSelect" class="form-label">Zone</label>
+                <select id="zoneSelect" class="form-select" disabled="disabled">
+                  <option value="">Sélectionnez d'abord un zonage</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="text-center margin-top-lg">
+            <button
+              id="synthesisBtn"
+              class="download-btn btn"
+              type="button"
+              disabled="disabled"
+            >
+              Voir la synthèse
+            </button>
+          </div>
+        </form>
+        <div
+          id="statusMessage"
+          class="status-message alert alert-info margin-top-lg"
+        ></div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="grid">
+          <div class="grid-col-4">
+            <h3 class="heading-6 margin-bottom-md">Contact</h3>
+            <div class="contact-info"><p>sift@mwplu.com</p></div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
