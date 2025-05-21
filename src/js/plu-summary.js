@@ -52,7 +52,7 @@ async function loadDocument() {
         id,
         zonage:zonages(nom, ville:villes(nom)),
         zone:zones(nom),
-        plu-summary_markdown_content,
+        plu_summary_markdown_content,
         pdf_storage_path
       `
       )
