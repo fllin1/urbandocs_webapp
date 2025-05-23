@@ -1,0 +1,271 @@
+/* Modal and Preview Components for Phase 2A */
+
+/* Tooltip Styling */
+.tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: var(--primary-white);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    max-width: 200px;
+    z-index: 1000;
+    pointer-events: none;
+    display: none;
+    line-height: 1.4;
+}
+
+.tooltip::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid rgba(0, 0, 0, 0.9);
+}
+
+/* Preview Modal Content Styling */
+.preview-container {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.preview-header {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.preview-header h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-black);
+    margin-bottom: 0.5rem;
+}
+
+.preview-location {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.preview-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.preview-section h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-black);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.preview-content-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    position: relative;
+}
+
+.preview-content-box p {
+    margin-bottom: 0.5rem;
+    color: #475569;
+}
+
+.preview-content-box p:last-of-type {
+    margin-bottom: 0;
+}
+
+.preview-locked {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border: 1px dashed #cbd5e1;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.8;
+}
+
+.lock-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.preview-locked em {
+    color: #64748b;
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+.preview-benefits {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.preview-benefits h5 {
+    color: #15803d;
+    margin-bottom: 1rem;
+}
+
+.preview-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.preview-benefits li {
+    color: #166534;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Guest Mode Info Styling */
+.guest-mode-info {
+    background: var(--primary-white);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: left;
+}
+
+.guest-mode-info h4 {
+    color: var(--primary-black);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.guest-mode-info p {
+    color: #475569;
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.guest-mode-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+}
+
+.guest-mode-info li {
+    padding: 0.25rem 0;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.guest-cta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.guest-cta .primary-btn,
+.guest-cta .secondary-btn {
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* Button Icon Styling */
+.btn-icon {
+    margin-right: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Loading State for Buttons */
+.btn.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn.loading .btn-icon {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Form Enhancement Styles */
+.form-group.has-help .form-label {
+    margin-bottom: 0.25rem;
+}
+
+.form-group.loading .form-select {
+    background-image: url("data:image/svg+xml,%3csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M6 1V3M6 9V11M11 6H9M3 6H1' stroke='%23666' stroke-width='1.5' stroke-linecap='round'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    animation: spin 1s linear infinite;
+}
+
+/* Responsive Modal Adjustments */
+@media (max-width: 768px) {
+    .preview-container {
+        font-size: 13px;
+    }
+    
+    .preview-header h4 {
+        font-size: 1.125rem;
+    }
+    
+    .preview-benefits {
+        padding: 1rem;
+    }
+    
+    .guest-cta {
+        flex-direction: column;
+    }
+    
+    .guest-cta .primary-btn,
+    .guest-cta .secondary-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Focus States for Accessibility */
+.help-tooltip:focus,
+.guest-toggle:focus,
+.modal-close:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .preview-locked {
+        border-width: 2px;
+        border-color: var(--primary-black);
+    }
+    
+    .tooltip {
+        background: var(--primary-black);
+        border: 1px solid var(--primary-white);
+    }
+} 

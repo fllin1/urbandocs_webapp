@@ -1,3 +1,14 @@
+/* Header logo */
+.header-logo {
+    display: inline-block;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.header-logo:hover {
+    opacity: 0.8;
+}
+
 /* Logo in header */
 .site-header .header-logo img {
     height: 40px;

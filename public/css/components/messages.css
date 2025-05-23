@@ -43,3 +43,68 @@
     color: var(--danger-color);
     background-color: var(--danger-bg);
 }
+
+/* Message Components */
+
+/* Status messages */
+.status-message {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 14px;
+}
+
+/* Error messages */
+.error-message {
+    background-color: var(--danger-bg);
+    color: var(--danger-color);
+    border: 1px solid #f5c6cb;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 14px;
+}
+
+/* Alert system */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-warning {
+    color: var(--warning-color);
+    background-color: var(--warning-bg);
+    border-color: #ffeaa7;
+}
+
+.alert-danger {
+    color: var(--danger-color);
+    background-color: var(--danger-bg);
+    border-color: #f5c6cb;
+}
+
+/* Success messages */
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 14px;
+}
