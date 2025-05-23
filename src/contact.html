@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact - MWPLU</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="flex-between">
+          <a href="/" class="header-logo">
+            <img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo" />
+          </a>
+          <div class="auth-section">
+            <a
+              href="/profile"
+              id="userStatus"
+              class="auth-btn margin-right-sm hidden"
+              >Votre compte</a
+            >
+            <a href="/login" id="loginLink" class="auth-btn margin-right-sm">
+              Se connecter
+            </a>
+            <a href="/signup" id="signupLink" class="auth-btn">
+              Créer un compte
+            </a>
+            <button id="logoutBtn" class="auth-btn hidden">
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container margin-top-lg margin-bottom-lg">
+        <div class="contact-page">
+          <div class="grid">
+            <!-- Contact Information -->
+            <div class="grid-col-6">
+              <section class="contact-info-section">
+                <h1 class="margin-bottom-md">Contactez-nous</h1>
+                <p class="lead margin-bottom-lg">
+                  Nous sommes là pour vous aider. N'hésitez pas à nous contacter pour toute question ou suggestion.
+                </p>
+
+                <div class="contact-details">
+                  <div class="contact-item margin-bottom-md">
+                    <h3 class="heading-6 margin-bottom-sm">📧 Email</h3>
+                    <p>
+                      <a href="mailto:contact@mwplu.com">contact@mwplu.com</a>
+                    </p>
+                  </div>
+
+                  <div class="contact-item margin-bottom-md">
+                    <h3 class="heading-6 margin-bottom-sm">📞 Téléphone</h3>
+                    <p>
+                      <a href="tel:0601842720">06 01 84 27 20</a>
+                    </p>
+                  </div>
+
+                  <div class="contact-item margin-bottom-md">
+                    <h3 class="heading-6 margin-bottom-sm">📍 Adresse</h3>
+                    <p>
+                      40 Rue Mallifaud<br>
+                      38100 Grenoble<br>
+                      France
+                    </p>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="grid-col-6">
+              <section class="contact-form-section">
+                <div class="auth-card">
+                  <h2 class="auth-title">Envoyez-nous un message</h2>
+                  
+                  <form id="contactForm" class="auth-form">
+                    <div class="form-group">
+                      <label for="name" class="form-label">Nom *</label>
+                      <div class="input-wrapper">
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          class="form-input"
+                          placeholder="Votre nom complet"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email" class="form-label">Email *</label>
+                      <div class="input-wrapper">
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          class="form-input"
+                          placeholder="votre.email@exemple.com"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="message" class="form-label">Message *</label>
+                      <div class="input-wrapper">
+                        <textarea
+                          id="message"
+                          name="message"
+                          class="form-input"
+                          placeholder="Votre message..."
+                          rows="5"
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="checkbox-label">
+                        <input
+                          type="checkbox"
+                          id="consent"
+                          name="consent"
+                          required
+                        />
+                        <span class="checkbox-custom"></span>
+                        J'autorise MWPLU à me répondre par email *
+                      </label>
+                    </div>
+
+                    <button type="submit" class="auth-button" id="submitBtn">
+                      Envoyer le message
+                      <span id="submitSpinner" class="spinner hidden"></span>
+                    </button>
+                  </form>
+
+                  <div id="successMessage" class="status-message alert alert-success hidden">
+                    Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.
+                  </div>
+                  
+                  <div id="errorMessage" class="error-message hidden"></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-content">
+          <!-- Contact Information -->
+          <div class="footer-contact">
+            <h3 class="heading-6">Contact</h3>
+            <div class="contact-info">
+              <p>
+                <span class="contact-icon">📧</span>
+                <a href="mailto:contact@mwplu.com">contact@mwplu.com</a>
+              </p>
+              <p>
+                <span class="contact-icon">📞</span>
+                <a href="tel:0601842720">06 01 84 27 20</a>
+              </p>
+              <p>
+                <span class="contact-icon">📍</span>
+                40 Rue Mallifaud<br>38100 Grenoble
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Links -->
+          <div class="footer-nav">
+            <h3 class="heading-6">Liens rapides</h3>
+            <ul class="footer-nav-list">
+              <li><a href="/">Accueil</a></li>
+              <li><a href="/documentation">Documentation</a></li>
+              <li><a href="/about">À propos</a></li>
+              <li><a href="/contact">Contact</a></li>
+              <li><a href="/support">Nous soutenir</a></li>
+              <li><a href="/profile">Mon compte</a></li>
+            </ul>
+          </div>
+
+          <!-- Social Media Links -->
+          <div class="footer-social">
+            <h3 class="heading-6">Suivez-nous</h3>
+            <div class="social-links">
+              <a href="#" class="social-link" title="X (Twitter)" aria-label="Suivez-nous sur X">
+                𝕏
+              </a>
+              <a href="#" class="social-link" title="Instagram" aria-label="Suivez-nous sur Instagram">
+                📷
+              </a>
+              <a href="#" class="social-link" title="LinkedIn" aria-label="Suivez-nous sur LinkedIn">
+                💼
+              </a>
+              <a href="#" class="social-link" title="Facebook" aria-label="Suivez-nous sur Facebook">
+                📘
+              </a>
+              <a href="#" class="social-link" title="YouTube" aria-label="Suivez-nous sur YouTube">
+                📺
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <div class="footer-legal">
+            <a href="/mentions-legales">Mentions légales</a>
+            <a href="/terms">CGU</a>
+            <a href="/privacy">Confidentialité</a>
+            <a href="/cookies">Cookies</a>
+          </div>
+          <div class="footer-copyright">
+            &copy; <span id="currentYear"></span> MWPLU. Tous droits réservés.
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("currentYear").textContent = new Date().getFullYear();
+      
+      // Contact form handling
+      document.getElementById("contactForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById("submitBtn");
+        const spinner = document.getElementById("submitSpinner");
+        const successMsg = document.getElementById("successMessage");
+        const errorMsg = document.getElementById("errorMessage");
+        
+        // Basic form validation
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const message = document.getElementById("message").value.trim();
+        const consent = document.getElementById("consent").checked;
+        
+        if (!name || !email || !message || !consent) {
+          errorMsg.textContent = "Veuillez remplir tous les champs obligatoires.";
+          errorMsg.classList.remove("hidden");
+          return;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          errorMsg.textContent = "Veuillez entrer une adresse email valide.";
+          errorMsg.classList.remove("hidden");
+          return;
+        }
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        spinner.classList.remove("hidden");
+        errorMsg.classList.add("hidden");
+        
+        // Simulate form submission (replace with actual implementation)
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          spinner.classList.add("hidden");
+          successMsg.classList.remove("hidden");
+          
+          // Reset form
+          document.getElementById("contactForm").reset();
+          
+          // Hide success message after 5 seconds
+          setTimeout(() => {
+            successMsg.classList.add("hidden");
+          }, 5000);
+        }, 1000);
+      });
+    </script>
+  </body>
+</html> 
