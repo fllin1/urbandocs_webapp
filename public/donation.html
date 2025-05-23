@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nous Soutenir - MWPLU</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="flex-between">
+          <a href="/" class="header-logo">
+            <img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo" />
+          </a>
+          <div class="auth-section">
+            <a
+              href="/profile"
+              id="userStatus"
+              class="auth-btn margin-right-sm hidden"
+              >Votre compte</a
+            >
+            <a href="/login" id="loginLink" class="auth-btn margin-right-sm">
+              Se connecter
+            </a>
+            <a href="/signup" id="signupLink" class="auth-btn">
+              Créer un compte
+            </a>
+            <button id="logoutBtn" class="auth-btn hidden">
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container margin-top-lg margin-bottom-lg">
+        <section class="donation-hero text-center margin-bottom-lg">
+          <h1 class="margin-bottom-md">Soutenez MWPLU</h1>
+          <p class="lead margin-bottom-lg">
+            Votre soutien nous aide à maintenir et à améliorer ce service gratuit de synthèses PLU, 
+            et à développer de nouvelles fonctionnalités pour la communauté.
+          </p>
+        </section>
+
+        <div class="grid">
+          <!-- Impact Section -->
+          <div class="grid-col-6">
+            <section class="donation-impact">
+              <h2 class="heading-3 margin-bottom-md">Votre impact</h2>
+              
+              <div class="impact-item margin-bottom-md">
+                <h3 class="heading-6 margin-bottom-sm">🏠 Accès gratuit aux PLU</h3>
+                <p>Nous maintenons un service gratuit pour tous les citoyens qui souhaitent comprendre les règles d'urbanisme.</p>
+              </div>
+
+              <div class="impact-item margin-bottom-md">
+                <h3 class="heading-6 margin-bottom-sm">⚡ Amélioration continue</h3>
+                <p>Nous développons de nouvelles fonctionnalités : recherche avancée, cartes interactives, notifications de changements.</p>
+              </div>
+
+              <div class="impact-item margin-bottom-md">
+                <h3 class="heading-6 margin-bottom-sm">📚 Documentation enrichie</h3>
+                <p>Nous créons des guides, glossaires et ressources pour démocratiser l'urbanisme.</p>
+              </div>
+
+              <div class="impact-item margin-bottom-md">
+                <h3 class="heading-6 margin-bottom-sm">🔧 Infrastructure robuste</h3>
+                <p>Vos dons nous aident à maintenir des serveurs performants et une disponibilité 24h/24.</p>
+              </div>
+            </section>
+          </div>
+
+          <!-- Donation Form -->
+          <div class="grid-col-6">
+            <section class="donation-form-section">
+              <div class="auth-card">
+                <h2 class="auth-title">Faire un don</h2>
+                <p class="margin-bottom-md text-center">Choisissez le montant qui vous convient</p>
+
+                <div class="donation-amounts margin-bottom-md">
+                  <div class="amount-buttons">
+                    <button class="amount-btn" data-amount="5">5€</button>
+                    <button class="amount-btn" data-amount="10">10€</button>
+                    <button class="amount-btn" data-amount="25">25€</button>
+                    <button class="amount-btn" data-amount="50">50€</button>
+                  </div>
+                  
+                  <div class="custom-amount margin-top-md">
+                    <label for="customAmount" class="form-label">Montant personnalisé</label>
+                    <div class="input-wrapper">
+                      <input
+                        type="number"
+                        id="customAmount"
+                        class="form-input"
+                        placeholder="€"
+                        min="1"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="donation-type margin-bottom-md">
+                  <label class="radio-label">
+                    <input type="radio" name="donationType" value="once" checked>
+                    <span class="radio-custom"></span>
+                    Don ponctuel
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="donationType" value="monthly">
+                    <span class="radio-custom"></span>
+                    Don mensuel
+                  </label>
+                </div>
+
+                <button 
+                  id="donateBtn" 
+                  class="auth-button btn-lg" 
+                  disabled
+                >
+                  Faire un don avec Stripe
+                  <span id="donateSpinner" class="spinner hidden"></span>
+                </button>
+
+                <div class="donation-info margin-top-md">
+                  <p class="text-center">
+                    <small>
+                      🔒 Paiement sécurisé via Stripe<br>
+                      Nous ne stockons aucune information de paiement
+                    </small>
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- Other Ways to Support -->
+        <section class="other-support margin-top-lg">
+          <div class="auth-card">
+            <h2 class="heading-3 text-center margin-bottom-md">Autres façons de nous soutenir</h2>
+            
+            <div class="grid">
+              <div class="grid-col-4 text-center">
+                <h3 class="heading-6 margin-bottom-sm">📢 Partagez</h3>
+                <p>Parlez de MWPLU autour de vous et sur les réseaux sociaux</p>
+              </div>
+              
+              <div class="grid-col-4 text-center">
+                <h3 class="heading-6 margin-bottom-sm">💬 Feedback</h3>
+                <p>Donnez-nous vos retours pour améliorer le service</p>
+              </div>
+              
+              <div class="grid-col-4 text-center">
+                <h3 class="heading-6 margin-bottom-sm">👨‍💻 Contribuez</h3>
+                <p>Rejoignez notre équipe de développement bénévole</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-content">
+          <!-- Contact Information -->
+          <div class="footer-contact">
+            <h3 class="heading-6">Contact</h3>
+            <div class="contact-info">
+              <p>
+                <span class="contact-icon">📧</span>
+                <a href="mailto:contact@mwplu.com">contact@mwplu.com</a>
+              </p>
+              <p>
+                <span class="contact-icon">📞</span>
+                <a href="tel:0601842720">06 01 84 27 20</a>
+              </p>
+              <p>
+                <span class="contact-icon">📍</span>
+                40 Rue Mallifaud<br>38100 Grenoble
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Links -->
+          <div class="footer-nav">
+            <h3 class="heading-6">Liens rapides</h3>
+            <ul class="footer-nav-list">
+              <li><a href="/">Accueil</a></li>
+              <li><a href="/documentation">Documentation</a></li>
+              <li><a href="/about">À propos</a></li>
+              <li><a href="/contact">Contact</a></li>
+              <li><a href="/support">Nous soutenir</a></li>
+              <li><a href="/profile">Mon compte</a></li>
+            </ul>
+          </div>
+
+          <!-- Social Media Links -->
+          <div class="footer-social">
+            <h3 class="heading-6">Suivez-nous</h3>
+            <div class="social-links">
+              <a href="#" class="social-link" title="X (Twitter)" aria-label="Suivez-nous sur X">
+                𝕏
+              </a>
+              <a href="#" class="social-link" title="Instagram" aria-label="Suivez-nous sur Instagram">
+                📷
+              </a>
+              <a href="#" class="social-link" title="LinkedIn" aria-label="Suivez-nous sur LinkedIn">
+                💼
+              </a>
+              <a href="#" class="social-link" title="Facebook" aria-label="Suivez-nous sur Facebook">
+                📘
+              </a>
+              <a href="#" class="social-link" title="YouTube" aria-label="Suivez-nous sur YouTube">
+                📺
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <div class="footer-legal">
+            <a href="/mentions-legales">Mentions légales</a>
+            <a href="/terms">CGU</a>
+            <a href="/privacy">Confidentialité</a>
+            <a href="/cookies">Cookies</a>
+          </div>
+          <div class="footer-copyright">
+            &copy; <span id="currentYear"></span> MWPLU. Tous droits réservés.
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("currentYear").textContent = new Date().getFullYear();
+      
+      // Donation form handling
+      let selectedAmount = 0;
+      
+      // Amount button selection
+      document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          // Remove active class from all buttons
+          document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          
+          // Set selected amount
+          selectedAmount = parseInt(this.dataset.amount);
+          
+          // Clear custom amount
+          document.getElementById('customAmount').value = '';
+          
+          // Enable donate button
+          updateDonateButton();
+        });
+      });
+      
+      // Custom amount input
+      document.getElementById('customAmount').addEventListener('input', function() {
+        const customAmount = parseInt(this.value);
+        
+        if (customAmount && customAmount > 0) {
+          // Remove active class from amount buttons
+          document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('active'));
+          
+          selectedAmount = customAmount;
+        } else {
+          selectedAmount = 0;
+        }
+        
+        updateDonateButton();
+      });
+      
+      function updateDonateButton() {
+        const donateBtn = document.getElementById('donateBtn');
+        const donationType = document.querySelector('input[name="donationType"]:checked').value;
+        
+        if (selectedAmount > 0) {
+          donateBtn.disabled = false;
+          donateBtn.textContent = `Donner ${selectedAmount}€ ${donationType === 'monthly' ? '/mois' : ''}`;
+        } else {
+          donateBtn.disabled = true;
+          donateBtn.textContent = 'Faire un don avec Stripe';
+        }
+      }
+      
+      // Donation type change
+      document.querySelectorAll('input[name="donationType"]').forEach(input => {
+        input.addEventListener('change', updateDonateButton);
+      });
+      
+      // Donate button click
+      document.getElementById('donateBtn').addEventListener('click', function() {
+        if (selectedAmount > 0) {
+          const donationType = document.querySelector('input[name="donationType"]:checked').value;
+          
+          // Here you would integrate with Stripe
+          console.log(`Donation: ${selectedAmount}€ (${donationType})`);
+          
+          // For now, show a message
+          alert(`Merci ! Intégration Stripe en cours de développement.\nMontant: ${selectedAmount}€\nType: ${donationType}`);
+        }
+      });
+    </script>
+  </body>
+</html>

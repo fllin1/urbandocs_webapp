@@ -1,1 +1,81 @@
-<!doctype html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Synthèse PLU - MWPLU</title><link rel="stylesheet" href="css/main.css"/><script defer="defer" src="js/303.bundle.js"></script><script defer="defer" src="js/23.bundle.js"></script><script defer="defer" src="js/pluSummary.bundle.js"></script></head><body><header class="site-header"><div class="container"><div class="flex-between"><a href="/" class="header-logo"><img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo"/></a><div class="auth-section"><a href="/profile" id="userStatus" class="auth-btn margin-right-sm hidden"></a> <button id="logoutBtn" class="auth-btn">Se déconnecter</button></div></div></div></header><main class="main-content"><div class="container"><div class="plu-summary"><div class="plu-summary-header"><h1 id="documentTitle">Synthèse du PLU</h1><div class="document-meta"><div class="rating-container"><div id="averageRating" class="rating">Note moyenne: --</div><div id="ratingStars" class="rating-stars"></div></div><button id="downloadBtn" class="download-btn" disabled="disabled">Télécharger le PDF <span id="downloadSpinner" class="spinner hidden"></span></button></div></div><div class="plu-content-wrapper"><nav id="tableOfContents" class="table-of-contents"><h2>Table des matières</h2><div id="tocContent"></div></nav><article id="pluContent" class="plu-content"></article></div><section class="comments-section"><h2>Commentaires</h2><form id="commentForm" class="comment-form"><div class="form-group"><textarea id="commentInput" class="form-input" placeholder="Votre commentaire..." required></textarea></div><button type="submit" class="auth-button">Ajouter un commentaire <span id="commentSpinner" class="spinner hidden"></span></button></form><div id="commentsList" class="comments-list"></div></section></div></div></main><div id="statusMessage" class="status-message hidden"></div></body></html>
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Synthèse PLU - MWPLU</title>
+    <link rel="stylesheet" href="css/main.css" />
+  <script defer src="js/vendors-node_modules_supabase_supabase-js_dist_module_index_js.bundle.js"></script><script defer src="js/vendors-node_modules_marked_lib_marked_esm_js.bundle.js"></script><script defer src="js/pluSummary.bundle.js"></script></head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="flex-between">
+          <a href="/" class="header-logo">
+            <img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo" />
+          </a>
+          <div class="auth-section">
+            <a
+              href="/profile"
+              id="userStatus"
+              class="auth-btn margin-right-sm hidden"
+            ></a>
+            <button id="logoutBtn" class="auth-btn">Se déconnecter</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="plu-summary">
+          <div class="plu-summary-header">
+            <h1 id="documentTitle">Synthèse du PLU</h1>
+            <div class="document-meta">
+              <div class="rating-container">
+                <div id="averageRating" class="rating">Note moyenne: --</div>
+                <div id="ratingStars" class="rating-stars"></div>
+              </div>
+              <button id="downloadBtn" class="download-btn" disabled>
+                Télécharger le PDF
+                <span id="downloadSpinner" class="spinner hidden"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="plu-content-wrapper">
+            <nav id="tableOfContents" class="table-of-contents">
+              <h2>Table des matières</h2>
+              <div id="tocContent"></div>
+            </nav>
+            <article id="pluContent" class="plu-content">
+              <!-- Content will be loaded here -->
+            </article>
+          </div>
+
+          <section class="comments-section">
+            <h2>Commentaires</h2>
+            <form id="commentForm" class="comment-form">
+              <div class="form-group">
+                <textarea
+                  id="commentInput"
+                  class="form-input"
+                  placeholder="Votre commentaire..."
+                  required
+                ></textarea>
+              </div>
+              <button type="submit" class="auth-button">
+                Ajouter un commentaire
+                <span id="commentSpinner" class="spinner hidden"></span>
+              </button>
+            </form>
+            <div id="commentsList" class="comments-list">
+              <!-- Comments will be loaded here -->
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <div id="statusMessage" class="status-message hidden"></div>
+  </body>
+</html>

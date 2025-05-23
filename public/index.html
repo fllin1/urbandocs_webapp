@@ -2,8 +2,9 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MWPLU</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MWPLU - Synthèses PLU Simplifiées</title>
+    <meta name="description" content="Accédez facilement aux synthèses de PLU françaises. Explorez les zones d'urbanisme, découvrez les règlements et prenez des décisions éclairées pour vos projets.">
     <link rel="stylesheet" href="css/main.css" />
     <style>
       .site-header {
@@ -34,18 +35,14 @@
         }
       });
     </script>
-    <script defer="defer" src="js/303.bundle.js"></script>
-    <script defer="defer" src="js/app.bundle.js"></script>
-    <script defer="defer" src="js/mappings.bundle.js"></script>
-    <script defer="defer" src="js/typewriter.bundle.js"></script>
-  </head>
+  <script defer src="js/vendors-node_modules_supabase_supabase-js_dist_module_index_js.bundle.js"></script><script defer src="js/app.bundle.js"></script><script defer src="js/homepagePhase2A.bundle.js"></script><script defer src="js/mappings.bundle.js"></script><script defer src="js/typewriter.bundle.js"></script></head>
   <body>
     <header class="site-header">
       <div class="container">
         <div class="flex-between">
-          <a href="index.html" class="header-logo animate-title"
-            ><img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo"
-          /></a>
+          <a href="index.html" class="header-logo animate-title">
+            <img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo" />
+          </a>
           <div class="auth-section">
             <a
               href="/profile"
@@ -53,84 +50,277 @@
               class="auth-btn margin-right-sm hidden"
               >Votre compte</a
             >
-            <a href="/login" id="loginLink" class="auth-btn margin-right-sm"
-              >Se connecter </a
-            ><a href="/signup" id="signupLink" class="auth-btn"
-              >Créer un compte </a
-            ><button id="logoutBtn" class="auth-btn hidden">
+            <a href="/login" id="loginLink" class="auth-btn margin-right-sm">
+              Se connecter
+            </a>
+            <a href="/signup" id="signupLink" class="auth-btn">
+              Créer un compte
+            </a>
+            <button id="logoutBtn" class="auth-btn hidden">
               Se déconnecter
             </button>
           </div>
         </div>
       </div>
     </header>
+
     <main class="main-content">
+      <!-- Enhanced Hero Section -->
       <section class="hero-section text-center">
-        <h2 class="animate-title margin-bottom-md">
-          Répertoire des synthèses de PLU
-        </h2>
-        <p class="lead" id="typewriter-subtitle"></p>
-      </section>
-      <div class="container">
-        <form class="margin-bottom-lg">
-          <div class="grid">
-            <div class="grid-col-4">
-              <div class="form-group">
-                <label for="villeSelect" class="form-label">Ville</label>
-                <select
-                  id="villeSelect"
-                  class="form-select"
-                  disabled="disabled"
-                ></select>
-              </div>
-            </div>
-            <div class="grid-col-4">
-              <div class="form-group">
-                <label for="zonageSelect" class="form-label">Zonage</label>
-                <select
-                  id="zonageSelect"
-                  class="form-select"
-                  disabled="disabled"
-                >
-                  <option value="">Sélectionnez d'abord une ville</option>
-                </select>
-              </div>
-            </div>
-            <div class="grid-col-4">
-              <div class="form-group">
-                <label for="zoneSelect" class="form-label">Zone</label>
-                <select id="zoneSelect" class="form-select" disabled="disabled">
-                  <option value="">Sélectionnez d'abord un zonage</option>
-                </select>
+        <div class="hero-content">
+          <h1 class="hero-title animate-title">
+            Synthèses PLU Simplifiées
+          </h1>
+          <p class="hero-subtitle" id="typewriter-subtitle">
+            Découvrez instantanément les règles d'urbanisme de votre territoire
+          </p>
+          
+          <!-- Process Steps in Hero -->
+          <div class="hero-process-steps margin-top-lg">
+            <div class="container">
+              <h2 class="text-center margin-bottom-md">Comment ça marche ?</h2>
+              <div class="steps-container">
+                <div class="step-item active" data-step="1">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h4>Choisissez votre ville</h4>
+                    <p>Sélectionnez la commune qui vous intéresse</p>
+                  </div>
+                </div>
+                <div class="step-item" data-step="2">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h4>Définissez la zone</h4>
+                    <p>Précisez le zonage et la zone spécifique</p>
+                  </div>
+                </div>
+                <div class="step-item" data-step="3">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h4>Découvrez la synthèse</h4>
+                    <p>Obtenez votre résumé PLU personnalisé</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="text-center margin-top-lg">
-            <button
-              id="synthesisBtn"
-              class="download-btn btn"
-              type="button"
-              disabled="disabled"
-            >
-              Voir la synthèse
+        </div>
+      </section>
+
+      <!-- Main PLU Explorer -->
+      <div class="container">
+        <!-- Guest Mode Banner -->
+        <div id="guestBanner" class="guest-banner margin-bottom-md">
+          <div class="guest-banner-content">
+            <div class="guest-info">
+              <span class="guest-icon">👋</span>
+              <div class="guest-text">
+                <strong>Mode exploration gratuit</strong>
+                <p>Découvrez notre structure de données. <a href="/signup" class="text-link">Créez un compte</a> pour accéder aux synthèses complètes.</p>
+              </div>
+            </div>
+            <button id="guestToggle" class="guest-toggle" title="En savoir plus">
+              <span>ℹ️</span>
             </button>
           </div>
-        </form>
-        <div
-          id="statusMessage"
-          class="status-message alert alert-info margin-top-lg"
-        ></div>
+        </div>
+
+        <!-- PLU Explorer Form -->
+        <div class="plu-explorer">
+          <form id="pluForm" class="margin-bottom-lg">
+            <div class="grid">
+              <div class="grid-col-4">
+                <div class="form-group">
+                  <label for="villeSelect" class="form-label">
+                    Ville
+                    <span class="help-tooltip" title="Choisissez la commune pour laquelle vous souhaitez consulter le PLU">ℹ️</span>
+                  </label>
+                  <select id="villeSelect" class="form-select">
+                    <option value="">Sélectionnez une ville...</option>
+                    <!-- Options loaded by JS -->
+                  </select>
+                  <div class="form-help">
+                    <small id="villeHelp" class="form-help-text">Commencez par sélectionner votre ville</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid-col-4">
+                <div class="form-group">
+                  <label for="zonageSelect" class="form-label">
+                    Zonage
+                    <span class="help-tooltip" title="Type de zone d'urbanisme (résidentiel, commercial, etc.)">ℹ️</span>
+                  </label>
+                  <select id="zonageSelect" class="form-select" disabled>
+                    <option value="">Sélectionnez d'abord une ville</option>
+                  </select>
+                  <div class="form-help">
+                    <small id="zonageHelp" class="form-help-text">Le type de zonage détermine les règles applicables</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid-col-4">
+                <div class="form-group">
+                  <label for="zoneSelect" class="form-label">
+                    Zone spécifique
+                    <span class="help-tooltip" title="Zone précise au sein du type de zonage">ℹ️</span>
+                  </label>
+                  <select id="zoneSelect" class="form-select" disabled>
+                    <option value="">Sélectionnez d'abord un zonage</option>
+                  </select>
+                  <div class="form-help">
+                    <small id="zoneHelp" class="form-help-text">Chaque zone a ses propres spécificités</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center margin-top-lg">
+              <div class="action-buttons">
+                <button
+                  id="synthesisBtn"
+                  class="primary-btn btn"
+                  type="button"
+                  disabled
+                >
+                  <span class="btn-icon">📄</span>
+                  <span id="synthesisBtnText">Voir la synthèse</span>
+                  <span id="synthesisSpinner" class="spinner hidden"></span>
+                </button>
+                
+                <div class="action-alternatives margin-top-sm">
+                  <button type="button" id="previewBtn" class="secondary-btn" disabled>
+                    👀 Aperçu gratuit
+                  </button>
+                  <button type="button" id="sampleBtn" class="text-btn">
+                    📋 Voir un exemple
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+          
+          <!-- Status Messages -->
+          <div id="statusMessage" class="status-message alert alert-info margin-top-lg hidden"></div>
+        </div>
+
+        <!-- Social Proof Section -->
+        <section class="social-proof margin-top-lg margin-bottom-lg">
+          <div class="stats-container">
+            <div class="stat-item">
+              <div class="stat-number">500+</div>
+              <div class="stat-label">Communes disponibles</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">2000+</div>
+              <div class="stat-label">Synthèses générées</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">98%</div>
+              <div class="stat-label">Utilisateurs satisfaits</div>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Aperçu de synthèse PLU</h3>
+          <button class="modal-close" id="closePreview">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="preview-content">
+            <!-- Preview content will be loaded here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="secondary-btn" id="closePreviewBtn">Fermer l'aperçu</button>
+          <a href="/signup" class="primary-btn">Accès complet gratuit</a>
+        </div>
+      </div>
+    </div>
+
     <footer class="site-footer">
       <div class="container">
-        <div class="grid">
-          <div class="grid-col-4">
-            <h3 class="heading-6 margin-bottom-md">Contact</h3>
-            <div class="contact-info"><p>sift@mwplu.com</p></div>
+        <div class="footer-content">
+          <!-- Contact Information -->
+          <div class="footer-contact">
+            <h3 class="heading-6">Contact</h3>
+            <div class="contact-info">
+              <p>
+                <span class="contact-icon">📧</span>
+                <a href="mailto:contact@mwplu.com">contact@mwplu.com</a>
+              </p>
+              <p>
+                <span class="contact-icon">📞</span>
+                <a href="tel:0601842720">06 01 84 27 20</a>
+              </p>
+              <p>
+                <span class="contact-icon">📍</span>
+                40 Rue Mallifaud<br>38100 Grenoble
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Links -->
+          <div class="footer-nav">
+            <h3 class="heading-6">Liens rapides</h3>
+            <ul class="footer-nav-list">
+              <li><a href="/">Accueil</a></li>
+              <li><a href="/documentation">Documentation</a></li>
+              <li><a href="/about">À propos</a></li>
+              <li><a href="/contact">Contact</a></li>
+              <li><a href="/support">Nous soutenir</a></li>
+              <li><a href="/profile">Mon compte</a></li>
+            </ul>
+          </div>
+
+          <!-- Social Media Links -->
+          <div class="footer-social">
+            <h3 class="heading-6">Suivez-nous</h3>
+            <div class="social-links">
+              <a href="#" class="social-link" title="X (Twitter)" aria-label="Suivez-nous sur X">
+                𝕏
+              </a>
+              <a href="#" class="social-link" title="Instagram" aria-label="Suivez-nous sur Instagram">
+                📷
+              </a>
+              <a href="#" class="social-link" title="LinkedIn" aria-label="Suivez-nous sur LinkedIn">
+                💼
+              </a>
+              <a href="#" class="social-link" title="Facebook" aria-label="Suivez-nous sur Facebook">
+                📘
+              </a>
+              <a href="#" class="social-link" title="YouTube" aria-label="Suivez-nous sur YouTube">
+                📺
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <div class="footer-legal">
+            <a href="/mentions-legales">Mentions légales</a>
+            <a href="/terms">CGU</a>
+            <a href="/privacy">Confidentialité</a>
+            <a href="/cookies">Cookies</a>
+          </div>
+          <div class="footer-copyright">
+            &copy; <span id="currentYear"></span> MWPLU. Tous droits réservés.
           </div>
         </div>
       </div>
     </footer>
+    
+    <script>
+      document.getElementById("currentYear").textContent = new Date().getFullYear();
+    </script>
   </body>
 </html>
