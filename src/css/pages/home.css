@@ -2,16 +2,18 @@
 :root {
     --accent-gray: #e0e0e0;
     --primary-white: #ffffff;
+    --primary-black: #000000;
+    --border-gray: #d3d3d3;
 }
 
 /* Main content area */
 .main-content {
     max-width: 1920px;
     margin: 0 auto;
-    padding: 3rem 1.5rem;
+    padding: 1rem 1.5rem;
 }
 
-/* Hero Section specific to homepage */
+/* Hero Section specific to homepage - with static grid background on white */
 .hero-section {
     position: relative;
     width: 100vw;
@@ -23,6 +25,7 @@
     margin-bottom: 3rem;
     overflow: hidden;
     text-align: center;
+    background: var(--primary-white);
 }
 
 .hero-section::before {
@@ -32,30 +35,20 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, var(--accent-gray) 1px, transparent 1px) 0 0,
-        linear-gradient(var(--accent-gray) 1px, transparent 1px) 0 0;
+    background: linear-gradient(90deg, #e0e0e0 1px, transparent 1px) 0 0,
+        linear-gradient(#e0e0e0 1px, transparent 1px) 0 0;
     background-size: 20px 20px;
-    z-index: -1;
+    z-index: 0;
     opacity: 0.5;
-}
-
-.hero-section::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(ellipse at center,
-            transparent 50%,
-            var(--primary-white) 100%);
-    z-index: -1;
+    mask: radial-gradient(ellipse 90% 90% at center, black 20%, transparent 80%);
+    -webkit-mask: radial-gradient(ellipse 90% 90% at center, black 30%, transparent 80%);
 }
 
 .hero-section h2 {
     font-size: 2.5rem;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 1rem;
+    color: var(--primary-black);
 }
 
 .lead {
@@ -66,6 +59,14 @@
     margin: 0 auto 2rem auto;
 }
 
+/* Enhanced form container with more subtle shadow */
+.container form {
+    background: var(--primary-white);
+    border-radius: 6px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
 /* Responsive for Home page elements */
 @media (max-width: 768px) {
     .main-content {
@@ -73,7 +74,7 @@
     }
 
     .hero-section {
-        padding: 2rem 1rem;
+        padding: 4rem 1rem;
     }
 
     .hero-section h2 {
@@ -82,5 +83,14 @@
 
     .lead {
         font-size: 1.3rem;
+    }
+
+    .container form {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+
+    .grid {
+        gap: 1.5rem;
     }
 }

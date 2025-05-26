@@ -62,8 +62,18 @@ module.exports = (argv) => {
       }),
       // Policy pages
       new HtmlWebpackPlugin({
+        filename: "confidentialite.html",
+        template: "src/policies/confidentialite.html",
+        chunks: [...commonChunks],
+      }),
+      new HtmlWebpackPlugin({
         filename: "cookies.html",
         template: "src/policies/cookies.html",
+        chunks: [...commonChunks],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "mentions-legales.html",
+        template: "src/policies/mentions-legales.html",
         chunks: [...commonChunks],
       }),
       new HtmlWebpackPlugin({
@@ -80,6 +90,26 @@ module.exports = (argv) => {
       new HtmlWebpackPlugin({
         filename: "404.html",
         template: "src/404.html",
+        chunks: [...commonChunks],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "about.html",
+        template: "src/about.html",
+        chunks: [...commonChunks],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "contact.html",
+        template: "src/contact.html",
+        chunks: [...commonChunks],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "documentation.html",
+        template: "src/documentation.html",
+        chunks: [...commonChunks],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "donation.html",
+        template: "src/donation.html",
         chunks: [...commonChunks],
       }),
       new HtmlWebpackPlugin({

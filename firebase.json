@@ -15,10 +15,76 @@
   ],
   "hosting": {
     "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/confirmation",
+        "destination": "/confirmation.html"
+      },
+      {
+        "source": "/forgotten-password",
+        "destination": "/forgotten-password.html"
+      },
+      {
+        "source": "/login",
+        "destination": "/login.html"
+      },
+      {
+        "source": "/signup",
+        "destination": "/signup.html"
+      },
+      {
+        "source": "/update-password",
+        "destination": "/update-password.html"
+      },
+      {
+        "source": "/confidentialite",
+        "destination": "/confidentialite.html"
+      },
+      {
+        "source": "/cookies",
+        "destination": "/cookies.html"
+      },
+      {
+        "source": "/mentions-legales",
+        "destination": "/mentions-legales.html"
+      },
+      {
+        "source": "/politiques-de-ventes",
+        "destination": "/politiques-de-ventes.html"
+      },
+      {
+        "source": "/terms",
+        "destination": "/terms.html"
+      },
+      {
+        "source": "/about",
+        "destination": "/about.html"
+      },
+      {
+        "source": "/contact",
+        "destination": "/contact.html"
+      },
+      {
+        "source": "/documentation",
+        "destination": "/documentation.html"
+      },
+      {
+        "source": "/donation",
+        "destination": "/donation.html"
+      },
+      {
+        "source": "/",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/plu-summary",
+        "destination": "/plu-summary-template.html"
+      },
+      {
+        "source": "/profile",
+        "destination": "/profile.html"
+      }
     ]
   }
 }

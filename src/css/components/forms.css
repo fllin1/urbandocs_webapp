@@ -18,6 +18,8 @@
     margin-bottom: 8px;
     font-size: 14px;
     padding-left: 3px;
+    font-weight: 500;
+    color: var(--primary-black);
 }
 
 .input-wrapper {
@@ -31,12 +33,13 @@
     border: none;
     border-bottom: 1px solid var(--border-gray);
     background: transparent;
-    transition: border-color 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .form-input:focus {
     outline: none;
     border-color: var(--primary-black);
+    transform: translateY(-1px);
 }
 
 .form-hint {
@@ -48,25 +51,84 @@
 .form-select {
     display: block;
     width: 100%;
-    border: none;
-    border-bottom: 1px solid var(--border-gray);
-    padding: 0.75rem;
+    border: 1px solid var(--border-gray);
+    border-radius: 3px;
+    padding: 0.75rem 1rem;
     font-size: 14px;
-    transition: border-color 0.2s ease;
+    transition: all 0.3s ease;
     background: var(--primary-white);
     cursor: pointer;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
 }
 
 .form-select:hover {
     border-color: var(--medium-gray);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary-black);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
 
 .form-select:disabled {
     background-color: var(--accent-gray);
     cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Enhanced button styling */
+.download-btn,
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    background: var(--primary-black);
+    color: var(--primary-white);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.download-btn:hover,
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.download-btn:active,
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.download-btn:disabled,
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Checkbox */
@@ -98,10 +160,12 @@
     align-items: center;
     justify-content: center;
     color: var(--medium-gray);
+    transition: all 0.2s ease;
 }
 
 .toggle-password:hover {
     color: var(--primary-black);
+    transform: translateY(-50%) scale(1.1);
 }
 
 .toggle-password span,
@@ -115,5 +179,15 @@
     .form-group {
         margin-bottom: 1.5rem;
         /* 24px */
+    }
+
+    .form-select {
+        padding: 0.875rem 1rem;
+    }
+
+    .download-btn,
+    .btn {
+        padding: 0.875rem 1.25rem;
+        width: 100%;
     }
 }
