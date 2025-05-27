@@ -60,9 +60,9 @@
 }
 
 /* Enhanced form container with more subtle shadow */
-.container form {
+.form-home {
     background: var(--primary-white);
-    border-radius: 6px;
+    border-radius: 4px;
     padding: 2rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }

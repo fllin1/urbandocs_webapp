@@ -2,6 +2,9 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
+const webpack = require("webpack");
+require("dotenv").config(); // Load .env file
+
 module.exports = (argv) => {
   const isProd = argv.mode === "production";
 
@@ -118,8 +121,8 @@ module.exports = (argv) => {
         chunks: [...commonChunks, "app", "mappings", "typewriter"],
       }),
       new HtmlWebpackPlugin({
-        filename: "plu-summary-template.html",
-        template: "src/plu-summary-template.html",
+        filename: "plu-summary.html",
+        template: "src/plu-summary.html",
         chunks: [...commonChunks, "pluSummary"],
       }),
       new HtmlWebpackPlugin({
@@ -138,6 +141,12 @@ module.exports = (argv) => {
             to: "assets",
           },
         ],
+      }),
+      new webpack.DefinePlugin({
+        "process.env.SUPABASE_URL": JSON.stringify(process.env.SUPABASE_URL),
+        "process.env.SUPABASE_ANON_KEY": JSON.stringify(
+          process.env.SUPABASE_ANON_KEY
+        ),
       }),
     ],
     optimization: {

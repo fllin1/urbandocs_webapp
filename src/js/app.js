@@ -19,8 +19,8 @@ import { supabase } from "./supabase-client.js";
 
 // Import API functions
 import {
-  loadVilles,
-  loadZonages,
+  loadCities,
+  loadZonings,
   loadZones,
   findDocument,
   getSelectedDocument, // Function to get the document details from api.js
@@ -28,8 +28,8 @@ import {
 
 // Import UI elements and functions
 import {
-  villeSelect,
-  zonageSelect,
+  citySelect,
+  zoningSelect,
   zoneSelect,
   synthesisBtn,
   showStatus,
@@ -96,7 +96,7 @@ supabase.auth.onAuthStateChange((event, session) => {
     // User is signed in. session.user has details.
     // Login.js handles redirect after login, so no specific action here unless needed.
   } else if (event === "INITIAL_SESSION") {
-    console.log("Event INITIAL_SESSION received. User data:", user.email);
+    console.log("Event INITIAL_SESSION received.");
   } else if (event === "TOKEN_REFRESHED") {
     console.log("Event TOKEN_REFRESHED received. User data:", user.email);
   }
@@ -147,41 +147,41 @@ function downloadDocument() {
 }
 
 // === Event listeners ===
-villeSelect.addEventListener("change", (event) => {
-  const villeId = event.target.value;
-  loadZonages(villeId); // Call API function
+citySelect.addEventListener("change", (event) => {
+  const cityId = event.target.value;
+  loadZonings(cityId); // Call API function
 });
 
-zonageSelect.addEventListener("change", (event) => {
-  const zonageId = event.target.value;
-  loadZones(zonageId); // Call API function
+zoningSelect.addEventListener("change", (event) => {
+  const zoningId = event.target.value;
+  loadZones(zoningId); // Call API function
 });
 
 zoneSelect.addEventListener("change", (event) => {
   const zoneId = event.target.value;
-  const zonageId = zonageSelect.value; // Get current zonage selection
+  const zoningId = zoningSelect.value; // Get current zoning selection
   // TODO : typologieSelect logic
-  if (zoneId && zonageId) {
-    findDocument(zonageId, zoneId, "d6cd2337-5803-4802-a208-1cfa4eeba905"); // Call API function
+  if (zoneId && zoningId) {
+    findDocument(zoningId, zoneId, "7c0f2830-f3fc-4c69-911c-470286f91982"); // Call API function
   } else {
-    showStatus("Veuillez d'abord sélectionner un zonage.", "warning");
+    showStatus("Veuillez d'abord sélectionner un zoning.", "warning");
   }
-  // if (zonageId) {
-  //   loadTypologies(zoneId, zonageId); // Call API function
+  // if (zoningId) {
+  //   loadTypologies(zoneId, zoningId); // Call API function
   // } else {
-  //   showStatus("Veuillez d'abord sélectionner un zonage.", "warning");
+  //   showStatus("Veuillez d'abord sélectionner un zoning.", "warning");
   // }
 });
 
 // typologieSelect.addEventListener("change", (event) => {
 //   const typologieId = event.target.value;
 //   const zoneId = zoneSelect.value;
-//   const zonageId = zonageSelect.value;
-//   if (zoneId && zonageId) {
-//     findDocument(zonageId, zoneId, typologieId); // Call API function
+//   const zoningId = zoningSelect.value;
+//   if (zoneId && zoningId) {
+//     findDocument(zoningId, zoneId, typologieId); // Call API function
 //   } else {
 //     showStatus(
-//       "Veuillez d'abord sélectionner un zonage et une zone.",
+//       "Veuillez d'abord sélectionner un zoning et une zone.",
 //       "warning"
 //     );
 //   }
@@ -192,8 +192,8 @@ synthesisBtn.addEventListener("click", downloadDocument);
 // === Initialisation ===
 document.addEventListener("DOMContentLoaded", async () => {
   // Initialize UI state
-  resetSelect(villeSelect, "Chargement...");
-  resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
+  resetSelect(citySelect, "Chargement...");
+  resetSelect(zoningSelect, "Sélectionnez d'abord une ville");
   resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
   // resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
   if (synthesisBtn) synthesisBtn.disabled = true;
@@ -209,13 +209,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   updateUIForAuthState(initiallyStoredUser); // This will set the initial UI based on localStorage
 
   // Load initial data if on the main page
-  if (villeSelect && zonageSelect && zoneSelect) {
+  if (citySelect && zoningSelect && zoneSelect) {
     showStatus("Initialisation...", "info"); // Show this only when relevant selectors are present
-    resetSelect(villeSelect, "Chargement...");
-    resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
+    resetSelect(citySelect, "Chargement...");
+    resetSelect(zoningSelect, "Sélectionnez d'abord une ville");
     resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
     // resetSelect(typologieSelect, "Sélectionnez d'abord une zone");
-    await loadVilles(); // Start loading cities
+    await loadCities(); // Start loading cities
   } else {
     // If not on the main page with selectors, ensure a relevant status or clear it
     // For example, on login/signup pages, statusMessage might be used for other things.

@@ -79,7 +79,7 @@
       },
       {
         "source": "/plu-summary",
-        "destination": "/plu-summary-template.html"
+        "destination": "/plu-summary.html"
       },
       {
         "source": "/profile",

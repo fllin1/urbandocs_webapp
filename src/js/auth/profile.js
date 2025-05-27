@@ -34,7 +34,7 @@ function showProfileStatus(message, type, elementId) {
 async function fetchUserProfile(userId) {
   const { data, error } = await supabase
     .from("users")
-    .select("nom, prenom, adresse, ville, code_postal, occupation, updated_at")
+    .select("name, prename, adresse, city, code_postal, occupation, updated_at")
     .eq("id", userId)
     .single();
 
@@ -48,10 +48,10 @@ async function fetchUserProfile(userId) {
 
 function populateProfileForm(profile) {
   if (!profile) return;
-  document.getElementById("nom").value = profile.nom || "";
-  document.getElementById("prenom").value = profile.prenom || "";
+  document.getElementById("name").value = profile.name || "";
+  document.getElementById("prename").value = profile.prename || "";
   document.getElementById("adresse").value = profile.adresse || "";
-  document.getElementById("ville").value = profile.ville || "";
+  document.getElementById("city").value = profile.city || "";
   document.getElementById("codePostal").value = profile.code_postal || "";
   document.getElementById("occupation").value = profile.occupation || "";
 
@@ -141,10 +141,10 @@ export async function initProfilePage() {
 
         const updates = {
           id: user.id, // Required for RLS and identifying the row
-          nom: document.getElementById("nom").value,
-          prenom: document.getElementById("prenom").value,
+          name: document.getElementById("name").value,
+          prename: document.getElementById("prename").value,
           adresse: document.getElementById("adresse").value,
-          ville: document.getElementById("ville").value,
+          city: document.getElementById("city").value,
           code_postal: document.getElementById("codePostal").value,
           occupation: document.getElementById("occupation").value,
           updated_at: new Date(), // Supabase best practice

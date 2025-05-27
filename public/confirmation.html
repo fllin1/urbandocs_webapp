@@ -1,6 +1,97 @@
-<!doctype html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Confirmation d'Email - MWPLU</title><link rel="stylesheet" href="css/main.css"/><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/><style>#statusMessage {
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmation d'Email - MWPLU</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      #statusMessage {
         margin-bottom: 15px;
       }
       #tosModal .modal-content {
         border-radius: 8px;
-      }</style><script defer="defer" src="js/303.bundle.js"></script><script defer="defer" src="js/confirmation.bundle.js"></script></head><body><div class="container"><div class="auth-container"><div class="auth-card"><h1 class="auth-title">Confirmation d'Email</h1><div class="auth-subtitle">Confirmez votre adresse email pour activer votre compte</div><div id="loading" class="loading-state hidden"><div class="spinner"></div><p>Vérification en cours...</p></div><div class="terms-section"><div class="form-group"><label class="checkbox-wrapper"><input type="checkbox" id="tosCheckbox" disabled="disabled"/> <span class="checkbox-label">J'ai lu et j'accepte les <a href="#" data-bs-toggle="modal" data-bs-target="#tosModal" style="color: grey; text-decoration: underline">Conditions Générales d'Utilisation</a></span></label></div></div><div id="statusMessage" class="status-message">Veuillez <b>lire les conditions d'utilisation</b> avant de confirmer votre email.</div><button id="confirmButton" class="auth-button" disabled="disabled">Confirmer mon email <span id="confirmSpinner" class="spinner hidden"></span></button></div></div></div><div class="modal fade" id="tosModal" tabindex="-1" aria-labelledby="tosModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-xl"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="tosModalLabel">Conditions d'Utilisation</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="tosModalBody"><p>Chargement des conditions d'utilisation...</p></div></div></div></div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script></body></html>
+      }
+    </style>
+  <script defer src="js/vendors-node_modules_supabase_supabase-js_dist_module_index_js.bundle.js"></script><script defer src="js/confirmation.bundle.js"></script></head>
+  <body>
+    <div class="container">
+      <div class="auth-container">
+        <div class="auth-card">
+          <h1 class="auth-title">Confirmation d'Email</h1>
+          <div class="auth-subtitle">
+            Confirmez votre adresse email pour activer votre compte
+          </div>
+
+          <div id="loading" class="loading-state hidden">
+            <div class="spinner"></div>
+            <p>Vérification en cours...</p>
+          </div>
+
+          <div class="terms-section">
+            <div class="form-group">
+              <label class="checkbox-wrapper">
+                <input type="checkbox" id="tosCheckbox" disabled />
+                <span class="checkbox-label"
+                  >J'ai lu et j'accepte les
+                  <a
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#tosModal"
+                    style="color: grey; text-decoration: underline"
+                    >Conditions Générales d'Utilisation</a
+                  ></span
+                >
+              </label>
+            </div>
+          </div>
+
+          <div id="statusMessage" class="status-message">
+            Veuillez <b>lire les conditions d'utilisation</b> avant de confirmer
+            votre email.
+          </div>
+
+          <button id="confirmButton" class="auth-button" disabled>
+            Confirmer mon email
+            <span id="confirmSpinner" class="spinner hidden"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Updated Bootstrap 5 Modal Structure -->
+    <div
+      class="modal fade"
+      id="tosModal"
+      tabindex="-1"
+      aria-labelledby="tosModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tosModalLabel">
+              Conditions d'Utilisation
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="tosModalBody">
+            <p>Chargement des conditions d'utilisation...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS (must be loaded for modal functionality) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -3,206 +3,150 @@
  * PLU Summary
  * @module plu-summary
  * @description This module handles the PLU summary page.
- * @version 0.0.1
+ * @version 0.0.2
  * @author GreyPanda
  *
  * @changelog
+ * - 0.0.2 (2025-05-27): Rework UI.
  * - 0.0.1 (2025-05-16): Initial version with basic PLU summary page.
  */
 
 import { supabase } from "./supabase-client.js";
-import { showStatus, showError } from "./auth/auth.js";
-import { marked } from "marked";
 
-// Get document ID from URL
-const urlParams = new URLSearchParams(window.location.search);
-const documentId = urlParams.get("id");
+// Global variables
+let currentUser = null;
+let currentDocument = null;
+let currentCommentId = null;
 
-// DOM Elements
-const documentTitle = document.getElementById("documentTitle");
-const pluContent = document.getElementById("pluContent");
-const tocContent = document.getElementById("tocContent");
-const downloadBtn = document.getElementById("downloadBtn");
-const commentForm = document.getElementById("commentForm");
-const commentsList = document.getElementById("commentsList");
-const averageRating = document.getElementById("averageRating");
-const ratingStars = document.getElementById("ratingStars");
+// Initialize page
+document.addEventListener("DOMContentLoaded", async () => {
+  // Check authentication
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    window.location.href = "/login";
+    return;
+  }
+  currentUser = user;
 
-// Initialize marked options
-marked.setOptions({
-  headerIds: true,
-  gfm: true,
+  // Get document ID from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const documentId = urlParams.get("id");
+
+  if (!documentId) {
+    showError("Aucun document spécifié");
+    return;
+  }
+
+  // Load document
+  await loadDocument(documentId);
+
+  // Setup event listeners
+  setupEventListeners();
 });
 
-function formatText(text) {
-  return text
-    .replace(/_/g, " ") // Remplace les underscores par des espaces
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-}
-
-// Load document content
-async function loadDocument() {
+// Load document from Supabase
+async function loadDocument(documentId) {
   try {
+    // Fetch document with related data
     const { data: document, error } = await supabase
       .from("documents")
       .select(
         `
-        id,
-        zonage:zonages(nom, ville:villes(nom)),
-        zone:zones(nom),
-        plu_summary_markdown_content,
-        pdf_storage_path
-      `
+          id,
+          zoning:zonings(name, city:cities(name)),
+          zone:zones(name),
+          html_content,
+          pdf_storage_path,
+          source_plu_date
+        `
       )
       .eq("id", documentId)
       .single();
 
     if (error) throw error;
 
-    // Update title
-    documentTitle.textContent = `PLU de ${formatText(
-      document.zonage.ville.nom
-    )} | ${formatText(document.zonage.nom)} | ${formatText(document.zone.nom)}`;
+    currentDocument = document;
 
-    // Render markdown content
-    const htmlContent = marked(document.plu - summary_markdown_content);
-    pluContent.innerHTML = htmlContent;
+    // Update UI with document info
+    updateDocumentInfo(document);
 
-    // Generate table of contents
-    generateTableOfContents();
+    // Insert HTML content
+    document.getElementById("plu-content").innerHTML = document.html_content;
 
-    // Enable download button if PDF path exists
-    if (document.pdf_storage_path) {
-      downloadBtn.disabled = false;
-      downloadBtn.onclick = () =>
-        downloadPDF(
-          document.pdf_storage_path,
-          document.zonage.ville.nom,
-          document.zonage.nom,
-          document.zone.nom
-        );
-    }
-
-    // Log view
-    await logView(documentId);
-
-    // Load ratings and comments
+    // Load ratings
     await loadRatings();
+
+    // Load comments
     await loadComments();
+
+    // Load download count
+    await loadDownloadCount();
+
+    // Hide loading, show content
+    document.getElementById("loading-state").style.display = "none";
+    document.getElementById("document-content").style.display = "block";
   } catch (error) {
     console.error("Error loading document:", error);
-    showError("Erreur lors du chargement du document");
+    showError("Impossible de charger le document");
   }
 }
 
-// Generate table of contents
-function generateTableOfContents() {
-  const headings = pluContent.querySelectorAll("h2, h3");
-  const toc = document.createElement("ul");
-  toc.className = "toc-list";
+// Update document information in UI
+function updateDocumentInfo(document) {
+  // Breadcrumb
+  document.getElementById("city-name").textContent = document.zoning.city.name;
+  document.getElementById("zoning-name").textContent = document.zoning.name;
+  document.getElementById("zone-name").textContent = document.zone.name;
 
-  headings.forEach((heading) => {
-    const li = document.createElement("li");
-    li.className = "toc-item";
-
-    const a = document.createElement("a");
-    a.href = `#${heading.id}`;
-    a.className = `toc-link toc-${heading.tagName.toLowerCase()}`;
-    a.textContent = heading.textContent;
-
-    li.appendChild(a);
-    toc.appendChild(li);
-  });
-
-  tocContent.appendChild(toc);
+  // Title
+  document.getElementById("doc-city").textContent = document.zoning.city.name;
+  document.getElementById("doc-zone").textContent = document.zone.name;
+  document.getElementById("doc-zoning").textContent = document.zoning.name;
 }
 
-// Download PDF
-async function downloadPDF(pdfPath, ville, zonage, zone) {
-  try {
-    const customFilename = `MEWE_plu_${ville}_${zonage}_${zone}.pdf`;
-    const { data, error } = await supabase.storage
-      .from("urbandocs")
-      .createSignedUrl(pdfPath, 20, {
-        download: customFilename,
-      }); // URL valid for 20 seconds
-
-    if (error) throw error;
-
-    // Create a temporary anchor element
-    const link = document.createElement("a");
-    link.href = data.signedUrl;
-    link.download = customFilename; // Suggest a filename for the download
-
-    // Append to the document, click, and remove
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } catch (error) {
-    console.error("Error downloading PDF:", error);
-    showError("Erreur lors du téléchargement du PDF");
-  }
-}
-
-// Log view
-async function logView(documentId) {
-  try {
-    const { error } = await supabase
-      .from("view_history")
-      .insert([{ document_id: documentId }]);
-
-    if (error) throw error;
-  } catch (error) {
-    console.error("Error logging view:", error);
-  }
-}
-
-// Load ratings
+// Load and display ratings
 async function loadRatings() {
   try {
+    // Get all ratings for this document
     const { data: ratings, error } = await supabase
       .from("ratings")
-      .select("rating")
-      .eq("document_id", documentId);
+      .select("rating, user_id")
+      .eq("document_id", currentDocument.id);
 
     if (error) throw error;
 
-    if (ratings.length > 0) {
+    // Calculate average
+    if (ratings && ratings.length > 0) {
       const average =
-        ratings.reduce((acc, curr) => acc + curr.rating, 0) / ratings.length;
-      averageRating.textContent = `Note moyenne: ${average.toFixed(1)}/5`;
-    }
+        ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length;
+      document.getElementById("average-rating").textContent =
+        average.toFixed(1);
+      document.getElementById("rating-count").textContent = ratings.length;
 
-    // Initialize rating stars
-    for (let i = 1; i <= 5; i++) {
-      const star = document.createElement("span");
-      star.className = "star";
-      star.textContent = "★";
-      star.onclick = () => submitRating(i);
-      ratingStars.appendChild(star);
+      // Check if current user has rated
+      const userRating = ratings.find((r) => r.user_id === currentUser.id);
+      if (userRating) {
+        highlightUserRating(userRating.rating);
+      }
+    } else {
+      document.getElementById("average-rating").textContent = "-";
+      document.getElementById("rating-count").textContent = "0";
     }
   } catch (error) {
     console.error("Error loading ratings:", error);
   }
 }
 
-// Submit rating
-async function submitRating(rating) {
-  try {
-    const { error } = await supabase
-      .from("ratings")
-      .upsert([{ document_id: documentId, rating }]);
-
-    if (error) throw error;
-
-    showStatus("Note enregistrée", "success");
-    await loadRatings();
-  } catch (error) {
-    console.error("Error submitting rating:", error);
-    showError("Erreur lors de l'enregistrement de la note");
-  }
+// Highlight user's rating
+function highlightUserRating(rating) {
+  const stars = document.querySelectorAll("#user-rating .star");
+  stars.forEach((star, index) => {
+    if (index < rating) {
+      star.classList.add("selected");
+    }
+  });
 }
 
 // Load comments
@@ -212,64 +156,354 @@ async function loadComments() {
       .from("comments")
       .select(
         `
-        content,
-        created_at,
-        user:users(email)
-      `
+                id,
+                content,
+                created_at,
+                updated_at,
+                user_id,
+                profiles:user_id(full_name, avatar_url)
+            `
       )
-      .eq("document_id", documentId)
+      .eq("document_id", currentDocument.id)
       .order("created_at", { ascending: false });
 
     if (error) throw error;
 
-    commentsList.innerHTML = comments
-      .map(
-        (comment) => `
-      <div class="comment">
-        <div class="comment-header">
-          <span>${comment.user.email}</span>
-          <span>${new Date(comment.created_at).toLocaleDateString()}</span>
-        </div>
-        <div class="comment-content">${comment.content}</div>
-      </div>
-    `
-      )
-      .join("");
+    // Update comment count
+    document.getElementById("comment-count").textContent = comments.length;
+
+    // Render comments
+    renderComments(comments);
   } catch (error) {
     console.error("Error loading comments:", error);
-    showError("Erreur lors du chargement des commentaires");
   }
 }
 
-// Initialize page
-document.addEventListener("DOMContentLoaded", () => {
-  if (!documentId) {
-    showError("ID du document manquant");
+// Render comments in UI
+function renderComments(comments) {
+  const commentsList = document.getElementById("comments-list");
+  commentsList.innerHTML = "";
+
+  if (comments.length === 0) {
+    commentsList.innerHTML =
+      '<p class="no-comments">Aucun commentaire pour le moment. Soyez le premier à commenter!</p>';
     return;
   }
 
-  loadDocument();
-
-  // Handle comment form submission
-  commentForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const content = document.getElementById("commentInput").value.trim();
-    if (!content) return;
-
-    try {
-      const { error } = await supabase
-        .from("comments")
-        .insert([{ document_id: documentId, content }]);
-
-      if (error) throw error;
-
-      document.getElementById("commentInput").value = "";
-      showStatus("Commentaire ajouté", "success");
-      await loadComments();
-    } catch (error) {
-      console.error("Error submitting comment:", error);
-      showError("Erreur lors de l'ajout du commentaire");
-    }
+  comments.forEach((comment) => {
+    const commentEl = createCommentElement(comment);
+    commentsList.appendChild(commentEl);
   });
-});
+}
+
+// Create comment element
+function createCommentElement(comment) {
+  const div = document.createElement("div");
+  div.className = "comment";
+  div.dataset.commentId = comment.id;
+
+  const isOwner = comment.user_id === currentUser.id;
+  const userName = comment.profiles?.full_name || "Utilisateur anonyme";
+  const avatarUrl =
+    comment.profiles?.avatar_url || "/assets/default-avatar.png";
+  const date = new Date(comment.created_at).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  div.innerHTML = `
+        <div class="comment-header">
+            <div class="comment-author">
+                <img src="${avatarUrl}" alt="${userName}" class="comment-avatar">
+                <div>
+                    <div class="comment-name">${userName}</div>
+                    <div class="comment-date">${date}${
+    comment.updated_at !== comment.created_at ? " (modifié)" : ""
+  }</div>
+                </div>
+            </div>
+            ${
+              isOwner
+                ? `
+                <div class="comment-actions">
+                    <button class="comment-action edit-comment" data-id="${comment.id}">Modifier</button>
+                    <button class="comment-action delete-comment" data-id="${comment.id}">Supprimer</button>
+                </div>
+            `
+                : ""
+            }
+        </div>
+        <div class="comment-content">${escapeHtml(comment.content)}</div>
+    `;
+
+  return div;
+}
+
+// Load download count
+async function loadDownloadCount() {
+  try {
+    const { data, error } = await supabase
+      .from("downloads")
+      .select("id")
+      .eq("document_id", currentDocument.id);
+
+    if (error) throw error;
+
+    document.getElementById("download-count").textContent = data.length;
+  } catch (error) {
+    console.error("Error loading download count:", error);
+  }
+}
+
+// Setup event listeners
+function setupEventListeners() {
+  // Tab switching
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.addEventListener("click", switchTab);
+  });
+
+  // Rating stars
+  document.querySelectorAll("#user-rating .star").forEach((star) => {
+    star.addEventListener("click", handleRating);
+  });
+
+  // Download button
+  document
+    .getElementById("download-btn")
+    .addEventListener("click", handleDownload);
+
+  // Comment submission
+  document
+    .getElementById("submit-comment")
+    .addEventListener("click", submitComment);
+
+  // Comment actions (delegation)
+  document
+    .getElementById("comments-list")
+    .addEventListener("click", handleCommentAction);
+
+  // Modal events
+  document.querySelector(".modal-close").addEventListener("click", closeModal);
+  document.getElementById("cancel-edit").addEventListener("click", closeModal);
+  document
+    .getElementById("save-edit")
+    .addEventListener("click", saveCommentEdit);
+
+  // Logout
+  document.getElementById("logout-btn").addEventListener("click", handleLogout);
+}
+
+// Switch tabs
+function switchTab(e) {
+  const targetTab = e.target.dataset.tab;
+
+  // Update active states
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.tab === targetTab);
+  });
+
+  // Show/hide content
+  document.getElementById("summary-tab").style.display =
+    targetTab === "summary" ? "block" : "none";
+  document.getElementById("comments-tab").style.display =
+    targetTab === "comments" ? "block" : "none";
+}
+
+// Handle rating
+async function handleRating(e) {
+  const rating = parseInt(e.target.dataset.rating);
+
+  try {
+    // Check if user already rated
+    const { data: existing } = await supabase
+      .from("ratings")
+      .select("id")
+      .eq("document_id", currentDocument.id)
+      .eq("user_id", currentUser.id)
+      .single();
+
+    if (existing) {
+      // Update existing rating
+      await supabase
+        .from("ratings")
+        .update({ rating, updated_at: new Date().toISOString() })
+        .eq("id", existing.id);
+    } else {
+      // Insert new rating
+      await supabase.from("ratings").insert({
+        document_id: currentDocument.id,
+        user_id: currentUser.id,
+        rating,
+      });
+    }
+
+    // Update UI
+    document.querySelectorAll("#user-rating .star").forEach((star, index) => {
+      star.classList.toggle("selected", index < rating);
+    });
+
+    // Reload ratings to update average
+    await loadRatings();
+  } catch (error) {
+    console.error("Error rating document:", error);
+    alert("Erreur lors de l'enregistrement de votre note");
+  }
+}
+
+// Handle download
+async function handleDownload() {
+  try {
+    // Get download URL from Supabase Storage
+    const { data: urlData, error: urlError } = await supabase.storage
+      .from("documents")
+      .createSignedUrl(currentDocument.pdf_storage_path, 60); // 60 seconds expiry
+
+    if (urlError) throw urlError;
+
+    // Track download
+    await supabase.from("downloads").insert({
+      document_id: currentDocument.id,
+      user_id: currentUser.id,
+    });
+
+    // Update count
+    const countEl = document.getElementById("download-count");
+    countEl.textContent = parseInt(countEl.textContent) + 1;
+
+    // Trigger download
+    const a = document.createElement("a");
+    a.href = urlData.signedUrl;
+    a.download = `PLU_${currentDocument.zoning.city.name}_${currentDocument.zone.name}.pdf`;
+    a.click();
+  } catch (error) {
+    console.error("Error downloading document:", error);
+    alert("Erreur lors du téléchargement");
+  }
+}
+
+// Submit comment
+async function submitComment() {
+  const content = document.getElementById("comment-input").value.trim();
+
+  if (!content) {
+    alert("Veuillez entrer un commentaire");
+    return;
+  }
+
+  try {
+    const { error } = await supabase.from("comments").insert({
+      document_id: currentDocument.id,
+      user_id: currentUser.id,
+      content,
+    });
+
+    if (error) throw error;
+
+    // Clear input
+    document.getElementById("comment-input").value = "";
+
+    // Reload comments
+    await loadComments();
+  } catch (error) {
+    console.error("Error submitting comment:", error);
+    alert("Erreur lors de la publication du commentaire");
+  }
+}
+
+// Handle comment actions
+function handleCommentAction(e) {
+  if (e.target.classList.contains("edit-comment")) {
+    openEditModal(e.target.dataset.id);
+  } else if (e.target.classList.contains("delete-comment")) {
+    deleteComment(e.target.dataset.id);
+  }
+}
+
+// Open edit modal
+async function openEditModal(commentId) {
+  currentCommentId = commentId;
+
+  // Get comment content
+  const { data: comment } = await supabase
+    .from("comments")
+    .select("content")
+    .eq("id", commentId)
+    .single();
+
+  document.getElementById("edit-comment-input").value = comment.content;
+  document.getElementById("edit-modal").style.display = "flex";
+}
+
+// Close modal
+function closeModal() {
+  document.getElementById("edit-modal").style.display = "none";
+  currentCommentId = null;
+}
+
+// Save comment edit
+async function saveCommentEdit() {
+  const content = document.getElementById("edit-comment-input").value.trim();
+
+  if (!content) {
+    alert("Le commentaire ne peut pas être vide");
+    return;
+  }
+
+  try {
+    await supabase
+      .from("comments")
+      .update({
+        content,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", currentCommentId);
+
+    closeModal();
+    await loadComments();
+  } catch (error) {
+    console.error("Error updating comment:", error);
+    alert("Erreur lors de la modification");
+  }
+}
+
+// Delete comment
+async function deleteComment(commentId) {
+  if (!confirm("Êtes-vous sûr de vouloir supprimer ce commentaire?")) {
+    return;
+  }
+
+  try {
+    await supabase.from("comments").delete().eq("id", commentId);
+
+    await loadComments();
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    alert("Erreur lors de la suppression");
+  }
+}
+
+// Handle logout
+async function handleLogout() {
+  await supabase.auth.signOut();
+  window.location.href = "/login";
+}
+
+// Show error state
+function showError(message) {
+  document.getElementById("loading-state").style.display = "none";
+  document.getElementById("error-message").textContent = message;
+  document.getElementById("error-state").style.display = "block";
+}
+
+// Utility function to escape HTML
+function escapeHtml(text) {
+  const map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}

@@ -2,7 +2,7 @@
 /**
  * Supabase API
  * @module api
- * @description This module handles API calls to fetch data for villes, zoning, zones, and typologies.
+ * @description This module handles API calls to fetch data for cities, zoning, zones, and typologies.
  * @version 0.1.0
  * @author GreyPanda
  * @todo
@@ -20,12 +20,12 @@ import {
   populateSelect,
   resetSelect,
   formatApiName,
-  villeSelect,
-  zonageSelect,
+  citySelect,
+  zoningSelect,
   zoneSelect,
   synthesisBtn,
-  villeSpinner,
-  zonageSpinner,
+  citySpinner,
+  zoningSpinner,
   zoneSpinner,
   documentSpinner,
 } from "./ui.js";
@@ -36,27 +36,27 @@ import { currentUser } from "./app.js";
 let selectedDocument = null;
 
 /**
- * Fetches villes from Supabase
+ * Fetches cities from Supabase
  */
-async function loadVilles() {
-  toggleSpinner(villeSpinner, true);
-  showStatus("Chargement des villes...", "info");
-  villeSelect.disabled = true;
+async function loadCities() {
+  toggleSpinner(citySpinner, true);
+  showStatus("Chargement des cities...", "info");
+  citySelect.disabled = true;
 
   try {
     const { data, error } = await supabase
-      .from("villes")
-      .select("id, nom")
-      .order("nom");
+      .from("cities")
+      .select("id, name")
+      .order("name");
 
     if (error) throw error;
 
     const hasData = populateSelect(
-      villeSelect,
-      data.map((city) => ({ id: city.id, nom: city.nom })),
-      "Sélectionnez une ville",
+      citySelect,
+      data.map((city) => ({ id: city.id, name: city.name })),
+      "Sélectionnez une city",
       "Aucune ville disponible",
-      "ville"
+      "city"
     );
 
     if (hasData) {
@@ -70,71 +70,71 @@ async function loadVilles() {
       showStatus("Aucune ville n'a été trouvée.", "warning");
     }
   } catch (error) {
-    console.error("Erreur lors du chargement des villes:", error);
-    resetSelect(villeSelect, "Erreur chargement");
+    console.error("Erreur lors du chargement des cities:", error);
+    resetSelect(citySelect, "Erreur chargement");
   } finally {
-    toggleSpinner(villeSpinner, false);
+    toggleSpinner(citySpinner, false);
   }
 }
 
 /**
- * Fetches zonages for a city from Supabase
+ * Fetches zonings for a city from Supabase
  */
-async function loadZonages(villeId) {
-  resetSelect(zonageSelect, "Sélectionnez d'abord une ville");
-  resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
+async function loadZonings(cityId) {
+  resetSelect(zoningSelect, "Sélectionnez d'abord une city");
+  resetSelect(zoneSelect, "Sélectionnez d'abord un zoning");
   synthesisBtn.disabled = true;
   selectedDocument = null;
 
-  if (!villeId) {
-    showStatus("Veuillez sélectionner une ville.", "info");
+  if (!cityId) {
+    showStatus("Veuillez sélectionner une city.", "info");
     return;
   }
 
-  toggleSpinner(zonageSpinner, true);
-  showStatus("Chargement des zonages...", "info");
-  zonageSelect.disabled = true;
+  toggleSpinner(zoningSpinner, true);
+  showStatus("Chargement des zonings...", "info");
+  zoningSelect.disabled = true;
 
   try {
     const { data, error } = await supabase
-      .from("zonages")
-      .select("id, nom")
-      .eq("ville_id", villeId)
-      .order("nom");
+      .from("zonings")
+      .select("id, name")
+      .eq("city_id", cityId)
+      .order("name");
 
     if (error) throw error;
 
     const hasData = populateSelect(
-      zonageSelect,
-      data.map((zoning) => ({ id: zoning.id, nom: zoning.nom })),
-      "Sélectionnez un zonage",
+      zoningSelect,
+      data.map((zoning) => ({ id: zoning.id, name: zoning.name })),
+      "Sélectionnez un zoning",
       "Aucun zonage disponible",
-      "zonage"
+      "zoning"
     );
 
     if (hasData) {
       showStatus(`Zonages chargés : ${data.length}`, "info");
     } else {
-      showStatus("Aucun zonage trouvé pour cette ville.", "warning");
+      showStatus("Aucun zonage trouvé pour cette city.", "warning");
     }
   } catch (error) {
-    console.error("Erreur lors du chargement des zonages:", error);
-    resetSelect(zonageSelect, "Erreur chargement");
+    console.error("Erreur lors du chargement des zonings:", error);
+    resetSelect(zoningSelect, "Erreur chargement");
   } finally {
-    toggleSpinner(zonageSpinner, false);
+    toggleSpinner(zoningSpinner, false);
   }
 }
 
 /**
  * Fetches zones for a zoning from Supabase
  */
-async function loadZones(zonageId) {
-  resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
+async function loadZones(zoningId) {
+  resetSelect(zoneSelect, "Sélectionnez d'abord un zoning");
   synthesisBtn.disabled = true;
   selectedDocument = null;
 
-  if (!zonageId) {
-    showStatus("Veuillez sélectionner un zonage.", "info");
+  if (!zoningId) {
+    showStatus("Veuillez sélectionner un zoning.", "info");
     return;
   }
 
@@ -145,15 +145,15 @@ async function loadZones(zonageId) {
   try {
     const { data, error } = await supabase
       .from("zones")
-      .select("id, nom")
-      .eq("zonage_id", zonageId)
-      .order("nom");
+      .select("id, name")
+      .eq("zoning_id", zoningId)
+      .order("name");
 
     if (error) throw error;
 
     const hasData = populateSelect(
       zoneSelect,
-      data.map((zone) => ({ id: zone.id, nom: zone.nom })),
+      data.map((zone) => ({ id: zone.id, name: zone.name })),
       "Sélectionnez une zone",
       "Aucune zone disponible",
       "zone"
@@ -162,7 +162,7 @@ async function loadZones(zonageId) {
     if (hasData) {
       showStatus(`Zones chargées : ${data.length}`, "info");
     } else {
-      showStatus("Aucune zone trouvée pour ce zonage.", "warning");
+      showStatus("Aucune zone trouvée pour ce zoning.", "warning");
     }
   } catch (error) {
     console.error("Erreur lors du chargement des zones:", error);
@@ -175,7 +175,7 @@ async function loadZones(zonageId) {
 /**
  * Fetches document for a zone from Supabase
  */
-async function findDocument(zonageId, zoneId, typologieId) {
+async function findDocument(zoningId, zoneId, typologieId) {
   synthesisBtn.disabled = true;
   selectedDocument = null;
 
@@ -187,7 +187,7 @@ async function findDocument(zonageId, zoneId, typologieId) {
     return;
   }
 
-  if (!zonageId || !zoneId) {
+  if (!zoningId || !zoneId) {
     showStatus("Sélection incomplète pour rechercher le document.", "info");
     return;
   }
@@ -198,11 +198,10 @@ async function findDocument(zonageId, zoneId, typologieId) {
   try {
     const { data, error } = await supabase
       .from("documents")
-      // TODO: add plu_path and plu_markdown_content to the query
       .select("id, source_plu_date")
-      .eq("zonage_id", zonageId)
+      .eq("zoning_id", zoningId)
       .eq("zone_id", zoneId)
-      .eq("typologie_id", typologieId)
+      .eq("typology_id", typologieId)
       .single();
 
     if (error) {
@@ -240,8 +239,8 @@ function getSelectedDocument() {
 }
 
 export {
-  loadVilles,
-  loadZonages,
+  loadCities,
+  loadZonings,
   loadZones,
   findDocument,
   getSelectedDocument,

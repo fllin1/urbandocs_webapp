@@ -15,16 +15,16 @@
 import { zoneNameMappings } from "./mappings";
 
 // --- DOM Element References ---
-const villeSelect = document.getElementById("villeSelect");
-const zonageSelect = document.getElementById("zonageSelect");
+const citySelect = document.getElementById("citySelect");
+const zoningSelect = document.getElementById("zoningSelect");
 const zoneSelect = document.getElementById("zoneSelect");
 const typologieSelect = document.getElementById("typologieSelect");
 const synthesisBtn = document.getElementById("synthesisBtn");
 const statusMessage = document.getElementById("statusMessage");
 
 // Spinners (ensure these IDs exist in your index.html)
-const villeSpinner = document.getElementById("villeSpinner");
-const zonageSpinner = document.getElementById("zonageSpinner");
+const citySpinner = document.getElementById("citySpinner");
+const zoningSpinner = document.getElementById("zoningSpinner");
 const zoneSpinner = document.getElementById("zoneSpinner");
 const typologieSpinner = document.getElementById("typologieSpinner");
 const documentSpinner = document.getElementById("documentSpinner"); // For the final search/download button area
@@ -80,7 +80,7 @@ function resetSelect(selectElement, defaultText) {
 }
 
 /**
- * Formate un nom reçu de l'API (enlève underscores, capitalise)
+ * Formate un name reçu de l'API (enlève underscores, capitalise)
  * Utilisé comme fallback si le mappage spécifique n'existe pas.
  */
 function formatApiName(name) {
@@ -92,10 +92,10 @@ function formatApiName(name) {
 /**
  * Peuple un sélecteur avec des options
  * @param selectElement L'élément select à remplir
- * @param data Tableau d'objets {id, nom}
+ * @param data Tableau d'objets {id, name}
  * @param defaultOptionText Texte de la première option désactivée
  * @param emptyDataText Texte si le tableau data est vide
- * @param dataType 'ville', 'zonage', 'zone', ou 'typologie' pour le formatage conditionnel
+ * @param dataType 'city', 'zoning', 'zone', ou 'typology' pour le formatage conditionnel
  */
 function populateSelect(
   selectElement,
@@ -123,12 +123,12 @@ function populateSelect(
 
     // --- Conditional Formatting Logic ---
     let displayText = "";
-    // If it's a 'zone' and a mapping exists for its 'nom'
-    if (dataType === "zone" && zoneNameMappings.hasOwnProperty(item.nom)) {
-      displayText = zoneNameMappings[item.nom]; // Use the mapped name
+    // If it's a 'zone' and a mapping exists for its 'name'
+    if (dataType === "zone" && zoneNameMappings.hasOwnProperty(item.name)) {
+      displayText = zoneNameMappings[item.name]; // Use the mapped name
     } else {
       // Otherwise, use the general formatting function
-      displayText = formatApiName(item.nom);
+      displayText = formatApiName(item.name);
     }
     option.textContent = displayText; // Apply the chosen text
 
@@ -143,14 +143,14 @@ function populateSelect(
 
 // --- Export Elements and Functions ---
 export {
-  villeSelect,
-  zonageSelect,
+  citySelect,
+  zoningSelect,
   zoneSelect,
   typologieSelect,
   synthesisBtn,
   statusMessage,
-  villeSpinner,
-  zonageSpinner,
+  citySpinner,
+  zoningSpinner,
   zoneSpinner,
   typologieSpinner,
   documentSpinner,
