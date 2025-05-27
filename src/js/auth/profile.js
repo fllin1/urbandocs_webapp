@@ -3,10 +3,12 @@
  * Profile Module
  * @module profile
  * @description Handles user profile management, including data fetching, updates, and account deletion.
- * @version 0.1.0
+ * @version 0.2.1
  *
  * @changelog
- * - 0.1.0 (2024-05-16): Added profile data fetching, updating, and account deletion functionality.
+ * - 0.2.1 (2025-01-27): Updated to use English column names and added date_of_birth support
+ * - 0.2.0 (2025-01-27): Fixed database table references and field mappings to match actual Supabase structure
+ * - 0.1.0 (2025-05-16): Added profile data fetching, updating, and account deletion functionality.
  * - 0.0.2 (2025-05-15): Improved error handling and added loading states (previous versioning was future-dated)
  * - 0.0.1 (2025-05-14): Initial version with basic profile display and logout.
  */
@@ -33,13 +35,15 @@ function showProfileStatus(message, type, elementId) {
 
 async function fetchUserProfile(userId) {
   const { data, error } = await supabase
-    .from("users")
-    .select("name, prename, adresse, city, code_postal, occupation, updated_at")
+    .from("profiles")
+    .select(
+      "first_name, last_name, address, city, postal_code, occupation, phone, date_of_birth, updated_at"
+    )
     .eq("id", userId)
     .single();
 
   if (error && error.code !== "PGRST116") {
-    // PGRST116: " वैद्युत row not found" (row not found)
+    // PGRST116: "row not found"
     console.error("Error fetching profile:", error);
     throw error;
   }
@@ -48,19 +52,26 @@ async function fetchUserProfile(userId) {
 
 function populateProfileForm(profile) {
   if (!profile) return;
-  document.getElementById("name").value = profile.name || "";
-  document.getElementById("prename").value = profile.prename || "";
-  document.getElementById("adresse").value = profile.adresse || "";
-  document.getElementById("city").value = profile.city || "";
-  document.getElementById("codePostal").value = profile.code_postal || "";
+
+  // Map database fields to HTML form fields (HTML still uses French field names)
+  document.getElementById("nom").value = profile.last_name || "";
+  document.getElementById("prenom").value = profile.first_name || "";
+  document.getElementById("adresse").value = profile.address || "";
+  document.getElementById("ville").value = profile.city || "";
+  document.getElementById("codePostal").value = profile.postal_code || "";
   document.getElementById("occupation").value = profile.occupation || "";
+  document.getElementById("telephone").value = profile.phone || "";
+
+  // Handle date of birth
+  if (profile.date_of_birth) {
+    document.getElementById("dateNaissance").value = profile.date_of_birth;
+  }
 
   const memberSinceEl = document.getElementById("memberSince");
   if (memberSinceEl && profile.updated_at) {
-    // Using updated_at as a proxy if created_at isn't directly on profiles
-    memberSinceEl.textContent = new Date(
-      profile.updated_at
-    ).toLocaleDateString();
+    memberSinceEl.textContent = new Date(profile.updated_at).toLocaleDateString(
+      "fr-FR"
+    );
   }
 }
 
@@ -79,7 +90,7 @@ export async function initProfilePage() {
     } = await supabase.auth.getSession();
     if (!session || !session.user) {
       console.log("No active session or user. Redirecting to login.");
-      window.location.href = "/login.html"; // Or your designated login page
+      window.location.href = "/login.html";
       return;
     }
     const user = session.user;
@@ -88,19 +99,17 @@ export async function initProfilePage() {
       userEmailEl.textContent = user.email;
     }
     if (memberSinceEl && user.created_at) {
-      memberSinceEl.textContent = new Date(
-        user.created_at
-      ).toLocaleDateString();
+      memberSinceEl.textContent = new Date(user.created_at).toLocaleDateString(
+        "fr-FR"
+      );
     }
 
     // Fetch and populate profile
-    showLoading("saveProfileBtn"); // Show loading on form initially
+    showLoading("saveProfileBtn");
     const profile = await fetchUserProfile(user.id);
     if (profile) {
       populateProfileForm(profile);
     } else {
-      // If no profile, it might be created by the trigger, or we can pre-fill some things
-      // For now, form will be empty, user can fill and save to create/update.
       console.log("No profile data found for user, form will be empty.");
     }
     hideLoading("saveProfileBtn");
@@ -115,7 +124,7 @@ export async function initProfilePage() {
             "Déconnexion réussie. Redirection...",
             "success",
             "profileFormStatus"
-          ); // Or a global status
+          );
           setTimeout(() => {
             window.location.href = "/";
           }, 200);
@@ -139,16 +148,26 @@ export async function initProfilePage() {
         const profileStatusEl = "profileFormStatus";
         document.getElementById(profileStatusEl).classList.add("hidden");
 
+        // Get form values and map to database fields (using English column names)
         const updates = {
-          id: user.id, // Required for RLS and identifying the row
-          name: document.getElementById("name").value,
-          prename: document.getElementById("prename").value,
-          adresse: document.getElementById("adresse").value,
-          city: document.getElementById("city").value,
-          code_postal: document.getElementById("codePostal").value,
-          occupation: document.getElementById("occupation").value,
-          updated_at: new Date(), // Supabase best practice
+          id: user.id,
+          last_name: document.getElementById("nom").value.trim(),
+          first_name: document.getElementById("prenom").value.trim(),
+          address: document.getElementById("adresse").value.trim(),
+          city: document.getElementById("ville").value.trim(),
+          postal_code: document.getElementById("codePostal").value.trim(),
+          occupation: document.getElementById("occupation").value.trim(),
+          phone: document.getElementById("telephone").value.trim(),
+          date_of_birth: document.getElementById("dateNaissance").value || null,
+          updated_at: new Date().toISOString(),
         };
+
+        // Remove empty fields to avoid constraint violations
+        Object.keys(updates).forEach((key) => {
+          if (updates[key] === "" && key !== "id" && key !== "updated_at") {
+            updates[key] = null;
+          }
+        });
 
         try {
           const { error } = await supabase.from("profiles").upsert(updates);
@@ -183,16 +202,36 @@ export async function initProfilePage() {
         ) {
           showLoading("deleteAccountBtn");
           try {
-            const { error } = await supabase.rpc("delete_user_account");
-            if (error) throw error;
+            // First delete the profile
+            const { error: profileError } = await supabase
+              .from("profiles")
+              .delete()
+              .eq("id", user.id);
 
-            showProfileStatus(
-              "Compte supprimé avec succès. Vous allez être déconnecté et redirigé.",
-              "success",
-              deleteStatusEl
-            );
-            // Attempt to sign out, then redirect.
-            await supabase.auth.signOut();
+            if (profileError) {
+              console.error("Error deleting profile:", profileError);
+            }
+
+            // Then try to delete the user account (this might require admin privileges)
+            const { error } = await supabase.rpc("delete_user_account");
+            if (error) {
+              // If RPC doesn't exist, just sign out the user
+              console.warn("delete_user_account RPC not available:", error);
+              await supabase.auth.signOut();
+              showProfileStatus(
+                "Profil supprimé. Veuillez contacter l'administrateur pour supprimer complètement votre compte.",
+                "info",
+                deleteStatusEl
+              );
+            } else {
+              showProfileStatus(
+                "Compte supprimé avec succès. Vous allez être déconnecté et redirigé.",
+                "success",
+                deleteStatusEl
+              );
+              await supabase.auth.signOut();
+            }
+
             setTimeout(() => {
               window.location.href = "/";
             }, 3000);
@@ -213,8 +252,7 @@ export async function initProfilePage() {
     }
   } catch (error) {
     console.error("Profile page initialization error:", error);
-    // Show a general error on the page if critical elements are missing or main try fails
-    const mainErrorContainer = document.getElementById("profileDetails"); // Or another suitable container
+    const mainErrorContainer = document.getElementById("profileDetails");
     if (mainErrorContainer) {
       mainErrorContainer.innerHTML =
         '<p class="error-message">Impossible de charger les informations du profil. Veuillez réessayer plus tard.</p>';

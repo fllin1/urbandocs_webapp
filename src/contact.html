@@ -5,17 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact - MWPLU</title>
     <link rel="stylesheet" href="css/main.css" />
+    <script>
+      window.addEventListener("scroll", function () {
+        const header = document.querySelector(".site-header");
+        if (window.scrollY > 10) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      });
+    </script>
   </head>
   <body>
-    <header class="site-header">
+    <header class="site-header sticky">
       <div class="container">
         <div class="flex-between">
-          <a href="/" class="header-logo">
-            <img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo" />
+          <a href="/" class="header-logo animate-title">
+            <img src="assets/icons/MWPLU.svg" alt="MWPLU Logo" />
           </a>
-          <nav class="main-nav">
-            <a href="/" class="nav-link">Accueil</a>
-          </nav>
+          <div class="auth-section">
+            <a
+              href="/profile"
+              id="userStatus"
+              class="auth-btn margin-right-sm hidden"
+              >Votre compte</a
+            >
+            <a href="/login" id="loginLink" class="auth-btn margin-right-sm">
+              Se connecter
+            </a>
+            <a href="/signup" id="signupLink" class="auth-btn">
+              Créer un compte
+            </a>
+            <button id="logoutBtn" class="auth-btn hidden">
+              Se déconnecter
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -100,7 +124,75 @@
 
     <footer class="site-footer">
       <div class="container">
-        <p class="text-center">&copy; 2024 MWPLU. Tous droits réservés.</p>
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3 class="footer-title">Contact</h3>
+            <div class="contact-info">
+              <div class="contact-item">
+                <span class="contact-icon">📧</span>
+                <span>contact@mwplu.com</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-icon">📞</span>
+                <span>06 01 84 27 20</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-icon">📍</span>
+                <span>40 Rue Mallifaud, 38100 Grenoble</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-section">
+            <h3 class="footer-title">Liens rapides</h3>
+            <div class="footer-links">
+              <div class="footer-links-column">
+                <a href="/" class="footer-link">Accueil</a>
+                <a href="/about" class="footer-link">À propos</a>
+                <a href="/donation" class="footer-link">Nous soutenir</a>
+              </div>
+              <div class="footer-links-column">
+                <a href="/documentation" class="footer-link">Documentation</a>
+                <a href="/contact" class="footer-link">Contact</a>
+                <a href="/profile" class="footer-link">Mon compte</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-section">
+            <h3 class="footer-title">Suivez-nous</h3>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Twitter">
+                <span class="social-icon">𝕏</span>
+              </a>
+              <a href="#" class="social-link" aria-label="Instagram">
+                <span class="social-icon">📷</span>
+              </a>
+              <a href="#" class="social-link" aria-label="Briefcase">
+                <span class="social-icon">💼</span>
+              </a>
+              <a href="#" class="social-link" aria-label="LinkedIn">
+                <span class="social-icon">💼</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div class="footer-legal">
+            <a href="/policies/mentions-legales" class="legal-link"
+              >Mentions légales</a
+            >
+            <a href="/policies/terms" class="legal-link">CGU</a>
+            <a href="/policies/confidentialite" class="legal-link"
+              >Confidentialité</a
+            >
+            <a href="/policies/cookies" class="legal-link">Cookies</a>
+          </div>
+          <div class="footer-copyright">
+            <p>&copy; 2025 MWPLU. Tous droits réservés.</p>
+          </div>
+        </div>
       </div>
     </footer>
   </body>

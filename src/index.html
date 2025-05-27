@@ -3,35 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MWPLU</title>
+    <title>Accueil - MWPLU</title>
     <link rel="stylesheet" href="css/main.css" />
-    <style>
-      .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        background-color: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        width: 100%;
-        transition: all 0.3s ease;
-      }
-
-      .site-header.scrolled {
-        background-color: rgba(255, 255, 255, 0.8);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        border-bottom: 1px solid var(--border-gray);
-        padding: 4px 0;
-      }
-
-      .site-header .header-logo img {
-        transition: all 0.3s ease;
-      }
-
-      .site-header.scrolled .header-logo img {
-        height: 36px;
-      }
-    </style>
     <script>
       window.addEventListener("scroll", function () {
         const header = document.querySelector(".site-header");
@@ -44,11 +17,11 @@
     </script>
   </head>
   <body>
-    <header class="site-header">
+    <header class="site-header sticky">
       <div class="container">
         <div class="flex-between">
           <a href="/" class="header-logo animate-title">
-            <img src="assets/icons/BLACK-MEWE.svg" alt="MWPLU Logo" />
+            <img src="assets/icons/MWPLU.svg" alt="MWPLU Logo" />
           </a>
           <div class="auth-section">
             <a

@@ -3,15 +3,17 @@
  * PLU Summary
  * @module plu-summary
  * @description This module handles the PLU summary page.
- * @version 0.0.2
+ * @version 0.0.3
  * @author GreyPanda
  *
  * @changelog
+ * - 0.0.3 (2025-01-XX): Added header authentication for dynamic header updates
  * - 0.0.2 (2025-05-27): Rework UI.
  * - 0.0.1 (2025-05-16): Initial version with basic PLU summary page.
  */
 
 import { supabase } from "./supabase-client.js";
+import { initHeaderAuth } from "./auth/header-auth.js";
 
 // Global variables
 let currentUser = null;
@@ -20,6 +22,9 @@ let currentCommentId = null;
 
 // Initialize page
 document.addEventListener("DOMContentLoaded", async () => {
+  // Initialize header authentication first
+  initHeaderAuth();
+
   // Check authentication
   const {
     data: { user },
@@ -50,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function loadDocument(documentId) {
   try {
     // Fetch document with related data
-    const { data: document, error } = await supabase
+    const { data: documentData, error } = await supabase
       .from("documents")
       .select(
         `
@@ -67,13 +72,14 @@ async function loadDocument(documentId) {
 
     if (error) throw error;
 
-    currentDocument = document;
+    currentDocument = documentData;
 
     // Update UI with document info
-    updateDocumentInfo(document);
+    updateDocumentInfo(documentData);
 
     // Insert HTML content
-    document.getElementById("plu-content").innerHTML = document.html_content;
+    document.getElementById("plu-content").innerHTML =
+      documentData.html_content;
 
     // Load ratings
     await loadRatings();
@@ -94,16 +100,18 @@ async function loadDocument(documentId) {
 }
 
 // Update document information in UI
-function updateDocumentInfo(document) {
+function updateDocumentInfo(documentData) {
   // Breadcrumb
-  document.getElementById("city-name").textContent = document.zoning.city.name;
-  document.getElementById("zoning-name").textContent = document.zoning.name;
-  document.getElementById("zone-name").textContent = document.zone.name;
+  document.getElementById("city-name").textContent =
+    documentData.zoning.city.name;
+  document.getElementById("zoning-name").textContent = documentData.zoning.name;
+  document.getElementById("zone-name").textContent = documentData.zone.name;
 
   // Title
-  document.getElementById("doc-city").textContent = document.zoning.city.name;
-  document.getElementById("doc-zone").textContent = document.zone.name;
-  document.getElementById("doc-zoning").textContent = document.zoning.name;
+  document.getElementById("doc-city").textContent =
+    documentData.zoning.city.name;
+  document.getElementById("doc-zone").textContent = documentData.zone.name;
+  document.getElementById("doc-zoning").textContent = documentData.zoning.name;
 }
 
 // Load and display ratings

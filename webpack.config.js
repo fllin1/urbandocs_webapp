@@ -2,9 +2,6 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
-const webpack = require("webpack");
-require("dotenv").config(); // Load .env file
-
 module.exports = (argv) => {
   const isProd = argv.mode === "production";
 
@@ -30,6 +27,12 @@ module.exports = (argv) => {
       profile: "./src/js/entries/profile.js",
       signup: "./src/js/entries/signup.js",
       updatePassword: "./src/js/entries/update-password.js",
+
+      // Page-specific entries for header authentication
+      about: "./src/js/entries/about.js",
+      contact: "./src/js/entries/contact.js",
+      documentation: "./src/js/entries/documentation.js",
+      donation: "./src/js/entries/donation.js",
     },
     output: {
       filename: "js/[name].bundle.js",
@@ -98,22 +101,22 @@ module.exports = (argv) => {
       new HtmlWebpackPlugin({
         filename: "about.html",
         template: "src/about.html",
-        chunks: [...commonChunks],
+        chunks: [...commonChunks, "about"],
       }),
       new HtmlWebpackPlugin({
         filename: "contact.html",
         template: "src/contact.html",
-        chunks: [...commonChunks],
+        chunks: [...commonChunks, "contact"],
       }),
       new HtmlWebpackPlugin({
         filename: "documentation.html",
         template: "src/documentation.html",
-        chunks: [...commonChunks],
+        chunks: [...commonChunks, "documentation"],
       }),
       new HtmlWebpackPlugin({
         filename: "donation.html",
         template: "src/donation.html",
-        chunks: [...commonChunks],
+        chunks: [...commonChunks, "donation"],
       }),
       new HtmlWebpackPlugin({
         filename: "index.html",
@@ -141,12 +144,6 @@ module.exports = (argv) => {
             to: "assets",
           },
         ],
-      }),
-      new webpack.DefinePlugin({
-        "process.env.SUPABASE_URL": JSON.stringify(process.env.SUPABASE_URL),
-        "process.env.SUPABASE_ANON_KEY": JSON.stringify(
-          process.env.SUPABASE_ANON_KEY
-        ),
       }),
     ],
     optimization: {
