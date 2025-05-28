@@ -1,0 +1,249 @@
+/* Policy pages unified styling - Apple-inspired design */
+
+/* CSS Variables for policy pages */
+:root {
+    --policy-primary-color: #333;
+    --policy-secondary-color: #666;
+    --policy-background-color: #fff;
+    --policy-border-color: #eaeaea;
+    --policy-accent-color: #0071e3;
+    --policy-highlight-bg: #f5f5f7;
+}
+
+/* Base policy page styling */
+.policy-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    line-height: 1.6;
+    color: var(--policy-primary-color);
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: var(--policy-background-color);
+}
+
+.policy-container h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--policy-primary-color);
+    letter-spacing: -0.5px;
+}
+
+.policy-container h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--policy-primary-color);
+    border-bottom: 1px solid var(--policy-border-color);
+    padding-bottom: 0.5rem;
+}
+
+.policy-container h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--policy-primary-color);
+}
+
+.policy-container .last-update {
+    text-align: right;
+    color: var(--policy-secondary-color);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.policy-container .article {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--policy-border-color);
+}
+
+.policy-container .article:last-child {
+    border-bottom: none;
+}
+
+.policy-container p {
+    margin-bottom: 1rem;
+    color: var(--policy-secondary-color);
+    text-align: justify;
+}
+
+.policy-container ul,
+.policy-container ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.policy-container li {
+    margin-bottom: 0.5rem;
+    color: var(--policy-secondary-color);
+}
+
+.policy-container a {
+    color: var(--policy-accent-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.policy-container a:hover {
+    text-decoration: underline;
+    color: #005bb5;
+}
+
+.policy-container .highlight {
+    background-color: var(--policy-highlight-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    border-left: 4px solid var(--policy-accent-color);
+}
+
+.policy-container .highlight p {
+    margin-bottom: 0.5rem;
+}
+
+.policy-container .highlight p:last-child {
+    margin-bottom: 0;
+}
+
+/* Special styling for important sections */
+.policy-container .important {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+    border: 1px solid #f0c674;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.policy-container .warning {
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+    border: 1px solid #ff6b6b;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+/* Table styling for policy pages */
+.policy-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.policy-container th,
+.policy-container td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--policy-border-color);
+}
+
+.policy-container th {
+    background-color: var(--policy-highlight-bg);
+    font-weight: 600;
+    color: var(--policy-primary-color);
+}
+
+/* Contact information styling */
+.policy-container .contact-info {
+    background: var(--policy-highlight-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.policy-container .contact-info h3 {
+    margin-top: 0;
+    color: var(--policy-primary-color);
+}
+
+/* Code and monospace text */
+.policy-container code {
+    background-color: var(--policy-highlight-bg);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--policy-primary-color);
+}
+
+/* Responsive design for policy pages */
+@media (max-width: 768px) {
+    .policy-container {
+        padding: 1rem;
+    }
+
+    .policy-container h1 {
+        font-size: 1.5rem;
+    }
+
+    .policy-container h2 {
+        font-size: 1.1rem;
+    }
+
+    .policy-container .last-update {
+        text-align: center;
+    }
+
+    .policy-container ul,
+    .policy-container ol {
+        padding-left: 1rem;
+    }
+
+    .policy-container table {
+        font-size: 0.8rem;
+    }
+
+    .policy-container th,
+    .policy-container td {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .policy-container {
+        padding: 0.5rem;
+    }
+
+    .policy-container h1 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .policy-container .highlight,
+    .policy-container .important,
+    .policy-container .warning {
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+    }
+
+    .policy-container .contact-info {
+        padding: 1rem;
+    }
+}
+
+/* Print styles for policy pages */
+@media print {
+    .policy-container {
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .policy-container .highlight,
+    .policy-container .important,
+    .policy-container .warning {
+        border: 1px solid #ccc;
+        background: #f9f9f9 !important;
+    }
+
+    .policy-container a {
+        color: #000 !important;
+        text-decoration: underline !important;
+    }
+}

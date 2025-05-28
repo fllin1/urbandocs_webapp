@@ -91,7 +91,7 @@
 }
 
 /* Enhanced button styling */
-.download-btn,
+.to-plu-btn,
 .btn {
     display: inline-flex;
     align-items: center;
@@ -111,19 +111,19 @@
     overflow: hidden;
 }
 
-.download-btn:hover,
+.to-plu-btn:hover,
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-.download-btn:active,
+.to-plu-btn:active,
 .btn:active {
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.download-btn:disabled,
+.to-plu-btn:disabled,
 .btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -178,15 +178,15 @@
 @media (max-width: 768px) {
     .form-group {
         margin-bottom: 1.5rem;
-        /* 24px */
     }
 
     .form-select {
         padding: 0.875rem 1rem;
     }
 
-    .download-btn,
+    .to-plu-btn,
     .btn {
+        margin-top: 1rem;
         padding: 0.875rem 1.25rem;
         width: 100%;
     }

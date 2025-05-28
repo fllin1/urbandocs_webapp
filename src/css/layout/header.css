@@ -1,6 +1,6 @@
 /* Header */
 .site-header {
-    padding: 8px 0;
+    padding: 4px 0;
     background-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -35,7 +35,6 @@
 /* Logo and brand styling */
 .header-logo {
     display: flex;
-    align-items: center;
     text-decoration: none;
     transition: all 0.3s ease;
 }
@@ -47,7 +46,7 @@
 }
 
 .site-header.scrolled .header-logo img {
-    height: 36px;
+    height: 38px;
 }
 
 .header-logo:hover img {
@@ -115,6 +114,10 @@
 
 /* Responsive header */
 @media (max-width: 768px) {
+    .site-header {
+        padding: 2px;
+    }
+
     .header-content {
         flex-wrap: wrap;
         gap: 1rem;
@@ -130,19 +133,14 @@
     }
 
     .header-logo img {
-        height: 36px;
-    }
-
-    .site-header.scrolled .header-logo img {
         height: 32px;
     }
 }
 
 @media (max-width: 480px) {
     .auth-section {
-        width: 100%;
-        justify-content: center;
-        margin-top: 0.5rem;
+        width: 70%;
+        justify-content: right;
     }
 
     .auth-btn {

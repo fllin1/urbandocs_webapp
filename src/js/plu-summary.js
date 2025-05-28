@@ -7,7 +7,7 @@
  * @author GreyPanda
  *
  * @changelog
- * - 0.0.3 (2025-01-XX): Added header authentication for dynamic header updates
+ * - 0.0.3 (2025-01-27): Added header authentication for dynamic header updates
  * - 0.0.2 (2025-05-27): Rework UI.
  * - 0.0.1 (2025-05-16): Initial version with basic PLU summary page.
  */
@@ -160,30 +160,65 @@ function highlightUserRating(rating) {
 // Load comments
 async function loadComments() {
   try {
-    const { data: comments, error } = await supabase
+    // First, get the comments
+    const { data: comments, error: commentsError } = await supabase
       .from("comments")
-      .select(
-        `
-                id,
-                content,
-                created_at,
-                updated_at,
-                user_id,
-                profiles:user_id(full_name, avatar_url)
-            `
-      )
+      .select("*")
       .eq("document_id", currentDocument.id)
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (commentsError) throw commentsError;
+
+    if (comments.length === 0) {
+      document.getElementById("comment-count").textContent = "0";
+      renderComments([]);
+      return;
+    }
+
+    // Get unique user IDs
+    const userIds = [...new Set(comments.map((c) => c.user_id))];
+
+    // Fetch profiles for those users
+    // The key here is that profiles.id should match comments.user_id
+    const { data: profiles, error: profilesError } = await supabase
+      .from("profiles")
+      .select("id, full_name, avatar_url")
+      .in("id", userIds);
+
+    if (profilesError) {
+      console.warn("Could not fetch profiles:", profilesError);
+      // Continue without profiles - show comments anyway
+      const commentsWithoutProfiles = comments.map((comment) => ({
+        ...comment,
+        profiles: null,
+      }));
+      document.getElementById("comment-count").textContent = comments.length;
+      renderComments(commentsWithoutProfiles);
+      return;
+    }
+
+    // Map profiles to comments
+    const profilesMap = profiles.reduce((acc, profile) => {
+      acc[profile.id] = profile;
+      return acc;
+    }, {});
+
+    // Attach profiles to comments
+    const commentsWithProfiles = comments.map((comment) => ({
+      ...comment,
+      profiles: profilesMap[comment.user_id] || null,
+    }));
 
     // Update comment count
     document.getElementById("comment-count").textContent = comments.length;
 
     // Render comments
-    renderComments(comments);
+    renderComments(commentsWithProfiles);
   } catch (error) {
     console.error("Error loading comments:", error);
+    // Show empty state on error
+    document.getElementById("comment-count").textContent = "0";
+    renderComments([]);
   }
 }
 
@@ -362,12 +397,22 @@ async function handleRating(e) {
 // Handle download
 async function handleDownload() {
   try {
-    // Get download URL from Supabase Storage
-    const { data: urlData, error: urlError } = await supabase.storage
-      .from("documents")
-      .createSignedUrl(currentDocument.pdf_storage_path, 60); // 60 seconds expiry
+    console.log("PDF storage path:", currentDocument.pdf_storage_path);
 
-    if (urlError) throw urlError;
+    // Remove any leading slashes if present
+    const cleanPath = currentDocument.pdf_storage_path.replace(/^\//, "");
+
+    // Get download URL from Supabase Storage with download parameter
+    const { data: urlData, error: urlError } = await supabase.storage
+      .from("pdfs")
+      .createSignedUrl(cleanPath, 60, {
+        download: true, // This forces the download behavior
+      });
+
+    if (urlError) {
+      console.error("URL Error details:", urlError);
+      throw urlError;
+    }
 
     // Track download
     await supabase.from("downloads").insert({
@@ -383,10 +428,19 @@ async function handleDownload() {
     const a = document.createElement("a");
     a.href = urlData.signedUrl;
     a.download = `PLU_${currentDocument.zoning.city.name}_${currentDocument.zone.name}.pdf`;
+    document.body.appendChild(a); // Add to DOM
     a.click();
+    document.body.removeChild(a); // Remove from DOM
   } catch (error) {
     console.error("Error downloading document:", error);
-    alert("Erreur lors du téléchargement");
+
+    if (error.message && error.message.includes("Object not found")) {
+      alert(
+        "Le fichier PDF n'a pas été trouvé. Veuillez contacter l'administrateur."
+      );
+    } else {
+      alert("Erreur lors du téléchargement");
+    }
   }
 }
 

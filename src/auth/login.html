@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Connexion - MWPLU</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="../css/main.css" />
     <script
       src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileLoginCallback"
       async
@@ -77,21 +77,21 @@
               Se connecter
               <span id="loginSpinner" class="spinner hidden"></span>
             </button>
-          </form>
 
-          <button
-            id="googleSignInBtn"
-            class="auth-button social-button google-button"
-            type="button"
-          >
-            <img
-              src="assets/icons/google.png"
-              alt="Google logo"
-              class="social-icon"
-            />
-            Continuer avec Google
-            <span id="googleSignInSpinner" class="spinner hidden"></span>
-          </button>
+            <button
+              id="googleSignInBtn"
+              class="auth-button social-button margin-top-lg"
+              type="button"
+            >
+              <img
+                src="assets/icons/google.png"
+                alt="Google logo"
+                class="social-icon"
+              />
+              Continuer avec Google
+              <span id="googleSignInSpinner" class="spinner hidden"></span>
+            </button>
+          </form>
 
           <div class="auth-links">
             <a href="/" class="text-link">Retour à l'accueil</a>

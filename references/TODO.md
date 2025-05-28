@@ -7,18 +7,18 @@ _For version 0.2.\*, our main focus will be to add useful features._
 _For version 0.3.\*, our main focus will be to enforce security._
 _For version 0.4.\*, our main focus will be UX._
 
-## 🍖 Priorities
-
-🤖 Powered by Claude, Cursor (Gemini 2.5 Pro) and Bolt.
+🤖 Powered by Cursor (Gemini 2.5 Pro / Claude Sonnet 4) and Bolt.
 
 ![Perplexity](https://img.shields.io/badge/perplexity-000000?style=for-the-badge&logo=perplexity&logoColor=088F8F)
 
-### 🏎️ Quick fix
+## 🏎️ Quick fix
 
 - [ ] Logo MWPLU sur toutes les pages;
-- [ ] Resize Google Auth for mobile;
-- [ ] Resize Turnstile widget for mobile;
-- [ ] Add Instagram link;
+- [ ] Mobile (login) : Resize "Google Auth" / "Se connecter" button and Turnstile widget;
+- [ ] Mobile (home) : Reduce vertical gap between selectors;
+- [ ] Add Social links;
+
+## 🍖 Priorities
 
 ### 🫀 Core Features
 
@@ -33,6 +33,7 @@ _For version 0.4.\*, our main focus will be UX._
   - [ ] Donation page;
   - [ ] Dedicated static pages (Politique de vente, cookies, presentation du produit, mission, présentation de l'équipe)
 - [ ] Add typology _(v 1.0.\*)_;
+- [ ] Add blog page _(v 1.0.\*)_;
 
 ### 🧠 Additional Features
 
@@ -40,13 +41,13 @@ Important features that are not necessary for the launch.
 
 - [x] Add Google Signup/Signin _(v 0.0.\*)_;
 - [x] Use professional domain adress to send all the mails _(v 0.0.\*)_;
-- [ ] Add a comment section (users could ask their cities PLU) _(v 0.0.\*)_;
+- [x] Add a comment section (users could ask their cities PLU) _(v 0.0.\*)_;
 - [ ] Add phone number verification _(v 0.1.\*)_;
-- [ ] Connect Supabase Authentication to the table Users, and to the Frontend _(v 0.2.\*)_;
+- [x] Connect Supabase Authentication to the table Users, and to the Frontend _(v 0.2.\*)_;
 - Voting system for the PLU _(v 0.2.\*)_;
-  - [ ] Can only vote once;
-  - [ ] Mark out of 5;
-  - [ ] Comment section;
+  - [x] Can only vote once;
+  - [x] Mark out of 5;
+  - [x] Comment section;
 - [ ] Links for users to verify source info _(v 0.2.\*)_;
 
 ### 🫁 Atomic Corrections
@@ -75,7 +76,8 @@ The tasks in this section should only concern specific features of the project/p
    - [ ] If the user confirmation link expired, it should display a specific message (currently just shows : _"Votre email n'a pas été confirmé. Veuillez vérifier votre boîte de réception."_ which is inexact) _(v 0.4.\*)_;
 4. **Profile** :
    - [x] Add the link to this page on the user info _(v 0.0.\*)_;
-   - [ ] Fill the page _(v 0.4.\*)_;
+   - [x] Fill the page _(v 0.4.\*)_;
+   - [x] Delete account functionality _(v 0.4.\*)_;
 
 ## 🦯 Ergonomie
 

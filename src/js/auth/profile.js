@@ -36,9 +36,7 @@ function showProfileStatus(message, type, elementId) {
 async function fetchUserProfile(userId) {
   const { data, error } = await supabase
     .from("profiles")
-    .select(
-      "first_name, last_name, address, city, postal_code, occupation, phone, date_of_birth, updated_at"
-    )
+    .select("first_name, last_name, phone, updated_at")
     .eq("id", userId)
     .single();
 
@@ -56,10 +54,6 @@ function populateProfileForm(profile) {
   // Map database fields to HTML form fields (HTML still uses French field names)
   document.getElementById("nom").value = profile.last_name || "";
   document.getElementById("prenom").value = profile.first_name || "";
-  document.getElementById("adresse").value = profile.address || "";
-  document.getElementById("ville").value = profile.city || "";
-  document.getElementById("codePostal").value = profile.postal_code || "";
-  document.getElementById("occupation").value = profile.occupation || "";
   document.getElementById("telephone").value = profile.phone || "";
 
   // Handle date of birth
@@ -90,7 +84,7 @@ export async function initProfilePage() {
     } = await supabase.auth.getSession();
     if (!session || !session.user) {
       console.log("No active session or user. Redirecting to login.");
-      window.location.href = "/login.html";
+      window.location.href = "/";
       return;
     }
     const user = session.user;
@@ -153,12 +147,7 @@ export async function initProfilePage() {
           id: user.id,
           last_name: document.getElementById("nom").value.trim(),
           first_name: document.getElementById("prenom").value.trim(),
-          address: document.getElementById("adresse").value.trim(),
-          city: document.getElementById("ville").value.trim(),
-          postal_code: document.getElementById("codePostal").value.trim(),
-          occupation: document.getElementById("occupation").value.trim(),
           phone: document.getElementById("telephone").value.trim(),
-          date_of_birth: document.getElementById("dateNaissance").value || null,
           updated_at: new Date().toISOString(),
         };
 
