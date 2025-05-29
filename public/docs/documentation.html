@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Documentation - MWPLU</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script>
+      window.addEventListener("scroll", function () {
+        const header = document.querySelector(".site-header");
+        if (window.scrollY > 10) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      });
+    </script>
+  <script defer src="../js/ui.bundle.js"></script><script defer src="../js/footer.bundle.js"></script><script defer src="../js/vendors-node_modules_supabase_supabase-js_dist_module_index_js.bundle.js"></script><script defer src="../js/src_js_auth_header-auth_js.bundle.js"></script><script defer src="../js/documentation.bundle.js"></script></head>
+  <body>
+    <header class="site-header sticky">
+      <div class="container">
+        <div class="flex-between">
+          <a href="/" class="header-logo animate-title">
+            <img src="assets/icons/MWPLU.svg" alt="MWPLU Logo" />
+          </a>
+          <div class="auth-section">
+            <a
+              href="/profile"
+              id="userStatus"
+              class="auth-btn margin-right-sm hidden"
+              >Votre compte</a
+            >
+            <a href="/login" id="loginLink" class="auth-btn margin-right-sm">
+              Se connecter
+            </a>
+            <a href="/signup" id="signupLink" class="auth-btn">
+              Créer un compte
+            </a>
+            <button id="logoutBtn" class="auth-btn hidden">
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container margin-top-lg margin-bottom-lg">
+        <section class="static-page-section card">
+          <h1 class="text-center margin-bottom-md">Documentation</h1>
+
+          <div class="documentation-content">
+            <h2 class="heading-3 margin-bottom-md">Guide d'utilisation</h2>
+            <p class="margin-bottom-md">
+              Découvrez comment utiliser efficacement la plateforme MWPLU pour
+              accéder aux synthèses de Plans Locaux d'Urbanisme.
+            </p>
+
+            <h2 class="heading-3 margin-bottom-md">FAQ</h2>
+            <p class="margin-bottom-md">
+              Trouvez les réponses aux questions les plus fréquemment posées sur
+              notre service et son fonctionnement.
+            </p>
+
+            <h2 class="heading-3 margin-bottom-md">API Documentation</h2>
+            <p class="margin-bottom-md">
+              Documentation technique pour les développeurs souhaitant intégrer
+              nos services dans leurs applications.
+            </p>
+
+            <h2 class="heading-3 margin-bottom-md">Tutoriels</h2>
+            <p class="margin-bottom-md">
+              Guides pas à pas pour vous aider à tirer le meilleur parti de
+              toutes les fonctionnalités de MWPLU.
+            </p>
+
+            <h2 class="heading-3 margin-bottom-md">Liens utiles</h2>
+            <p class="margin-bottom-sm">
+              Ressources officielles et services publics relatifs à l'urbanisme
+              et aux documents administratifs :
+            </p>
+            <ul class="margin-bottom-md">
+              <li class="margin-bottom-sm">
+                <a
+                  href="http://www.geoportail-urbanisme.gouv.fr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>Géoportail de l'urbanisme</strong>
+                </a>
+                - Portail national d'accès aux documents d'urbanisme et
+                servitudes d'utilité publique
+              </li>
+              <li class="margin-bottom-sm">
+                <a
+                  href="https://www.geoportail.gouv.fr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>Géoportail</strong>
+                </a>
+                - Portail national de l'information géographique de référence
+              </li>
+              <li class="margin-bottom-sm">
+                <a
+                  href="https://www.cadastre.gouv.fr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>Cadastre.gouv.fr</strong>
+                </a>
+                - Service de consultation du plan cadastral et des données
+                cadastrales
+              </li>
+              <li class="margin-bottom-sm">
+                <a
+                  href="https://www.legifrance.gouv.fr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>Légifrance</strong>
+                </a>
+                - Service public de la diffusion du droit français (codes, lois,
+                décrets)
+              </li>
+              <li class="margin-bottom-sm">
+                <a
+                  href="https://www.service-public.fr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>Service-Public.fr</strong>
+                </a>
+                - Site officiel de l'administration française pour les démarches
+                administratives
+              </li>
+              <li class="margin-bottom-sm">
+                <a
+                  href="https://www.info.gouv.fr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>Info.gouv.fr</strong>
+                </a>
+                - Site d'information officiel du gouvernement français
+              </li>
+              <li class="margin-bottom-sm">
+                <a
+                  href="https://explore.data.gouv.fr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>Data.gouv.fr</strong>
+                </a>
+                - Plateforme ouverte des données publiques françaises
+              </li>
+              <li class="margin-bottom-sm">
+                <a
+                  href="https://www.ecologie.gouv.fr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>Ministère de l'Écologie</strong>
+                </a>
+                - Informations sur l'aménagement du territoire et la transition
+                écologique
+              </li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer will be loaded here -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/components/footer.js"></script>
+  </body>
+</html>

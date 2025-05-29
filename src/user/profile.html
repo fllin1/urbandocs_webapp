@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil Utilisateur - MWPLU</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script>
+      window.addEventListener("scroll", function () {
+        const header = document.querySelector(".site-header");
+        if (window.scrollY > 10) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <header class="site-header sticky">
+      <div class="container">
+        <div class="flex-between">
+          <a href="/" class="header-logo animate-title">
+            <img src="assets/icons/MWPLU.svg" alt="MWPLU Logo" />
+          </a>
+          <div class="auth-section">
+            <a href="/" id="homeLink" class="auth-btn margin-right-sm">
+              Accueil
+            </a>
+            <button id="logoutBtn" class="auth-btn hidden">
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <section class="profile-section margin-top-lg">
+          <h2 class="text-center margin-bottom-md">Mon Profil</h2>
+          <div id="profileDetails" class="card">
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <p><strong>Statut:</strong> <span>Actif</span></p>
+            <p>
+              <strong>Membre depuis:</strong> <span id="memberSince">-</span>
+            </p>
+          </div>
+
+          <div id="profileFormSection" class="card margin-top-md">
+            <h3 class="margin-bottom-md">Mes informations personnelles</h3>
+            <form id="profileForm">
+              <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label for="prenom">Prénom :</label>
+                <input
+                  type="text"
+                  id="prenom"
+                  name="prenom"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group">
+                <label for="telephone">Téléphone :</label>
+                <input
+                  type="tel"
+                  id="telephone"
+                  name="telephone"
+                  class="form-control"
+                />
+              </div>
+              <button
+                type="submit"
+                id="saveProfileBtn"
+                class="btn btn-primary margin-top-sm"
+              >
+                Enregistrer les modifications
+              </button>
+              <div
+                id="profileFormStatus"
+                class="status-message hidden margin-top-sm"
+              ></div>
+            </form>
+          </div>
+
+          <div id="deleteAccountSection" class="card margin-top-md">
+            <h3 class="margin-bottom-sm">Supprimer le compte</h3>
+            <p class="margin-bottom-sm">
+              Attention : Cette action est irréversible. Toutes vos données
+              seront définitivement perdues.
+            </p>
+            <button id="deleteAccountBtn" class="btn btn-danger">
+              Supprimer mon compte
+            </button>
+            <div
+              id="deleteStatusMessage"
+              class="status-message hidden margin-top-sm"
+            ></div>
+          </div>
+        </section>
+        <!-- TODO: Add a section to change the password -->
+        <!-- TODO : Add status message -->
+      </div>
+    </main>
+
+    <!-- Footer will be loaded here -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/components/footer.js"></script>
+    <script type="module" src="js/profile.js"></script>
+  </body>
+</html>

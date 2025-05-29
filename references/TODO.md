@@ -17,6 +17,8 @@ _For version 0.4.\*, our main focus will be UX._
 - [ ] Mobile (login) : Resize "Google Auth" / "Se connecter" button and Turnstile widget;
 - [ ] Mobile (home) : Reduce vertical gap between selectors;
 - [ ] Add Social links;
+- [ ] On PLU-Summary page, add a third tab with the links to the source plu and useful info;
+- [ ] Redo the style of the PLU-Summary Page.
 
 ## 🍖 Priorities
 

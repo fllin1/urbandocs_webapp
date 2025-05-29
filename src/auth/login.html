@@ -16,9 +16,12 @@
       <div class="container">
         <div class="flex-between">
           <a href="/" class="header-logo">
-            <img src="assets/icons/MWPLU.svg" alt="MWPLU Logo" />
+            <img src="../assets/icons/MWPLU.svg" alt="MWPLU Logo" />
           </a>
           <div class="auth-section">
+            <a href="/" id="homeLink" class="auth-btn margin-right-sm">
+              Accueil
+            </a>
             <a href="/signup" id="signupLink" class="auth-btn">
               Créer un compte
             </a>
@@ -73,7 +76,16 @@
             </div>
             <!-- End Cloudflare Turnstile Placeholder -->
 
-            <button id="loginBtn" class="auth-button" type="submit">
+            <button
+              id="loginBtn"
+              class="auth-button social-button"
+              type="submit"
+            >
+              <img
+                src="../assets/icons/WHITE-PLU.svg"
+                alt="WHITE-PLU logo"
+                class="social-icon"
+              />
               Se connecter
               <span id="loginSpinner" class="spinner hidden"></span>
             </button>
@@ -84,7 +96,7 @@
               type="button"
             >
               <img
-                src="assets/icons/google.png"
+                src="../assets/icons/social/google.svg"
                 alt="Google logo"
                 class="social-icon"
               />
@@ -94,11 +106,9 @@
           </form>
 
           <div class="auth-links">
-            <a href="/" class="text-link">Retour à l'accueil</a>
-            <div class="auth-prompt margin-top-sm">Mot de passe oublié ?</div>
-            <a href="/forgotten-password" class="text-link"
-              >Changer de mot de passe</a
-            >
+            <a href="/forgotten-password" class="text-link">
+              Mot de passe oublié ?
+            </a>
           </div>
 
           <div id="errorMessage" class="error-message hidden"></div>

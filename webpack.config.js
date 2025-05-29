@@ -5,7 +5,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = (argv) => {
   const isProd = argv.mode === "production";
 
-  const commonChunks = ["ui"];
+  const commonChunks = ["ui", "footer"];
 
   const config = {
     mode: isProd ? "production" : "development",
@@ -17,7 +17,7 @@ module.exports = (argv) => {
       mappings: "./src/js/mappings.js",
       pluSummary: "./src/js/plu-summary.js",
       typewriter: "./src/js/typewriter.js",
-      // ui: "./src/js/ui.js",
+      ui: "./src/js/ui.js",
 
       // Authentification
       // auth: "./src/js/entries/auth.js",
@@ -27,6 +27,9 @@ module.exports = (argv) => {
       profile: "./src/js/entries/profile.js",
       signup: "./src/js/entries/signup.js",
       updatePassword: "./src/js/entries/update-password.js",
+
+      // Components
+      footer: "./src/js/components/footer.js",
 
       // Page-specific entries for header authentication
       about: "./src/js/entries/about.js",
@@ -42,53 +45,53 @@ module.exports = (argv) => {
     plugins: [
       // Auth pages
       new HtmlWebpackPlugin({
-        filename: "confirmation.html",
+        filename: "auth/confirmation.html",
         template: "src/auth/confirmation.html",
         chunks: [...commonChunks, "confirmation"],
       }),
       new HtmlWebpackPlugin({
-        filename: "forgotten-password.html",
+        filename: "auth/forgotten-password.html",
         template: "src/auth/forgotten-password.html",
         chunks: [...commonChunks, "forgottenPassword"],
       }),
       new HtmlWebpackPlugin({
-        filename: "login.html",
+        filename: "auth/login.html",
         template: "src/auth/login.html",
         chunks: [...commonChunks, "login"],
       }),
       new HtmlWebpackPlugin({
-        filename: "signup.html",
+        filename: "auth/signup.html",
         template: "src/auth/signup.html",
         chunks: [...commonChunks, "signup"],
       }),
       new HtmlWebpackPlugin({
-        filename: "update-password.html",
+        filename: "auth/update-password.html",
         template: "src/auth/update-password.html",
         chunks: [...commonChunks, "updatePassword"],
       }),
       // Policy pages
       new HtmlWebpackPlugin({
-        filename: "confidentialite.html",
+        filename: "policies/confidentialite.html",
         template: "src/policies/confidentialite.html",
         chunks: [...commonChunks],
       }),
       new HtmlWebpackPlugin({
-        filename: "cookies.html",
+        filename: "policies/cookies.html",
         template: "src/policies/cookies.html",
         chunks: [...commonChunks],
       }),
       new HtmlWebpackPlugin({
-        filename: "mentions-legales.html",
+        filename: "policies/mentions-legales.html",
         template: "src/policies/mentions-legales.html",
         chunks: [...commonChunks],
       }),
       new HtmlWebpackPlugin({
-        filename: "politiques-de-ventes.html",
+        filename: "policies/politiques-de-ventes.html",
         template: "src/policies/politiques-de-ventes.html",
         chunks: [...commonChunks],
       }),
       new HtmlWebpackPlugin({
-        filename: "terms.html",
+        filename: "policies/terms.html",
         template: "src/policies/terms.html",
         chunks: [...commonChunks],
       }),
@@ -99,23 +102,23 @@ module.exports = (argv) => {
         chunks: [...commonChunks],
       }),
       new HtmlWebpackPlugin({
-        filename: "about.html",
-        template: "src/about.html",
+        filename: "info/about.html",
+        template: "src/info/about.html",
         chunks: [...commonChunks, "about"],
       }),
       new HtmlWebpackPlugin({
-        filename: "contact.html",
-        template: "src/contact.html",
+        filename: "info/contact.html",
+        template: "src/info/contact.html",
         chunks: [...commonChunks, "contact"],
       }),
       new HtmlWebpackPlugin({
-        filename: "documentation.html",
-        template: "src/documentation.html",
+        filename: "docs/documentation.html",
+        template: "src/docs/documentation.html",
         chunks: [...commonChunks, "documentation"],
       }),
       new HtmlWebpackPlugin({
-        filename: "donation.html",
-        template: "src/donation.html",
+        filename: "info/donation.html",
+        template: "src/info/donation.html",
         chunks: [...commonChunks, "donation"],
       }),
       new HtmlWebpackPlugin({
@@ -129,8 +132,8 @@ module.exports = (argv) => {
         chunks: [...commonChunks, "pluSummary"],
       }),
       new HtmlWebpackPlugin({
-        filename: "profile.html",
-        template: "src/profile.html",
+        filename: "user/profile.html",
+        template: "src/user/profile.html",
         chunks: [...commonChunks, "profile"],
       }),
       new CopyPlugin({

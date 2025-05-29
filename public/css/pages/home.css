@@ -21,7 +21,7 @@
     right: 50%;
     margin-left: -50vw;
     margin-right: -50vw;
-    padding: 10rem 0;
+    padding: 7rem 0;
     margin-bottom: 3rem;
     overflow: hidden;
     text-align: center;
@@ -38,17 +38,24 @@
     background: linear-gradient(90deg, #e0e0e0 1px, transparent 1px) 0 0,
         linear-gradient(#e0e0e0 1px, transparent 1px) 0 0;
     background-size: 20px 20px;
-    z-index: 0;
+    z-index: 1;
     opacity: 0.5;
     mask: radial-gradient(ellipse 90% 90% at center, black 20%, transparent 80%);
     -webkit-mask: radial-gradient(ellipse 90% 90% at center, black 30%, transparent 80%);
 }
 
 .hero-section h2 {
+    position: relative;
+    z-index: 2;
     font-size: 2.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
     color: var(--primary-black);
+}
+
+.hero-section .lead {
+    position: relative;
+    z-index: 2;
 }
 
 .lead {
@@ -56,7 +63,7 @@
     font-weight: 300;
     color: var(--medium-gray);
     max-width: 700px;
-    margin: 0 auto 2rem auto;
+    margin: 0 auto 0.5rem auto;
 }
 
 /* Enhanced form container with more subtle shadow */
@@ -74,7 +81,7 @@
     }
 
     .hero-section {
-        padding: 4rem 1rem;
+        padding: 3rem 1rem;
     }
 
     .hero-section h2 {

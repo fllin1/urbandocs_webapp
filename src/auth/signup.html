@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Création de compte - MWPLU</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="../css/main.css" />
     <!-- <script
       src="https://js.hcaptcha.com/1/api.js?render=explicit&onload=hCaptchaLoadedCallback"
       async
@@ -21,9 +21,12 @@
       <div class="container">
         <div class="flex-between">
           <a href="/" class="header-logo">
-            <img src="assets/icons/MWPLU.svg" alt="MWPLU Logo" />
+            <img src="../assets/icons/MWPLU.svg" alt="MWPLU Logo" />
           </a>
           <div class="auth-section">
+            <a href="/" id="homeLink" class="auth-btn margin-right-sm">
+              Accueil
+            </a>
             <a href="/login" id="loginLink" class="auth-btn"> Se connecter </a>
           </div>
         </div>
@@ -79,9 +82,6 @@
                   required
                 />
               </div>
-              <div class="form-hint">
-                Format attendu: 0612345678 ou +33612345678.
-              </div>
             </div>
 
             <div class="form-group">
@@ -97,49 +97,43 @@
                   required
                 />
               </div>
-              <div class="form-hint">
-                Un code de vérification vous sera envoyé par SMS.
-              </div>
             </div>
-
-            <!-- hCaptcha Placeholder -->
-            <!-- <div class="form-group">
-              <div id="hcaptcha-container" class="h-captcha"></div>
-            </div> -->
-            <!-- End hCaptcha Placeholder -->
 
             <!-- Cloudflare Turnstile Placeholder -->
             <div class="form-group auth-captcha">
               <div id="turnstile-container"></div>
-              <!-- This is where Turnstile will be rendered -->
             </div>
             <!-- End Cloudflare Turnstile Placeholder -->
 
-            <button id="signupBtn" class="auth-button" type="submit">
+            <button
+              id="signupBtn"
+              class="auth-button social-button"
+              type="submit"
+            >
+              <img
+                src="../assets/icons/WHITE-PLU.svg"
+                alt="WHITE-PLU logo"
+                class="social-icon"
+              />
               Créer un compte
               <span id="signupSpinner" class="spinner hidden"></span>
             </button>
+
+            <button
+              id="googleSignUpBtn"
+              class="auth-button social-button margin-top-lg"
+              type="button"
+            >
+              <img
+                src="../assets/icons/social/google.svg"
+                alt="Google logo"
+                class="social-icon"
+              />
+              S'inscrire avec Google
+            </button>
           </form>
 
-          <button
-            id="googleSignUpBtn"
-            class="auth-button social-button"
-            type="button"
-          >
-            <img
-              src="assets/icons/google.png"
-              alt="Google logo"
-              class="social-icon"
-            />
-            S'inscrire avec Google
-          </button>
-
           <div id="statusMessage" class="status-message hidden"></div>
-
-          <div class="auth-links">
-            <a href="/" class="text-link">Retour à l'accueil</a>
-          </div>
-
           <div id="errorMessage" class="error-message hidden"></div>
         </div>
       </div>

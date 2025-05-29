@@ -5,6 +5,7 @@
     width: 100%;
     padding: 16px;
     font-size: 14px;
+    border-radius: 2px;
     color: var(--primary-white);
     background: var(--primary-black);
     border: none;

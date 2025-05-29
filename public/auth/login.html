@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion - MWPLU</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileLoginCallback"
+      async
+      defer
+    ></script>
+  <script defer src="../js/ui.bundle.js"></script><script defer src="../js/vendors-node_modules_supabase_supabase-js_dist_module_index_js.bundle.js"></script><script defer src="../js/login.bundle.js"></script><script defer src="../js/footer.bundle.js"></script></head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="flex-between">
+          <a href="/" class="header-logo">
+            <img src="../assets/icons/MWPLU.svg" alt="MWPLU Logo" />
+          </a>
+          <div class="auth-section">
+            <a href="/" id="homeLink" class="auth-btn margin-right-sm">
+              Accueil
+            </a>
+            <a href="/signup" id="signupLink" class="auth-btn">
+              Créer un compte
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="auth-container">
+        <div class="auth-card">
+          <h1 class="auth-title">Connexion</h1>
+          <div class="auth-subtitle">Accédez à votre compte MWPLU</div>
+
+          <form id="loginForm" class="auth-form">
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <div class="input-wrapper">
+                <input
+                  type="email"
+                  id="email"
+                  class="form-input"
+                  placeholder="exemple@mail.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Mot de passe</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  id="password"
+                  class="form-input"
+                  placeholder="Votre mot de passe"
+                  required
+                />
+                <button
+                  type="button"
+                  id="togglePassword"
+                  class="toggle-password"
+                >
+                  <i class="bi bi-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Cloudflare Turnstile Placeholder for Login -->
+            <div class="form-group auth-captcha">
+              <div id="turnstile-login-container"></div>
+            </div>
+            <!-- End Cloudflare Turnstile Placeholder -->
+
+            <button
+              id="loginBtn"
+              class="auth-button social-button"
+              type="submit"
+            >
+              <img
+                src="../assets/icons/WHITE-PLU.svg"
+                alt="WHITE-PLU logo"
+                class="social-icon"
+              />
+              Se connecter
+              <span id="loginSpinner" class="spinner hidden"></span>
+            </button>
+
+            <button
+              id="googleSignInBtn"
+              class="auth-button social-button margin-top-lg"
+              type="button"
+            >
+              <img
+                src="../assets/icons/social/google.svg"
+                alt="Google logo"
+                class="social-icon"
+              />
+              Continuer avec Google
+              <span id="googleSignInSpinner" class="spinner hidden"></span>
+            </button>
+          </form>
+
+          <div class="auth-links">
+            <a href="/forgotten-password" class="text-link">
+              Mot de passe oublié ?
+            </a>
+          </div>
+
+          <div id="errorMessage" class="error-message hidden"></div>
+          <div id="statusMessage" class="status-message alert hidden"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

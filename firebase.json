@@ -19,59 +19,59 @@
     "rewrites": [
       {
         "source": "/confirmation",
-        "destination": "/confirmation.html"
+        "destination": "/auth/confirmation.html"
       },
       {
         "source": "/forgotten-password",
-        "destination": "/forgotten-password.html"
+        "destination": "/auth/forgotten-password.html"
       },
       {
         "source": "/login",
-        "destination": "/login.html"
+        "destination": "/auth/login.html"
       },
       {
         "source": "/signup",
-        "destination": "/signup.html"
+        "destination": "/auth/signup.html"
       },
       {
         "source": "/update-password",
-        "destination": "/update-password.html"
+        "destination": "/auth/update-password.html"
       },
       {
         "source": "/confidentialite",
-        "destination": "/confidentialite.html"
+        "destination": "/policies/confidentialite.html"
       },
       {
         "source": "/cookies",
-        "destination": "/cookies.html"
+        "destination": "/policies/cookies.html"
       },
       {
         "source": "/mentions-legales",
-        "destination": "/mentions-legales.html"
+        "destination": "/policies/mentions-legales.html"
       },
       {
         "source": "/politiques-de-ventes",
-        "destination": "/politiques-de-ventes.html"
+        "destination": "/policies/politiques-de-ventes.html"
       },
       {
         "source": "/terms",
-        "destination": "/terms.html"
+        "destination": "/policies/terms.html"
       },
       {
         "source": "/about",
-        "destination": "/about.html"
+        "destination": "/info/about.html"
       },
       {
         "source": "/contact",
-        "destination": "/contact.html"
+        "destination": "/info/contact.html"
       },
       {
         "source": "/documentation",
-        "destination": "/documentation.html"
+        "destination": "/docs/documentation.html"
       },
       {
         "source": "/donation",
-        "destination": "/donation.html"
+        "destination": "/info/donation.html"
       },
       {
         "source": "/",
@@ -83,7 +83,7 @@
       },
       {
         "source": "/profile",
-        "destination": "/profile.html"
+        "destination": "/user/profile.html"
       }
     ]
   }

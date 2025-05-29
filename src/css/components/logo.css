@@ -9,18 +9,15 @@
 .social-button {
     display: inline-flex;
     align-items: center;
-    position: relative;
     justify-content: center;
     text-align: center;
-    padding-left: 30px;
+    gap: 8px;
+    position: relative;
 }
 
 .social-button img {
     height: 18px;
     width: auto;
     max-width: 20px;
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+    flex-shrink: 0;
 }
