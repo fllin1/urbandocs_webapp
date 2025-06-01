@@ -5,11 +5,11 @@
   "targets": {
     "urbandocs": {
       "hosting": {
-        "prod": [
-          "urbandocs"
-        ],
         "preprod": [
           "mwplu-preprod"
+        ],
+        "production": [
+          "urbandocs"
         ]
       }
     }

@@ -13,78 +13,115 @@
       "runtime": "python313"
     }
   ],
-  "hosting": {
-    "public": "public",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "/confirmation",
-        "destination": "/auth/confirmation.html"
-      },
-      {
-        "source": "/forgotten-password",
-        "destination": "/auth/forgotten-password.html"
-      },
-      {
-        "source": "/login",
-        "destination": "/auth/login.html"
-      },
-      {
-        "source": "/signup",
-        "destination": "/auth/signup.html"
-      },
-      {
-        "source": "/update-password",
-        "destination": "/auth/update-password.html"
-      },
-      {
-        "source": "/confidentialite",
-        "destination": "/policies/confidentialite.html"
-      },
-      {
-        "source": "/cookies",
-        "destination": "/policies/cookies.html"
-      },
-      {
-        "source": "/mentions-legales",
-        "destination": "/policies/mentions-legales.html"
-      },
-      {
-        "source": "/politiques-de-ventes",
-        "destination": "/policies/politiques-de-ventes.html"
-      },
-      {
-        "source": "/terms",
-        "destination": "/policies/terms.html"
-      },
-      {
-        "source": "/about",
-        "destination": "/info/about.html"
-      },
-      {
-        "source": "/contact",
-        "destination": "/info/contact.html"
-      },
-      {
-        "source": "/documentation",
-        "destination": "/docs/documentation.html"
-      },
-      {
-        "source": "/donation",
-        "destination": "/info/donation.html"
-      },
-      {
-        "source": "/",
-        "destination": "/index.html"
-      },
-      {
-        "source": "/plu-summary",
-        "destination": "/plu-summary.html"
-      },
-      {
-        "source": "/profile",
-        "destination": "/user/profile.html"
+  "hosting": [
+    {
+      "target": "production",
+      "public": "public",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "headers": [
+        {
+          "source": "**/*.@(js|css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(html|json)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        },
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            }
+          ]
+        }
+      ],
+      "cleanUrls": true,
+      "trailingSlash": false,
+      "appAssociation": "AUTO",
+      "i18n": {
+        "root": "/fr"
       }
-    ]
-  }
+    },
+    {
+      "target": "preprod",
+      "public": "public",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "headers": [
+        {
+          "source": "**/*.@(js|css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(html|json)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        },
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=()"
+            }
+          ]
+        }
+      ],
+      "cleanUrls": true,
+      "trailingSlash": false,
+      "appAssociation": "AUTO"
+    }
+  ]
 }

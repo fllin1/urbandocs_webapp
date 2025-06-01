@@ -13,12 +13,23 @@ _For version 0.4.\*, our main focus will be UX._
 
 ## 🏎️ Quick fix
 
-- [ ] Logo MWPLU sur toutes les pages;
-- [ ] Mobile (login) : Resize "Google Auth" / "Se connecter" button and Turnstile widget;
-- [ ] Mobile (home) : Reduce vertical gap between selectors;
+- [ ] Remove chapters in the templates of the plu-summaries (pdf as well);
+- [ ] Add a tab in plu-summary for downloads;
+- [x] Correct google creation account redirection issues;
+- [ ] Add a selector for users to chose their occupation;
+- [x] Hide temporarly the account suppression feature;
+- [x] Correct size of logos in the policies pages' footer;
+- [x] Remove tutorials in the documentation page;
+- [ ] Add CAPTCHA in the contact form;
+- [ ] Keep data on the deleted comments;
+- [ ] Add blog;
+- [x] Remove "SIFT" in the home subtitle;
+- [x] Logo MWPLU sur toutes les pages;
+- [x] Mobile (login) : Resize "Google Auth" / "Se connecter" button and Turnstile widget;
+- [x] Mobile (home) : Reduce vertical gap between selectors;
 - [ ] Add Social links;
-- [ ] On PLU-Summary page, add a third tab with the links to the source plu and useful info;
-- [ ] Redo the style of the PLU-Summary Page.
+- [x] On PLU-Summary page, add a third tab with the links to the source plu and useful info;
+- [x] Redo the style of the PLU-Summary Page.
 
 ## 🍖 Priorities
 

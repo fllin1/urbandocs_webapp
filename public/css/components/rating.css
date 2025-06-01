@@ -1,0 +1,270 @@
+/**
+ * Rating Component
+ * @description Reusable star rating component with breakdown display
+ * @version 1.0.0
+ * @author GreyPanda
+ */
+
+/* Rating Container */
+.rating-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+    .rating-container {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+/* Rating Summary */
+.rating-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 200px;
+}
+
+.rating-number {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-tight);
+}
+
+.rating-stars {
+    display: flex;
+    gap: var(--space-1);
+    margin: var(--space-2) 0;
+}
+
+.rating-star {
+    width: 20px;
+    height: 20px;
+    color: var(--color-warning-500);
+}
+
+.rating-star--empty {
+    color: var(--color-border-secondary);
+}
+
+.rating-count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+/* Interactive Rating */
+.user-rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+}
+
+.user-rating-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+}
+
+.user-stars {
+    display: flex;
+    gap: var(--space-1);
+}
+
+.star-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--color-border-secondary);
+    transition: var(--transition-colors);
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
+}
+
+
+.star-btn.active {
+    color: var(--color-warning-500);
+}
+
+/* Rating Breakdown */
+.rating-breakdown {
+    flex: 1;
+    min-width: 300px;
+}
+
+.rating-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+}
+
+.rating-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    min-width: 12px;
+    text-align: right;
+}
+
+.rating-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.rating-bar-fill {
+    height: 100%;
+    background: var(--color-warning-500);
+    border-radius: var(--radius-full);
+    transition: width var(--transition-slow);
+    width: 0%;
+}
+
+.rating-percentage {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    min-width: 32px;
+    text-align: right;
+}
+
+/* Rating Size Variants */
+.rating--small .rating-number {
+    font-size: var(--font-size-2xl);
+}
+
+.rating--small .rating-star {
+    width: 16px;
+    height: 16px;
+}
+
+.rating--small .star-btn {
+    font-size: 20px;
+}
+
+.rating--large .rating-number {
+    font-size: var(--font-size-5xl);
+}
+
+.rating--large .rating-star {
+    width: 24px;
+    height: 24px;
+}
+
+.rating--large .star-btn {
+    font-size: 28px;
+}
+
+/* Rating States */
+.rating--readonly .star-btn {
+    cursor: default;
+    pointer-events: none;
+}
+
+.rating--loading .rating-breakdown {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.rating--loading .rating-bar-fill {
+    background: var(--color-bg-tertiary);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Compact Rating Layout */
+.rating--compact {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.rating--compact .rating-summary {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: auto;
+}
+
+.rating--compact .rating-number {
+    font-size: var(--font-size-xl);
+}
+
+.rating--compact .user-rating {
+    margin-top: 0;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Hover Effects */
+.user-stars:hover .star-btn {
+    transform: scale(1.1);
+}
+
+.star-btn:hover~.star-btn {
+    color: var(--color-border-secondary);
+}
+
+/* Animation */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Accessibility */
+.star-btn[aria-pressed="true"] {
+    color: var(--color-warning-500);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .rating-bar-fill,
+    .star-btn,
+    .user-stars:hover .star-btn {
+        transition: none;
+        transform: none;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+    }
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+    .rating-bar-bg {
+        background: var(--color-primary-800);
+    }
+
+    .star-btn {
+        color: var(--color-primary-600);
+    }
+
+    .star-btn:hover,
+    .star-btn:focus,
+    .star-btn.active {
+        color: var(--color-warning-400);
+    }
+
+    .rating-bar-fill {
+        background: var(--color-warning-400);
+    }
+}

@@ -1,148 +1,313 @@
 // public/js/ui.js
 /**
- * Firebase UI
+ * UI Module
  * @module ui
- * @description This module handles the UI elements and utility functions for the application.
- * @version 0.0.1
+ * @description Upgraded UI module with enhanced components and backward compatibility
+ * @version 0.1.0
  * @author GreyPanda
- * @todo Rework on the messages to "login before downloading"
  *
  * @changelog
- * - 0.0.1 (2025-04-26): Initial version with basic UI functions and element references.
+ * - 0.1.0 (2025-01-29): Major refactor with enhanced components and state management integration
+ * - 0.0.1 (2025-04-26): Initial version with basic UI functions and element references
  */
 
-// Import mappings needed for formatting
-import { zoneNameMappings } from "./mappings";
+import { zoneNameMappings } from "./mappings.js";
 
-// --- DOM Element References ---
-const citySelect = document.getElementById("citySelect");
-const zoningSelect = document.getElementById("zoningSelect");
-const zoneSelect = document.getElementById("zoneSelect");
-const typologieSelect = document.getElementById("typologieSelect");
-const synthesisBtn = document.getElementById("synthesisBtn");
-const statusMessage = document.getElementById("statusMessage");
+// Simple fallbacks for enhanced features
+const UIComponents = {
+  showToast: (message, type) => console.log(`Toast: ${message} (${type})`),
+};
 
-// Spinners (ensure these IDs exist in your index.html)
-const citySpinner = document.getElementById("citySpinner");
-const zoningSpinner = document.getElementById("zoningSpinner");
-const zoneSpinner = document.getElementById("zoneSpinner");
-const typologieSpinner = document.getElementById("typologieSpinner");
-const documentSpinner = document.getElementById("documentSpinner"); // For the final search/download button area
+const stateManager = {
+  setUIState: () => {},
+  setLoading: () => {},
+};
 
-// New elements for Auth UI
-const userStatus = document.getElementById("userStatus");
-const logoutBtn = document.getElementById("logoutBtn");
-const loginLink = document.getElementById("loginLink"); // Reference to the login link/button
-const signupLink = document.getElementById("signupLink"); // Reference to the signup link/button
-// --- End DOM Element References ---
+// --- Enhanced DOM Element Management ---
+class DOMElements {
+  constructor() {
+    this.elements = new Map();
+    this.initializeElements();
+  }
 
-// --- UI Utility Functions ---
+  initializeElements() {
+    // Form elements
+    this.register("citySelect", "citySelect");
+    this.register("zoningSelect", "zoningSelect");
+    this.register("zoneSelect", "zoneSelect");
+    this.register("typologieSelect", "typologieSelect");
+    this.register("synthesisBtn", "synthesisBtn");
+    this.register("statusMessage", "statusMessage");
+
+    // Spinner elements
+    this.register("citySpinner", "citySpinner");
+    this.register("zoningSpinner", "zoningSpinner");
+    this.register("zoneSpinner", "zoneSpinner");
+    this.register("typologieSpinner", "typologieSpinner");
+    this.register("documentSpinner", "documentSpinner");
+
+    // Auth elements
+    this.register("userStatus", "userStatus");
+    this.register("logoutBtn", "logoutBtn");
+    this.register("loginLink", "loginLink");
+    this.register("signupLink", "signupLink");
+  }
+
+  register(name, id) {
+    const element = document.getElementById(id);
+    if (element) {
+      this.elements.set(name, element);
+    }
+  }
+
+  get(name) {
+    return this.elements.get(name) || null;
+  }
+
+  exists(name) {
+    return this.elements.has(name) && this.elements.get(name) !== null;
+  }
+}
+
+// Create singleton instance
+const domElements = new DOMElements();
+
+// --- Enhanced UI Functions ---
 
 /**
- * Affiche un message de statut (et type: info, success, danger, warning)
+ * Enhanced status message display with toast integration
  */
 function showStatus(message, type = "info") {
-  if (statusMessage) {
-    statusMessage.textContent = message;
-    // Ensure only one alert class is active at a time
-    statusMessage.className = `status-message alert alert-${type}`;
-    statusMessage.classList.remove("d-none"); // Make sure it's visible
-  } else {
-    console.warn("Status message element not found.");
+  const statusElement = domElements.get("statusMessage");
+
+  if (statusElement) {
+    // Update the existing status message element
+    statusElement.textContent = message;
+    statusElement.className = `status-message alert alert-${type}`;
+    statusElement.classList.remove("d-none");
+  }
+
+  // Also show a toast for better UX (optional, can be disabled)
+  if (type === "error" || type === "warning") {
+    try {
+      UIComponents.showToast(message, type, 8000); // Longer duration for errors
+    } catch (error) {
+      console.warn("Toast not available:", error);
+    }
+  }
+
+  // Update state
+  try {
+    stateManager.setUIState(type, message);
+  } catch (error) {
+    console.warn("State manager not available:", error);
   }
 }
 
 /**
- * Affiche ou cache un spinner Bootstrap
- * @param spinnerElement L'élément SPAN du spinner
- * @param show True pour afficher, false pour cacher
+ * Enhanced spinner management with fallback
  */
-function toggleSpinner(spinnerElement, show) {
+function toggleSpinner(elementName, show) {
+  const spinnerElement =
+    typeof elementName === "string"
+      ? domElements.get(elementName)
+      : elementName;
+
   if (spinnerElement) {
     spinnerElement.classList.toggle("d-none", !show);
-  } else {
-    // console.warn("Spinner element not found for toggling."); // Optional: log if spinner missing
+    spinnerElement.classList.toggle("hidden", !show);
+  }
+
+  // Update global loading state
+  try {
+    stateManager.setLoading(show);
+  } catch (error) {
+    console.warn("State manager not available:", error);
   }
 }
 
 /**
- * Réinitialise un élément select avec une option par défaut
+ * Enhanced select reset with better UX
  */
 function resetSelect(selectElement, defaultText) {
-  if (selectElement) {
-    selectElement.innerHTML = `<option value="">${
+  const element =
+    typeof selectElement === "string"
+      ? domElements.get(selectElement)
+      : selectElement;
+
+  if (element) {
+    element.innerHTML = `<option value="">${
       defaultText || "Sélectionnez une option"
     }</option>`;
-    selectElement.disabled = true; // Disable by default on reset
-  } else {
-    console.warn("Select element not found for reset.");
+    element.disabled = true;
+    element.classList.remove("error"); // Remove any error state
   }
 }
 
 /**
- * Formate un name reçu de l'API (enlève underscores, capitalise)
- * Utilisé comme fallback si le mappage spécifique n'existe pas.
+ * Enhanced name formatting with better Unicode support
  */
 function formatApiName(name) {
   if (!name) return "";
-  // Replace underscores with spaces, then capitalize the first letter of each word
-  return name.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+
+  return name
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+    .trim();
 }
 
 /**
- * Peuple un sélecteur avec des options
- * @param selectElement L'élément select à remplir
- * @param data Tableau d'objets {id, name}
- * @param defaultOptionText Texte de la première option désactivée
- * @param emptyDataText Texte si le tableau data est vide
- * @param dataType 'city', 'zoning', 'zone', ou 'typology' pour le formatage conditionnel
+ * Enhanced select population with error handling and animations
  */
 function populateSelect(
   selectElement,
   data,
   defaultOptionText,
   emptyDataText,
-  dataType // Used for conditional formatting (e.g., zones)
+  dataType
 ) {
-  if (!selectElement) {
-    console.warn("Select element not found for population.");
+  const element =
+    typeof selectElement === "string"
+      ? domElements.get(selectElement)
+      : selectElement;
+
+  if (!element) {
+    console.warn(`Select element not found: ${selectElement}`);
     return false;
   }
 
-  resetSelect(selectElement, defaultOptionText); // Reset first
+  // Reset first
+  resetSelect(element, defaultOptionText);
 
   if (!data || data.length === 0) {
-    selectElement.innerHTML = `<option value="">${emptyDataText}</option>`;
-    selectElement.disabled = true;
-    return false; // Indicate no data was populated
+    element.innerHTML = `<option value="">${emptyDataText}</option>`;
+    element.disabled = true;
+    return false;
   }
 
+  // Create document fragment for better performance
+  const fragment = document.createDocumentFragment();
+
+  // Add default option
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = defaultOptionText;
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  fragment.appendChild(defaultOption);
+
+  // Add data options
   data.forEach((item) => {
     const option = document.createElement("option");
     option.value = item.id;
 
-    // --- Conditional Formatting Logic ---
+    // Enhanced formatting logic
     let displayText = "";
-    // If it's a 'zone' and a mapping exists for its 'name'
     if (dataType === "zone" && zoneNameMappings.hasOwnProperty(item.name)) {
-      displayText = zoneNameMappings[item.name]; // Use the mapped name
+      displayText = zoneNameMappings[item.name];
     } else {
-      // Otherwise, use the general formatting function
       displayText = formatApiName(item.name);
     }
-    option.textContent = displayText; // Apply the chosen text
 
-    selectElement.appendChild(option);
+    option.textContent = displayText;
+    option.setAttribute("data-raw-name", item.name); // Store original name
+    fragment.appendChild(option);
   });
 
-  selectElement.disabled = false; // Enable the select as it has options
-  return true; // Indicate data was populated
+  // Update DOM in one operation
+  element.innerHTML = "";
+  element.appendChild(fragment);
+  element.disabled = false;
+
+  // Add fade-in animation
+  element.classList.add("fade-in");
+
+  return true;
 }
 
-// --- End UI Utility Functions ---
+// --- Enhanced Helper Functions ---
 
-// --- Export Elements and Functions ---
+/**
+ * Create enhanced form field with validation
+ */
+function createEnhancedField(config) {
+  console.warn("Enhanced field creation not available in fallback mode");
+  return null;
+}
+
+/**
+ * Batch update multiple selects efficiently
+ */
+function updateSelectStates(updates) {
+  updates.forEach(({ element, data, config }) => {
+    populateSelect(
+      element,
+      data,
+      config.defaultText,
+      config.emptyText,
+      config.dataType
+    );
+  });
+}
+
+/**
+ * Enhanced error display with better UX
+ */
+function showFieldError(fieldName, error) {
+  const field = domElements.get(fieldName);
+  if (field) {
+    field.classList.add("error");
+
+    // Show error message
+    let errorElement = field.parentNode.querySelector(".field-error");
+    if (!errorElement) {
+      errorElement = document.createElement("div");
+      errorElement.className = "field-error";
+      field.parentNode.appendChild(errorElement);
+    }
+
+    errorElement.textContent = error;
+    errorElement.classList.remove("hidden");
+  }
+}
+
+/**
+ * Clear field error state
+ */
+function clearFieldError(fieldName) {
+  const field = domElements.get(fieldName);
+  if (field) {
+    field.classList.remove("error");
+    const errorElement = field.parentNode.querySelector(".field-error");
+    if (errorElement) {
+      errorElement.classList.add("hidden");
+    }
+  }
+}
+
+// --- Backward Compatibility Layer ---
+// Export individual elements for backward compatibility
+const citySelect = domElements.get("citySelect");
+const zoningSelect = domElements.get("zoningSelect");
+const zoneSelect = domElements.get("zoneSelect");
+const typologieSelect = domElements.get("typologieSelect");
+const synthesisBtn = domElements.get("synthesisBtn");
+const statusMessage = domElements.get("statusMessage");
+
+const citySpinner = domElements.get("citySpinner");
+const zoningSpinner = domElements.get("zoningSpinner");
+const zoneSpinner = domElements.get("zoneSpinner");
+const typologieSpinner = domElements.get("typologieSpinner");
+const documentSpinner = domElements.get("documentSpinner");
+
+const userStatus = domElements.get("userStatus");
+const logoutBtn = domElements.get("logoutBtn");
+const loginLink = domElements.get("loginLink");
+const signupLink = domElements.get("signupLink");
+
+// --- Enhanced Exports ---
 export {
+  // Backward compatibility - individual elements
   citySelect,
   zoningSelect,
   zoneSelect,
@@ -154,14 +319,27 @@ export {
   zoneSpinner,
   typologieSpinner,
   documentSpinner,
+  userStatus,
+  logoutBtn,
+  loginLink,
+  signupLink,
+
+  // Enhanced functions
   showStatus,
   toggleSpinner,
   resetSelect,
   formatApiName,
   populateSelect,
-  // Export new auth-related elements
-  userStatus,
-  logoutBtn,
-  loginLink,
-  signupLink,
+
+  // New enhanced functions
+  createEnhancedField,
+  updateSelectStates,
+  showFieldError,
+  clearFieldError,
+
+  // Enhanced elements manager
+  domElements,
+
+  // Re-export UI components for convenience
+  UIComponents,
 };

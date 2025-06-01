@@ -2,10 +2,12 @@
 /**
  * Confirmation Module
  * @module confirmation
- * @description Handles email confirmation with Supabase API
- * @version 0.1.1
+ * @description Handles email confirmation with manual confirmation button and CAPTCHA verification.
+ * @version 0.3.0
  *
  * @changelog
+ * - 0.3.0 (2025-01-XX): Added manual confirmation with CAPTCHA requirement.
+ * - 0.2.0 (2025-05-31): Simplified page to auto-confirm and redirect. Removed ToS agreement from this page.
  * - 0.1.1 (2025-05-17): Corrected success message and redirect to login page.
  * - 0.1.0 (2025-05-15): Converted to use direct Supabase API calls instead of Firebase Cloud Functions.
  * - 0.0.3 (2025-05-12): Updated terms of service modal and confirmation email.
@@ -14,178 +16,310 @@
  */
 
 import { showStatus, showError, showLoading, hideLoading } from "./auth.js";
+import { supabase } from "../supabase-client.js";
+
+// Store confirmation data and captcha token
+let confirmationData = null;
+let captchaToken = null;
+let turnstileWidgetId = null;
+
+// Turnstile callback function
+window.onloadTurnstileCallback = function () {
+  console.log("Turnstile API ready for confirmation page.");
+  const turnstileContainer = document.getElementById("turnstile-container");
+
+  if (turnstileContainer && window.turnstile && !turnstileWidgetId) {
+    console.log("Rendering Turnstile widget for confirmation...");
+    try {
+      turnstileWidgetId = window.turnstile.render(turnstileContainer, {
+        sitekey: "0x4AAAAAABdzY3InOU2_In99",
+        callback: function (token) {
+          captchaToken = token;
+          console.log("Turnstile token obtained for confirmation:", token);
+
+          // Enable confirm button when CAPTCHA is solved
+          const confirmBtn = document.getElementById("confirmBtn");
+          if (confirmBtn) {
+            confirmBtn.disabled = false;
+          }
+        },
+        "expired-callback": () => {
+          console.log("Turnstile token expired on confirmation page.");
+          if (window.turnstile && turnstileWidgetId) {
+            window.turnstile.reset(turnstileWidgetId);
+          }
+          captchaToken = null;
+
+          // Disable confirm button when CAPTCHA expires
+          const confirmBtn = document.getElementById("confirmBtn");
+          if (confirmBtn) {
+            confirmBtn.disabled = true;
+          }
+        },
+        "error-callback": (err) => {
+          captchaToken = null;
+          console.error("Turnstile error on confirmation page:", err);
+          showError(`Erreur CAPTCHA: ${err}. Veuillez réessayer.`);
+
+          // Disable confirm button on CAPTCHA error
+          const confirmBtn = document.getElementById("confirmBtn");
+          if (confirmBtn) {
+            confirmBtn.disabled = true;
+          }
+        },
+      });
+
+      if (turnstileWidgetId === undefined) {
+        console.error(
+          "Turnstile.render did not return a widgetId for confirmation."
+        );
+        showError("Erreur initialisation CAPTCHA.");
+      } else {
+        console.log(
+          "Turnstile widget rendered for confirmation. ID:",
+          turnstileWidgetId
+        );
+      }
+    } catch (e) {
+      console.error("Error rendering Turnstile on confirmation page:", e);
+      showError("Impossible d'afficher le CAPTCHA.");
+    }
+  }
+};
 
 /**
  * Initializes the email confirmation page
  */
 export function initConfirmationPage() {
   const urlParams = new URLSearchParams(window.location.search);
-  const confirmationUrl = urlParams.get("confirmation_url");
+  const urlHash = window.location.hash;
 
-  const confirmButton = document.getElementById("confirmButton");
+  // Check for different types of confirmation data
+  let confirmationToken = urlParams.get("token");
+  const type = urlParams.get("type");
+  let confirmationUrl = urlParams.get("confirmation_url");
+
+  // Also check URL hash for tokens (Supabase sometimes puts tokens in hash)
+  if (urlHash) {
+    const hashParams = new URLSearchParams(urlHash.substring(1));
+    if (!confirmationToken) {
+      confirmationToken =
+        hashParams.get("access_token") || hashParams.get("token");
+    }
+  }
+
+  console.log("Confirmation page initialized with:", {
+    confirmationToken: confirmationToken ? "present" : "missing",
+    type,
+    confirmationUrl: confirmationUrl ? "present" : "missing",
+    urlHash: urlHash || "none",
+  });
+
   const statusMessage = document.getElementById("statusMessage");
-  const tosCheckbox = document.getElementById("tosCheckbox");
-  const tosModalElement = document.getElementById("tosModal");
-  const tosModalBody = document.getElementById("tosModalBody");
+  const errorMessage = document.getElementById("errorMessage");
+  const loading = document.getElementById("loading");
+  const confirmationForm = document.getElementById("confirmationForm");
+  const confirmForm = document.getElementById("confirmForm");
 
-  // Exit early if no confirmation URL is present
-  if (!confirmationUrl) {
-    showError("Erreur: URL de confirmation manquante.");
-    confirmButton.disabled = true;
+  if (loading) loading.classList.remove("hidden");
+
+  // Validate that we have the necessary confirmation data
+  if (confirmationUrl) {
+    confirmationData = { type: "url", data: confirmationUrl };
+    showConfirmationForm();
+  } else if (
+    confirmationToken &&
+    (type === "signup" || type === "email_change")
+  ) {
+    confirmationData = {
+      type: "token",
+      data: confirmationToken,
+      tokenType: type,
+    };
+    showConfirmationForm();
+  } else {
+    if (loading) loading.classList.add("hidden");
+    showError("Erreur: URL ou jeton de confirmation manquant ou invalide.");
     return;
   }
 
-  if (tosModalElement) {
-    tosModalElement.addEventListener("show.bs.modal", async () => {
-      if (tosModalBody.dataset.loaded !== "true") {
-        try {
-          const response = await fetch("/terms"); // Use clean URL
-          if (!response.ok) {
-            throw new Error(
-              `Failed to load Terms of Service: ${response.status}`
-            );
-          }
-          const tosHtml = await response.text();
-          tosModalBody.innerHTML = tosHtml;
-          tosModalBody.dataset.loaded = "true"; // Mark as loaded to prevent multiple fetches
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    });
-
-    tosModalBody.addEventListener("scroll", () => {
-      // Check if scrolled to the bottom (with a small tolerance)
-      if (
-        tosModalBody.scrollHeight - tosModalBody.scrollTop <=
-        tosModalBody.clientHeight + 2
-      ) {
-        // +2 for tolerance
-        tosCheckbox.disabled = false;
-      }
-    });
+  // Set up form submission handler
+  if (confirmForm) {
+    confirmForm.addEventListener("submit", handleConfirmation);
   }
 
-  if (tosCheckbox) {
-    tosCheckbox.addEventListener("change", () => {
-      confirmButton.disabled = !tosCheckbox.checked;
-    });
+  function showConfirmationForm() {
+    if (loading) loading.classList.add("hidden");
+    if (confirmationForm) confirmationForm.classList.remove("hidden");
+    showStatus(
+      "Lien de confirmation valide. Veuillez compléter le CAPTCHA et confirmer.",
+      "info"
+    );
+  }
+}
+
+/**
+ * Handles the manual confirmation process
+ */
+async function handleConfirmation(e) {
+  e.preventDefault();
+
+  if (!captchaToken) {
+    showError("Veuillez compléter le CAPTCHA avant de confirmer.");
+    return;
   }
 
-  confirmButton.addEventListener("click", () => {
-    confirmEmail(confirmationUrl);
-  });
+  if (!confirmationData) {
+    showError("Données de confirmation manquantes.");
+    return;
+  }
+
+  const confirmBtn = document.getElementById("confirmBtn");
+  const confirmSpinner = document.getElementById("confirmSpinner");
+
+  // Show loading state
+  if (confirmBtn) confirmBtn.disabled = true;
+  if (confirmSpinner) confirmSpinner.classList.remove("hidden");
+
+  try {
+    if (confirmationData.type === "url") {
+      await confirmEmailWithUrl(confirmationData.data);
+    } else if (confirmationData.type === "token") {
+      await confirmEmailWithToken(
+        confirmationData.data,
+        confirmationData.tokenType
+      );
+    }
+  } catch (error) {
+    console.error("Confirmation error:", error);
+    showError(`Erreur lors de la confirmation: ${error.message}`);
+  } finally {
+    // Reset loading state
+    if (confirmBtn) confirmBtn.disabled = false;
+    if (confirmSpinner) confirmSpinner.classList.add("hidden");
+
+    // Reset CAPTCHA
+    if (window.turnstile && turnstileWidgetId) {
+      window.turnstile.reset(turnstileWidgetId);
+    }
+    captchaToken = null;
+    if (confirmBtn) confirmBtn.disabled = true;
+  }
+}
+
+/**
+ * Confirms the email address with token-based confirmation
+ */
+async function confirmEmailWithToken(token, tokenType = "signup") {
+  try {
+    console.log("Attempting token confirmation with type:", tokenType);
+
+    // For signup confirmations, use verifyOtp with the token_hash
+    const { data, error } = await supabase.auth.verifyOtp({
+      token_hash: token,
+      type: "email", // Use 'email' type for email confirmations
+    });
+
+    if (error) {
+      console.error("Error during verifyOtp:", error);
+      throw new Error(
+        "Erreur lors de la vérification du token: " + error.message
+      );
+    }
+
+    if (data.user && data.session) {
+      console.log("Email confirmed successfully:", data.user.email);
+      showSuccessAndRedirect(
+        "Email vérifié avec succès ! Redirection vers la connexion..."
+      );
+    } else {
+      throw new Error(
+        "Impossible de confirmer l'email. Le token est peut-être invalide ou a expiré."
+      );
+    }
+  } catch (error) {
+    console.error("Error during token-based confirmation:", error);
+    throw error;
+  }
 }
 
 /**
  * Confirms the email address directly with Supabase using the confirmation URL
- * @param {string} confirmationUrl - Confirmation URL received by email
  */
-export async function confirmEmail(confirmationUrl) {
-  const confirmButton = document.getElementById("confirmButton");
-  const statusMessage = document.getElementById("statusMessage");
-  const loading = document.getElementById("loading");
-  const confirmSpinner = document.getElementById("confirmSpinner");
-  const tosCheckbox = document.getElementById("tosCheckbox");
-
-  // If the confirmation is successful, show a success message and redirect to the login page
-  const redirectToLogin = () => {
-    // Hide loading
-    hideLoading("confirmButton", "confirmSpinner");
-    if (loading) loading.classList.add("d-none");
-
-    showStatus(
-      "Votre email a été vérifié! Redirection vers la page de connexion...",
-      "success"
-    );
-    // Redirect to the login page after 2 seconds
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 2000); // 2 seconds delay
-  };
-
-  // Show loading indicator
-  showLoading("confirmButton", "confirmSpinner");
-
-  if (loading) loading.classList.remove("d-none");
-
+async function confirmEmailWithUrl(confirmationUrlParam) {
   try {
-    // Decode the URL if it's encoded
-    const decodedUrl = decodeURIComponent(confirmationUrl);
+    const decodedUrl = decodeURIComponent(confirmationUrlParam);
+    console.log("Attempting email confirmation with URL:", decodedUrl);
 
-    console.log("Confirming email with URL:", decodedUrl);
+    // Extract token from the confirmation URL
+    const url = new URL(decodedUrl);
+    const token = url.searchParams.get("token");
+    const type = url.searchParams.get("type");
 
-    // Direct request to Supabase confirmation URL, but prevent fetch from automatically following the redirect.
-    const response = await fetch(decodedUrl, { redirect: "manual" });
+    if (!token) {
+      throw new Error("Token manquant dans l'URL de confirmation.");
+    }
 
-    // If response.type is 'opaqueredirect', it means Supabase is trying to redirect.
-    // For Supabase email confirmation, a redirect implies the confirmation was successful
-    // and it's trying to send the user to the redirect_to URL specified in the confirmation link.
-    if (response.type === "opaqueredirect") {
-      console.log(
-        "Supabase confirmation successful, redirect indicated (opaqueredirect)."
+    console.log(
+      "Extracted from URL - token:",
+      token.substring(0, 20) + "...",
+      "type:",
+      type
+    );
+
+    // Use verifyOtp with token_hash for email confirmations
+    const { data, error } = await supabase.auth.verifyOtp({
+      token_hash: token,
+      type: "email", // Use 'email' type for email confirmations regardless of URL type
+    });
+
+    if (error) {
+      console.error("Error during URL-based confirmation:", error);
+      throw new Error("Erreur lors de la confirmation: " + error.message);
+    }
+
+    if (data.user && data.session) {
+      console.log("Email confirmed successfully via URL:", data.user.email);
+      showSuccessAndRedirect(
+        "Email vérifié avec succès ! Vous allez être redirigé vers la page de connexion."
       );
-      redirectToLogin();
-    } else if (response.ok) {
-      // This case is less likely for Supabase confirmation which usually redirects,
-      // but handle it if Supabase responds with 2xx without a redirect.
-      console.log(
-        "Supabase confirmation successful with a direct 2xx response."
-      );
-      redirectToLogin();
     } else {
-      // If it's not an opaqueredirect and not response.ok, then it's an error from Supabase.
-      console.log("Supabase confirmation failed with status:", response.status);
-      let responseData;
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        responseData = await response.json();
-        console.log("Error Response JSON:", responseData);
-      } else {
-        responseData = await response.text();
-        console.log("Error Response text:", responseData);
-      }
-
-      let errorMessage = "La confirmation a échoué.";
-      if (responseData && typeof responseData === "object") {
-        if (responseData.error_description) {
-          errorMessage = responseData.error_description;
-        } else if (responseData.msg) {
-          errorMessage = responseData.msg;
-        } else if (responseData.error) {
-          errorMessage = responseData.error;
-        }
-      } else if (
-        responseData &&
-        typeof responseData === "string" &&
-        responseData.trim() !== ""
-      ) {
-        // If responseData is a non-empty string, use it.
-        errorMessage = responseData;
-      }
-      throw new Error(errorMessage);
+      throw new Error(
+        "Impossible de confirmer l'email. Le lien est peut-être expiré ou déjà utilisé."
+      );
     }
   } catch (error) {
-    // Handle errors from decodeURIComponent, network errors for fetch, or errors thrown above.
     console.error("Confirmation processing error:", error);
-    if (error.stack) {
-      console.error("Error stack:", error.stack);
-    }
-
-    // Hide loading
-    hideLoading("confirmButton", "confirmSpinner");
-    if (loading) loading.classList.add("d-none");
-
-    // Show error message
-    // The error.message here will be from new Error(errorMessage) or other JS errors.
-    showStatus(
-      `Une erreur est survenue durant la confirmation: ${error.message}`, // Standardized error prefix
-      "danger"
-    );
+    throw error;
   }
+}
+
+/**
+ * Shows success message and redirects to login
+ */
+function showSuccessAndRedirect(message) {
+  const confirmationForm = document.getElementById("confirmationForm");
+  const successMessage = document.getElementById("successMessage");
+
+  if (confirmationForm) confirmationForm.classList.add("hidden");
+
+  if (successMessage) {
+    successMessage.innerHTML = `
+      <div class="confirmation-success">
+        <span class="success-icon">✅</span>
+        <h3>Confirmation réussie !</h3>
+        <p>Votre compte a été confirmé avec succès.</p>
+        <p>Vous allez être redirigé vers la page de connexion dans quelques secondes...</p>
+      </div>
+    `;
+    successMessage.classList.remove("hidden");
+  }
+
+  setTimeout(() => {
+    window.location.href = "/auth/login";
+  }, 3000);
 }
 
 export default {
   initConfirmationPage,
-  confirmEmail,
 };

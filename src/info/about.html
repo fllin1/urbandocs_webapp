@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>À propos - MWPLU</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="../css/main.css" />
     <script>
       window.addEventListener("scroll", function () {
         const header = document.querySelector(".site-header");
@@ -17,32 +17,7 @@
     </script>
   </head>
   <body>
-    <header class="site-header sticky">
-      <div class="container">
-        <div class="flex-between">
-          <a href="/" class="header-logo animate-title">
-            <img src="assets/icons/MWPLU.svg" alt="MWPLU Logo" />
-          </a>
-          <div class="auth-section">
-            <a
-              href="/profile"
-              id="userStatus"
-              class="auth-btn margin-right-sm hidden"
-              >Votre compte</a
-            >
-            <a href="/login" id="loginLink" class="auth-btn margin-right-sm">
-              Se connecter
-            </a>
-            <a href="/signup" id="signupLink" class="auth-btn">
-              Créer un compte
-            </a>
-            <button id="logoutBtn" class="auth-btn hidden">
-              Se déconnecter
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div id="header-placeholder"></div>
 
     <main class="main-content">
       <div class="container margin-top-lg margin-bottom-lg">
@@ -81,8 +56,5 @@
 
     <!-- Footer will be loaded here -->
     <div id="footer-placeholder"></div>
-
-    <!-- Scripts -->
-    <script type="module" src="js/components/footer.js"></script>
   </body>
 </html>

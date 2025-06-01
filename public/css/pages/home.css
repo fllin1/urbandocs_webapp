@@ -66,6 +66,10 @@
     margin: 0 auto 0.5rem auto;
 }
 
+.lead span {
+    color: inherit;
+}
+
 /* Enhanced form container with more subtle shadow */
 .form-home {
     background: var(--primary-white);

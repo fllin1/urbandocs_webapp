@@ -256,6 +256,40 @@ export async function login(email, password) {
       console.log("[login.js] User data saved locally");
     }
 
+    // Check if account is scheduled for deletion
+    try {
+      const response = await fetch(
+        `${supabase.supabaseUrl}/functions/v1/account-management`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${data.session.access_token}`,
+          },
+          body: JSON.stringify({
+            action: "status",
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success && result.data.deletion_scheduled) {
+        // Account is scheduled for deletion, redirect to deletion status page
+        showStatus(
+          "Connexion réussie! Redirection vers le statut de suppression...",
+          "info"
+        );
+        setTimeout(() => {
+          window.location.href = "/user/account-deletion-status";
+        }, 1000);
+        return data.user;
+      }
+    } catch (deletionCheckError) {
+      // If deletion check fails, continue with normal login flow
+      console.warn("Could not check deletion status:", deletionCheckError);
+    }
+
     // Show success message before redirect
     showStatus("Connexion réussie! Redirection...", "success");
 

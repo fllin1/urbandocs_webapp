@@ -12,25 +12,7 @@ Detail list of tasks in the [TODO list](./references/TODO.md).
 
 ### Version Update
 
-Versions 0.0.\* aims to create the first version of the website.
-
-```md
-0.0.11 (May 26th 2025) - Template policies pages, contact, donation
-0.0.10 (May 18th 2025) - Google Sign, Turnstil CAPTCHA, User Table
-0.0.9 (May 16th 2025) - PLU Synthesis template page, access only for auth
-0.0.8 (May 15th 2025) - Migrate all Firebase Cloud Functions to client side
-0.0.7 (May 14th 2025) - Update password feature
-0.0.6 (May 13th 2025) - Complete redesign, base built with [Bolt](https://bolt.new/~/github-p2sgvptw)
-0.0.5 (May 9th 2025) - Moved to Supabase Authentication (login & signup)
-0.0.4 (May 3rd 2025) - Supabase Mail Confirmation
-0.0.3 (April 27th 2025) - Firebase Authentication system for login
-0.0.2 (April 26th 2025) - Update on the UI
-0.0.1 (April 21st 2025) - Initial commit of the website
-```
-
-_Version 0.\*.0 aims to improve the UX._
-
-_For version 1.0.\*, we'll aim to have a fixed solution, that is complete in features, UI and UX, with a well thought expendable base._
+Launch date : 01/06/2025
 
 ## Author
 
@@ -135,6 +117,43 @@ The first step would be to use webpack in **production mode**. In this case, you
   npm run prod
   firebase deploy
 ```
+
+If you wish to deploy on a preview channel :
+
+```bash
+firebase hosting:channel:deploy preprod --expires 7d
+```
+
+As for the preprod custom domain `preprod.mwplu.com` :
+
+1. Set up multiple sites in your Firebase project :`firebase hosting:sites:create preprod-mwplu`.
+2. Update your firebase.json to include multiple hosting targets:
+  
+    ```json
+    {
+      "hosting": [
+        {
+          "target": "production",
+          "public": "dist",
+          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+        },
+        {
+          "target": "preprod",
+          "public": "dist",
+          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+        }
+      ]
+    }
+    ```
+
+3. Configure hosting targets & Deploy to the preprod target :
+  
+    ```bash
+    firebase target:apply hosting production mwplu-com
+    firebase target:apply hosting preprod preprod-mwplu
+
+    firebase deploy --only hosting:preprod
+    ```
 
 ## Code Structure
 

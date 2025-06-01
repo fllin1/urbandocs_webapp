@@ -12,7 +12,13 @@
  * - 0.1.0 (2025-05-15): Migrated to Supabase client-side auth (versioning adjusted)
  */
 
-import { showError, showStatus, showLoading, hideLoading } from "./auth.js";
+import {
+  showError,
+  showStatus,
+  showLoading,
+  hideLoading,
+  hideElement,
+} from "./auth.js";
 import { supabase } from "../supabase-client.js";
 
 // Store phone number temporarily between steps
@@ -50,8 +56,6 @@ window.onloadTurnstileCallback = function () {
           console.error("Turnstile error callback:", err);
           showError(`Erreur CAPTCHA: ${err}. Veuillez réessayer.`);
         },
-        // theme: 'light', // Optional: 'light', 'dark', or 'auto'
-        // language: 'fr', // Optional: specify language
       });
       if (turnstileWidgetId === undefined) {
         console.error(
@@ -75,28 +79,212 @@ window.onloadTurnstileCallback = function () {
 };
 
 /**
+ * Show detailed signup success message
+ * @param {string} email - The email address used for signup
+ */
+function showSignupSuccess(email) {
+  const statusElement = document.getElementById("statusMessage");
+  if (statusElement) {
+    statusElement.innerHTML = `
+      <div class="signup-success">
+        <h3>Compte créé avec succès !</h3>
+        <p><strong>Un email de confirmation a été envoyé à :</strong><br>
+        <code>${email}</code></p>
+        
+        <div class="confirmation-instructions">
+          <h4>📧 Prochaines étapes :</h4>
+          <ol>
+            <li>Vérifiez votre boîte de réception (et n'oubliez pas vos spams !)</li>
+            <li>Cliquez sur le lien de confirmation dans l'email</li>
+            <li>Vous pourrez ensuite vous connecter avec vos identifiants</li>
+          </ol>
+        </div>
+        
+        <div class="confirmation-note">
+          <p><strong>Note :</strong> Vous devez confirmer votre email avant de pouvoir vous connecter.</p>
+        </div>
+      </div>
+    `;
+    statusElement.classList.remove("hidden");
+    statusElement.classList.add("success");
+  }
+}
+
+/**
  * Initializes the signup page
  */
 export function initSignupPage() {
   console.log("initSignupPage called");
   const signupForm = document.getElementById("signupForm");
-  // const otpForm = document.getElementById("otpForm"); // OTP Form - Removed
   const errorMessageDiv = document.getElementById("errorMessage");
   const statusMessage = document.getElementById("statusMessage");
   const googleSignUpBtn = document.getElementById("googleSignUpBtn");
-  const turnstileContainer = document.getElementById("turnstile-container"); // Updated selector
+  const turnstileContainer = document.getElementById("turnstile-container");
+
+  // --- Terms of Service Logic for Signup ---
+  const tosCheckbox = document.getElementById("tosCheckbox");
+  const tosModalElement = document.getElementById("tosModal");
+  const tosModalBody = document.getElementById("tosModalBody");
+  const signupBtn = document.getElementById("signupBtn");
+  const tosStatusMessage = document.getElementById("tosStatusMessage");
+  const tosLink = document.getElementById("tosLink");
+  const tosModalClose = document.getElementById("tosModalClose");
+
+  // Initially disable signup button, Google button, and checkbox
+  if (signupBtn) {
+    signupBtn.disabled = true;
+  }
+  if (googleSignUpBtn) {
+    googleSignUpBtn.disabled = true;
+  }
+  if (tosCheckbox) {
+    tosCheckbox.disabled = true;
+  }
+
+  // Custom modal handling
+  if (tosLink && tosModalElement) {
+    tosLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      showModal();
+    });
+  }
+
+  if (tosModalClose) {
+    tosModalClose.addEventListener("click", () => {
+      hideModal();
+    });
+  }
+
+  // Close modal when clicking outside
+  if (tosModalElement) {
+    tosModalElement.addEventListener("click", (e) => {
+      if (e.target === tosModalElement) {
+        hideModal();
+      }
+    });
+  }
+
+  function showModal() {
+    if (tosModalElement) {
+      tosModalElement.classList.add("show");
+      tosModalElement.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+      // Load ToS content if not already loaded
+      if (tosModalBody && tosModalBody.dataset.loaded !== "true") {
+        loadToSContent();
+      }
+
+      // Enable checkbox immediately when modal opens
+      if (tosCheckbox) {
+        tosCheckbox.disabled = false;
+      }
+    }
+  }
+
+  function hideModal() {
+    if (tosModalElement) {
+      tosModalElement.classList.remove("show");
+      tosModalElement.style.display = "none";
+      document.body.style.overflow = "";
+    }
+  }
+
+  async function loadToSContent() {
+    try {
+      tosModalBody.innerHTML =
+        "<p>Chargement des conditions d'utilisation...</p>";
+
+      const response = await fetch("/policies/terms");
+      if (!response.ok) {
+        throw new Error(`Failed to load Terms of Service: ${response.status}`);
+      }
+
+      const tosHtml = await response.text();
+
+      // Extract just the content from the HTML
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(tosHtml, "text/html");
+      const mainContent =
+        doc.querySelector("main") ||
+        doc.querySelector(".policy-container") ||
+        doc.body;
+
+      if (mainContent) {
+        tosModalBody.innerHTML = mainContent.innerHTML;
+      } else {
+        tosModalBody.innerHTML = tosHtml;
+      }
+
+      tosModalBody.dataset.loaded = "true";
+      tosModalBody.scrollTop = 0;
+
+      // Enable checkbox after content is loaded
+      if (tosCheckbox) {
+        tosCheckbox.disabled = false;
+      }
+    } catch (error) {
+      console.error("Error loading ToS:", error);
+      tosModalBody.innerHTML = `
+        <div style="color: #dc3545; padding: 1rem; border: 1px solid #dc3545; border-radius: 4px; background-color: #f8d7da;">
+          <p><strong>Erreur lors du chargement des conditions d'utilisation.</strong></p>
+          <p>Veuillez réessayer ou consulter les conditions directement sur <a href="/policies/terms" target="_blank">cette page</a>.</p>
+        </div>
+      `;
+
+      // Enable checkbox even if there's an error loading content
+      if (tosCheckbox) {
+        tosCheckbox.disabled = false;
+      }
+    }
+  }
+
+  // Handle checkbox change
+  if (tosCheckbox) {
+    tosCheckbox.addEventListener("change", () => {
+      const isChecked = tosCheckbox.checked;
+
+      // Enable/disable both buttons based on ToS acceptance
+      if (signupBtn) {
+        signupBtn.disabled = !isChecked;
+      }
+      if (googleSignUpBtn) {
+        googleSignUpBtn.disabled = !isChecked;
+      }
+
+      // Hide/show ToS status message
+      if (tosStatusMessage) {
+        if (isChecked) {
+          tosStatusMessage.classList.add("hidden");
+        } else {
+          tosStatusMessage.classList.remove("hidden");
+        }
+      }
+
+      if (!isChecked) {
+        showError(
+          "Veuillez accepter les Conditions Générales d'Utilisation.",
+          "errorMessage"
+        );
+      } else {
+        // Clear ToS-related error messages
+        const errorElement = document.getElementById("errorMessage");
+        if (
+          errorElement &&
+          errorElement.innerHTML.includes("Conditions Générales d'Utilisation")
+        ) {
+          hideElement("errorMessage");
+        }
+      }
+    });
+  }
+  // --- End Terms of Service Logic for Signup ---
 
   if (!turnstileContainer) {
-    // Updated check
     console.error(
       "#turnstile-container not found in the DOM. CAPTCHA cannot be rendered."
     );
   }
-
-  // The onloadTurnstileCallback is the primary way the widget should be rendered.
-  // The redundant block previously here has been removed.
-  // If window.turnstile is already available and the callback hasn't fired yet (e.g. script loaded from cache before DOM ready for container),
-  // the `onloadTurnstileCallback` will still execute once the script fully processes its `onload` parameter.
 
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
@@ -129,6 +317,12 @@ export function initSignupPage() {
         validationErrors.push("Veuillez compléter le CAPTCHA.");
       }
 
+      if (!tosCheckbox || !tosCheckbox.checked) {
+        validationErrors.push(
+          "Veuillez lire et accepter les Conditions Générales d'Utilisation."
+        );
+      }
+
       if (validationErrors.length > 0) {
         showError(validationErrors.join("<br>"));
         return;
@@ -152,17 +346,33 @@ export function initSignupPage() {
         if (!data.user)
           throw new Error("Erreur lors de la création de l'utilisateur.");
 
+        // Step 2: Update profile with phone number if provided
+        // Note: The profile should be automatically created by the database trigger
         if (e164Phone && data.user.id) {
-          await supabase
-            .from("profiles")
-            .update({ phone: e164Phone })
-            .eq("id", data.user.id);
+          try {
+            // Wait a moment for the trigger to create the profile
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            const { error: profileError } = await supabase
+              .from("profiles")
+              .update({ phone: e164Phone })
+              .eq("id", data.user.id);
+
+            if (profileError) {
+              console.warn(
+                "Could not update profile with phone number:",
+                profileError
+              );
+              // Don't throw error here as the main signup was successful
+            }
+          } catch (profileUpdateError) {
+            console.warn("Profile update failed:", profileUpdateError);
+            // Don't throw error here as the main signup was successful
+          }
         }
 
-        // User created. Now update their profile with the phone number if provided.
-        let successMessage =
-          "Compte créé ! Un email de confirmation a été envoyé.";
-        showStatus(successMessage, "success");
+        // Show success message with detailed instructions
+        showSignupSuccess(email);
 
         // Hide the form and reset it
         if (signupForm) {
@@ -212,7 +422,10 @@ export function initSignupPage() {
       try {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: "google",
-          options: { redirectTo: `${window.location.origin}/profile.html` },
+          options: {
+            // Google OAut h will handle the redirect after successful authentication
+            // No custom redirectTo needed - let Supabase handle the default flow
+          },
         });
         if (error) {
           console.error("Error signing up with Google:", error);
@@ -220,6 +433,7 @@ export function initSignupPage() {
             error.message || "Erreur lors de l'inscription avec Google."
           );
         }
+        // On success, Supabase handles the redirect automatically
       } catch (error) {
         console.error("Exception during Google sign-up:", error);
         showError(

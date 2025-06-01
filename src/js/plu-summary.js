@@ -1,12 +1,13 @@
 // src/js/plu-summary.js
 /**
- * PLU Summary
+ * PLU Summary - Redesigned
  * @module plu-summary
- * @description This module handles the PLU summary page.
- * @version 0.0.3
+ * @description This module handles the PLU summary page with new design.
+ * @version 0.1.0
  * @author GreyPanda
  *
  * @changelog
+ * - 0.1.0 (2025-01-29): Complete redesign with new tab structure and styling
  * - 0.0.3 (2025-01-27): Added header authentication for dynamic header updates
  * - 0.0.2 (2025-05-27): Rework UI.
  * - 0.0.1 (2025-05-16): Initial version with basic PLU summary page.
@@ -14,41 +15,58 @@
 
 import { supabase } from "./supabase-client.js";
 import { initHeaderAuth } from "./auth/header-auth.js";
+import { initDeletionGuard } from "./auth/deletion-guard.js";
 
 // Global variables
 let currentUser = null;
 let currentDocument = null;
 let currentCommentId = null;
+let ratingsData = [];
+let userCurrentRating = null;
 
 // Initialize page
 document.addEventListener("DOMContentLoaded", async () => {
-  // Initialize header authentication first
-  initHeaderAuth();
+  try {
+    // Initialize deletion guard first (blocks access if needed)
+    const canAccess = await initDeletionGuard(false);
+    if (!canAccess) {
+      return; // Access was blocked, stop initialization
+    }
 
-  // Check authentication
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    window.location.href = "/login";
-    return;
+    // Initialize header authentication
+    initHeaderAuth();
+
+    // Check authentication
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      window.location.href = "/auth/login";
+      return;
+    }
+    currentUser = user;
+
+    // Get document ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const documentId = urlParams.get("id");
+
+    if (!documentId) {
+      showError("Aucun document spécifié");
+      return;
+    }
+
+    // Load document
+    await loadDocument(documentId);
+
+    // Setup event listeners
+    setupEventListeners();
+
+    // Initialize back to top functionality
+    initBackToTop();
+  } catch (error) {
+    console.error("Error initializing PLU summary page:", error);
+    showError("Erreur lors de l'initialisation de la page");
   }
-  currentUser = user;
-
-  // Get document ID from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const documentId = urlParams.get("id");
-
-  if (!documentId) {
-    showError("Aucun document spécifié");
-    return;
-  }
-
-  // Load document
-  await loadDocument(documentId);
-
-  // Setup event listeners
-  setupEventListeners();
 });
 
 // Load document from Supabase
@@ -64,7 +82,8 @@ async function loadDocument(documentId) {
           zone:zones(name),
           html_content,
           pdf_storage_path,
-          source_plu_date
+          source_plu_date,
+          source_plu_url
         `
       )
       .eq("id", documentId)
@@ -87,8 +106,11 @@ async function loadDocument(documentId) {
     // Load comments
     await loadComments();
 
-    // Load download count
-    await loadDownloadCount();
+    // Update source link
+    if (documentData.source_plu_url) {
+      document.getElementById("source-plu-link").href =
+        documentData.source_plu_url;
+    }
 
     // Hide loading, show content
     document.getElementById("loading-state").style.display = "none";
@@ -99,19 +121,38 @@ async function loadDocument(documentId) {
   }
 }
 
+function capitalizeWords(str) {
+  if (!str) return str;
+  return str.replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 // Update document information in UI
 function updateDocumentInfo(documentData) {
-  // Breadcrumb
-  document.getElementById("city-name").textContent =
-    documentData.zoning.city.name;
-  document.getElementById("zoning-name").textContent = documentData.zoning.name;
-  document.getElementById("zone-name").textContent = documentData.zone.name;
+  const cityName = capitalizeWords(documentData.zoning.city.name);
+  const zoneName = documentData.zone.name;
+  const sourcePluDate = documentData.source_plu_date
+    ? new Date(documentData.source_plu_date).toLocaleDateString("fr-FR", {
+        year: "numeric",
+        month: "long",
+      })
+    : "Date inconnue";
 
-  // Title
-  document.getElementById("doc-city").textContent =
-    documentData.zoning.city.name;
-  document.getElementById("doc-zone").textContent = documentData.zone.name;
-  document.getElementById("doc-zoning").textContent = documentData.zoning.name;
+  // Breadcrumb
+  const cityBreadcrumb = document.getElementById("city-breadcrumb");
+  cityBreadcrumb.textContent = cityName;
+  cityBreadcrumb.href = `/city?name=${encodeURIComponent(
+    documentData.zoning.city.name
+  )}`;
+
+  document.getElementById("zone-breadcrumb").textContent = `Zone ${zoneName}`;
+
+  // Title and subtitle
+  document.getElementById(
+    "document-title"
+  ).textContent = `Synthèse du PLU de ${cityName} pour la zone ${zoneName}`;
+  document.getElementById(
+    "document-subtitle"
+  ).textContent = `Basé sur le PLU de ${sourcePluDate}`;
 }
 
 // Load and display ratings
@@ -125,36 +166,62 @@ async function loadRatings() {
 
     if (error) throw error;
 
-    // Calculate average
-    if (ratings && ratings.length > 0) {
+    ratingsData = ratings || [];
+
+    // Calculate average and distribution
+    if (ratingsData.length > 0) {
       const average =
-        ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length;
+        ratingsData.reduce((sum, r) => sum + r.rating, 0) / ratingsData.length;
+
+      // Update average rating display
       document.getElementById("average-rating").textContent =
         average.toFixed(1);
-      document.getElementById("rating-count").textContent = ratings.length;
+      document.getElementById("rating-count").textContent = ratingsData.length;
+
+      // Calculate distribution
+      const distribution = calculateRatingDistribution(ratingsData);
+      updateRatingBars(distribution);
 
       // Check if current user has rated
-      const userRating = ratings.find((r) => r.user_id === currentUser.id);
+      const userRating = ratingsData.find((r) => r.user_id === currentUser.id);
       if (userRating) {
-        highlightUserRating(userRating.rating);
+        userCurrentRating = userRating.rating;
+      } else {
+        userCurrentRating = null;
       }
     } else {
-      document.getElementById("average-rating").textContent = "-";
+      document.getElementById("average-rating").textContent = "0";
       document.getElementById("rating-count").textContent = "0";
+      updateRatingBars({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 });
+      userCurrentRating = null;
     }
+
+    // Update stars display
+    updateStarsDisplay();
   } catch (error) {
     console.error("Error loading ratings:", error);
   }
 }
-
-// Highlight user's rating
-function highlightUserRating(rating) {
-  const stars = document.querySelectorAll("#user-rating .star");
-  stars.forEach((star, index) => {
-    if (index < rating) {
-      star.classList.add("selected");
-    }
+// Calculate rating distribution
+function calculateRatingDistribution(ratings) {
+  const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  ratings.forEach((r) => {
+    distribution[r.rating]++;
   });
+  return distribution;
+}
+
+// Update rating bars
+function updateRatingBars(distribution) {
+  const total = ratingsData.length || 1;
+
+  for (let i = 1; i <= 5; i++) {
+    const percentage = (distribution[i] / total) * 100;
+    document.getElementById(`rating-${i}`).style.width = `${percentage}%`;
+    document.getElementById(`rating-${i}-percent`).textContent = `${Math.round(
+      percentage
+    )}%`;
+  }
 }
 
 // Load comments
@@ -170,7 +237,6 @@ async function loadComments() {
     if (commentsError) throw commentsError;
 
     if (comments.length === 0) {
-      document.getElementById("comment-count").textContent = "0";
       renderComments([]);
       return;
     }
@@ -179,7 +245,6 @@ async function loadComments() {
     const userIds = [...new Set(comments.map((c) => c.user_id))];
 
     // Fetch profiles for those users
-    // The key here is that profiles.id should match comments.user_id
     const { data: profiles, error: profilesError } = await supabase
       .from("profiles")
       .select("id, full_name, avatar_url")
@@ -187,12 +252,10 @@ async function loadComments() {
 
     if (profilesError) {
       console.warn("Could not fetch profiles:", profilesError);
-      // Continue without profiles - show comments anyway
       const commentsWithoutProfiles = comments.map((comment) => ({
         ...comment,
         profiles: null,
       }));
-      document.getElementById("comment-count").textContent = comments.length;
       renderComments(commentsWithoutProfiles);
       return;
     }
@@ -209,15 +272,10 @@ async function loadComments() {
       profiles: profilesMap[comment.user_id] || null,
     }));
 
-    // Update comment count
-    document.getElementById("comment-count").textContent = comments.length;
-
     // Render comments
     renderComments(commentsWithProfiles);
   } catch (error) {
     console.error("Error loading comments:", error);
-    // Show empty state on error
-    document.getElementById("comment-count").textContent = "0";
     renderComments([]);
   }
 }
@@ -229,7 +287,7 @@ function renderComments(comments) {
 
   if (comments.length === 0) {
     commentsList.innerHTML =
-      '<p class="no-comments">Aucun commentaire pour le moment. Soyez le premier à commenter!</p>';
+      '<p style="text-align: center; color: var(--text-gray); padding: 2rem;">Aucun commentaire pour le moment. Soyez le premier à commenter!</p>';
     return;
   }
 
@@ -248,55 +306,64 @@ function createCommentElement(comment) {
   const isOwner = comment.user_id === currentUser.id;
   const userName = comment.profiles?.full_name || "Utilisateur anonyme";
   const avatarUrl =
-    comment.profiles?.avatar_url || "/assets/default-avatar.png";
+    comment.profiles?.avatar_url || "assets/icons/default-avatar.svg";
   const date = new Date(comment.created_at).toLocaleDateString("fr-FR", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
-  div.innerHTML = `
-        <div class="comment-header">
-            <div class="comment-author">
-                <img src="${avatarUrl}" alt="${userName}" class="comment-avatar">
-                <div>
-                    <div class="comment-name">${userName}</div>
-                    <div class="comment-date">${date}${
+  const commentHeader = document.createElement("div");
+  commentHeader.className = "comment-header";
+
+  // Avatar and meta
+  const avatarMeta = document.createElement("div");
+  avatarMeta.style.display = "flex";
+  avatarMeta.style.alignItems = "center";
+  avatarMeta.style.gap = "1rem";
+  avatarMeta.innerHTML = `
+    <img src="${avatarUrl}" alt="${userName}" class="comment-avatar">
+    <div class="comment-meta">
+      <div class="comment-author">${userName}</div>
+      <div class="comment-date">${date}${
     comment.updated_at !== comment.created_at ? " (modifié)" : ""
   }</div>
-                </div>
-            </div>
-            ${
-              isOwner
-                ? `
-                <div class="comment-actions">
-                    <button class="comment-action edit-comment" data-id="${comment.id}">Modifier</button>
-                    <button class="comment-action delete-comment" data-id="${comment.id}">Supprimer</button>
-                </div>
-            `
-                : ""
-            }
-        </div>
-        <div class="comment-content">${escapeHtml(comment.content)}</div>
+    </div>
+  `;
+  commentHeader.appendChild(avatarMeta);
+
+  div.appendChild(commentHeader);
+
+  // Comment content
+  const content = document.createElement("div");
+  content.className = "comment-content";
+  content.textContent = comment.content;
+  div.appendChild(content);
+
+  // Actions for owner
+  if (isOwner) {
+    const actions = document.createElement("div");
+    actions.className = "comment-actions";
+    actions.innerHTML = `
+      <button class="comment-action edit-comment" data-id="${comment.id}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        Modifier
+      </button>
+      <button class="comment-action delete-comment" data-id="${comment.id}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+        Supprimer
+      </button>
     `;
+    div.appendChild(actions);
+  }
 
   return div;
-}
-
-// Load download count
-async function loadDownloadCount() {
-  try {
-    const { data, error } = await supabase
-      .from("downloads")
-      .select("id")
-      .eq("document_id", currentDocument.id);
-
-    if (error) throw error;
-
-    document.getElementById("download-count").textContent = data.length;
-  } catch (error) {
-    console.error("Error loading download count:", error);
-  }
 }
 
 // Setup event listeners
@@ -306,9 +373,19 @@ function setupEventListeners() {
     btn.addEventListener("click", switchTab);
   });
 
-  // Rating stars
-  document.querySelectorAll("#user-rating .star").forEach((star) => {
+  // Rating stars click
+  document.querySelectorAll("#user-rating .star-btn").forEach((star) => {
     star.addEventListener("click", handleRating);
+  });
+
+  // Rating stars hover
+  document.querySelectorAll("#user-rating .star-btn").forEach((star, index) => {
+    star.addEventListener("mouseenter", () => handleStarHover(index + 1));
+  });
+
+  // Reset stars on mouse leave
+  document.getElementById("user-rating").addEventListener("mouseleave", () => {
+    updateStarsDisplay();
   });
 
   // Download button
@@ -334,7 +411,42 @@ function setupEventListeners() {
     .addEventListener("click", saveCommentEdit);
 
   // Logout
-  document.getElementById("logout-btn").addEventListener("click", handleLogout);
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", handleLogout);
+  }
+}
+
+function handleStarHover(rating) {
+  const stars = document.querySelectorAll("#user-rating .star-btn");
+  stars.forEach((star, index) => {
+    if (index < rating) {
+      star.classList.add("hovered");
+    } else {
+      star.classList.remove("hovered");
+    }
+  });
+}
+// Initialize back to top functionality
+function initBackToTop() {
+  const backToTopBtn = document.getElementById("back-to-top");
+
+  // Show/hide button based on scroll position
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      backToTopBtn.classList.add("visible");
+    } else {
+      backToTopBtn.classList.remove("visible");
+    }
+  });
+
+  // Smooth scroll to top
+  backToTopBtn.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
 }
 
 // Switch tabs
@@ -347,16 +459,69 @@ function switchTab(e) {
   });
 
   // Show/hide content
-  document.getElementById("summary-tab").style.display =
-    targetTab === "summary" ? "block" : "none";
-  document.getElementById("comments-tab").style.display =
-    targetTab === "comments" ? "block" : "none";
+  document.getElementById("synthese-tab").style.display =
+    targetTab === "synthese" ? "block" : "none";
+  document.getElementById("commentaires-tab").style.display =
+    targetTab === "commentaires" ? "block" : "none";
+  document.getElementById("sources-tab").style.display =
+    targetTab === "sources" ? "block" : "none";
+}
+
+function updateStarsDisplay() {
+  const stars = document.querySelectorAll("#user-rating .star-btn");
+
+  // If user has a rating, show it
+  if (userCurrentRating) {
+    stars.forEach((star, index) => {
+      star.classList.toggle("selected", index < userCurrentRating);
+      star.classList.remove("hovered");
+      star.setAttribute("data-star-type", "full");
+    });
+  } else {
+    // Show average rating with half stars
+    const avgRating = parseFloat(
+      document.getElementById("average-rating").textContent
+    );
+    if (!isNaN(avgRating) && avgRating > 0) {
+      displayAverageRating(avgRating);
+    } else {
+      // No ratings at all, show empty stars
+      stars.forEach((star) => {
+        star.classList.remove("selected", "hovered");
+        star.setAttribute("data-star-type", "empty");
+      });
+    }
+  }
 }
 
 // Handle rating
 async function handleRating(e) {
   const rating = parseInt(e.target.dataset.rating);
 
+  // If clicking on the same rating, remove it
+  if (userCurrentRating === rating) {
+    try {
+      // Delete the rating
+      const { error } = await supabase
+        .from("ratings")
+        .delete()
+        .eq("document_id", currentDocument.id)
+        .eq("user_id", currentUser.id);
+
+      if (error) throw error;
+
+      userCurrentRating = null;
+
+      // Reload ratings to update average
+      await loadRatings();
+    } catch (error) {
+      console.error("Error removing rating:", error);
+      alert("Erreur lors de la suppression de votre note");
+    }
+    return;
+  }
+
+  // Otherwise, set/update the rating
   try {
     // Check if user already rated
     const { data: existing } = await supabase
@@ -381,10 +546,7 @@ async function handleRating(e) {
       });
     }
 
-    // Update UI
-    document.querySelectorAll("#user-rating .star").forEach((star, index) => {
-      star.classList.toggle("selected", index < rating);
-    });
+    userCurrentRating = rating;
 
     // Reload ratings to update average
     await loadRatings();
@@ -419,10 +581,6 @@ async function handleDownload() {
       document_id: currentDocument.id,
       user_id: currentUser.id,
     });
-
-    // Update count
-    const countEl = document.getElementById("download-count");
-    countEl.textContent = parseInt(countEl.textContent) + 1;
 
     // Trigger download
     const a = document.createElement("a");
@@ -475,10 +633,13 @@ async function submitComment() {
 
 // Handle comment actions
 function handleCommentAction(e) {
-  if (e.target.classList.contains("edit-comment")) {
-    openEditModal(e.target.dataset.id);
-  } else if (e.target.classList.contains("delete-comment")) {
-    deleteComment(e.target.dataset.id);
+  const editBtn = e.target.closest(".edit-comment");
+  const deleteBtn = e.target.closest(".delete-comment");
+
+  if (editBtn) {
+    openEditModal(editBtn.dataset.id);
+  } else if (deleteBtn) {
+    deleteComment(deleteBtn.dataset.id);
   }
 }
 
@@ -536,7 +697,20 @@ async function deleteComment(commentId) {
   }
 
   try {
-    await supabase.from("comments").delete().eq("id", commentId);
+    // Use the soft delete function instead of direct deletion
+    const { data, error } = await supabase.rpc("soft_delete_comment", {
+      comment_id: commentId,
+      user_id: currentUser.id,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    // Show success message with information about recovery period
+    alert(
+      "Commentaire supprimé. Il sera définitivement supprimé dans 30 jours. Contactez le support si vous souhaitez le récupérer."
+    );
 
     await loadComments();
   } catch (error) {
@@ -548,14 +722,14 @@ async function deleteComment(commentId) {
 // Handle logout
 async function handleLogout() {
   await supabase.auth.signOut();
-  window.location.href = "/login";
+  window.location.href = "/auth/login";
 }
 
 // Show error state
 function showError(message) {
   document.getElementById("loading-state").style.display = "none";
   document.getElementById("error-message").textContent = message;
-  document.getElementById("error-state").style.display = "block";
+  document.getElementById("error-state").style.display = "flex";
 }
 
 // Utility function to escape HTML

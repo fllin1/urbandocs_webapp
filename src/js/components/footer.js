@@ -8,16 +8,13 @@ export function createFooter() {
             <h3 class="footer-title">Contact</h3>
             <div class="contact-info">
               <div class="contact-item">
-                <span class="contact-icon">📧</span>
-                <span>contact@mwplu.com</span>
+                <a href="mailto:contact@mwplu.com">contact@mwplu.com</a>
               </div>
               <div class="contact-item">
-                <span class="contact-icon">📞</span>
-                <span>06 01 84 27 20</span>
+                <a href="tel:+33601842720">06 01 84 27 20</a>
               </div>
               <div class="contact-item">
-                <span class="contact-icon">📍</span>
-                <span>40 Rue Mallifaud, 38100 Grenoble</span>
+                <a href="https://maps.google.com?q=40+Rue+Mallifaud,+38100+Grenoble" target="_blank">40 Rue Mallifaud, 38100 Grenoble</a>
               </div>
             </div>
           </div>
@@ -27,13 +24,13 @@ export function createFooter() {
             <div class="footer-links">
               <div class="footer-links-column">
                 <a href="/" class="footer-link">Accueil</a>
-                <a href="/about" class="footer-link">À propos</a>
-                <a href="/donation" class="footer-link">Nous soutenir</a>
+                <a href="/info/about" class="footer-link">À propos</a>
+                <a href="/info/donation" class="footer-link">Nous soutenir</a>
               </div>
               <div class="footer-links-column">
-                <a href="/documentation" class="footer-link">Documentation</a>
-                <a href="/contact" class="footer-link">Contact</a>
-                <a href="/profile" class="footer-link">Mon compte</a>
+                <a href="/docs/documentation" class="footer-link">Documentation</a>
+                <a href="/info/contact" class="footer-link">Contact</a>
+                <a href="/user/profile" class="footer-link">Mon compte</a>
               </div>
             </div>
           </div>
@@ -44,7 +41,7 @@ export function createFooter() {
               <a href="#" class="social-link" aria-label="Twitter">
                 <span class="social-icon">
                   <img
-                    src="assets/icons/social/twitter-x.svg"
+                    src="https://mwplu.com/assets/icons/social/twitter-x.svg"
                     alt="Twitter Logo"
                   />
                 </span>
@@ -52,7 +49,7 @@ export function createFooter() {
               <a href="#" class="social-link" aria-label="Facebook">
                 <span class="social-icon">
                   <img
-                    src="assets/icons/social/facebook.svg"
+                    src="https://mwplu.com/assets/icons/social/facebook.svg"
                     alt="Facebook Logo"
                   />
                 </span>
@@ -60,7 +57,7 @@ export function createFooter() {
               <a href="#" class="social-link" aria-label="LinkedIn">
                 <span class="social-icon">
                   <img
-                    src="assets/icons/social/linkedin.svg"
+                    src="https://mwplu.com/assets/icons/social/linkedin.svg"
                     alt="LinkedIn Logo"
                   />
                 </span>
@@ -68,7 +65,7 @@ export function createFooter() {
               <a href="#" class="social-link" aria-label="Youtube">
                 <span class="social-icon">
                   <img
-                    src="assets/icons/social/youtube.svg"
+                    src="https://mwplu.com/assets/icons/social/youtube.svg"
                     alt="Youtube Logo"
                   />
                 </span>
@@ -79,10 +76,10 @@ export function createFooter() {
 
         <div class="footer-bottom">
           <div class="footer-legal">
-            <a href="/mentions-legales" class="legal-link">Mentions légales</a>
-            <a href="/terms" class="legal-link">CGU</a>
-            <a href="/confidentialite" class="legal-link">Confidentialité</a>
-            <a href="/cookies" class="legal-link">Cookies</a>
+            <a href="/policies/legal-notice" class="legal-link">Mentions légales</a>
+            <a href="/policies/terms" class="legal-link">CGU</a>
+            <a href="/policies/privacy" class="legal-link">Confidentialité</a>
+            <a href="/policies/cookies" class="legal-link">Cookies</a>
           </div>
           <div class="footer-copyright">
             <p>&copy; 2025 MWPLU. Tous droits réservés.</p>

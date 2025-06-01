@@ -40,7 +40,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* General .btn class and Download button */
+/* General .btn class and variants */
 .btn {
     display: inline-block;
     font-weight: 400;
@@ -53,6 +53,20 @@
     line-height: 1.5;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     cursor: pointer;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background: var(--primary-black);
+    color: var(--primary-white);
+    border-color: var(--primary-black);
+}
+
+.btn-primary:hover {
+    background: #333;
+    border-color: #333;
+    color: var(--primary-white);
 }
 
 .to-plu-btn {

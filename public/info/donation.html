@@ -1,103 +1,86 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Faire un Don - MWPLU</title>
-    <link rel="stylesheet" href="css/main.css" />
-    <script>
-      window.addEventListener("scroll", function () {
+<!doctype html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Faire un Don - MWPLU</title><link rel="stylesheet" href="../css/main.css"/><script>window.addEventListener("scroll", function () {
         const header = document.querySelector(".site-header");
         if (window.scrollY > 10) {
           header.classList.add("scrolled");
         } else {
           header.classList.remove("scrolled");
         }
-      });
-    </script>
-  <script defer src="../js/ui.bundle.js"></script><script defer src="../js/footer.bundle.js"></script><script defer src="../js/vendors-node_modules_supabase_supabase-js_dist_module_index_js.bundle.js"></script><script defer src="../js/src_js_auth_header-auth_js.bundle.js"></script><script defer src="../js/donation.bundle.js"></script></head>
-  <body>
-    <header class="site-header sticky">
-      <div class="container">
-        <div class="flex-between">
-          <a href="/" class="header-logo animate-title">
-            <img src="assets/icons/MWPLU.svg" alt="MWPLU Logo" />
-          </a>
-          <div class="auth-section">
-            <a
-              href="/profile"
-              id="userStatus"
-              class="auth-btn margin-right-sm hidden"
-              >Votre compte</a
-            >
-            <a href="/login" id="loginLink" class="auth-btn margin-right-sm">
-              Se connecter
-            </a>
-            <a href="/signup" id="signupLink" class="auth-btn">
-              Créer un compte
-            </a>
-            <button id="logoutBtn" class="auth-btn hidden">
-              Se déconnecter
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
+      });</script><script defer="defer" src="../js/common.bundle.js"></script><script defer="defer" src="../js/ui.bundle.js"></script><script defer="defer" src="../js/utils.bundle.js"></script><script defer="defer" src="../js/security.bundle.js"></script><script defer="defer" src="../js/components.bundle.js"></script><script defer="defer" src="../js/uiComponents.bundle.js"></script><script defer="defer" src="../js/footer.bundle.js"></script><script defer="defer" src="../js/header.bundle.js"></script><script defer="defer" src="../js/donation.bundle.js"></script></head><body><div id="header-placeholder"></div><main class="main-content"><div class="container margin-top-lg"><section class="static-page-section card text-center"><h1 class="margin-bottom-md">Soutenez MWPLU</h1><p class="lead margin-bottom-lg">Aidez-nous à maintenir ce service gratuit et à développer de nouvelles fonctionnalités.</p><div class="donation-section"><div class="donation-amounts margin-bottom-lg"><h2 class="heading-3 margin-bottom-md">Choisissez un montant</h2><div class="amount-buttons"><button class="amount-btn selected" data-amount="5">5€</button> <button class="amount-btn" data-amount="10">10€</button> <button class="amount-btn" data-amount="20">20€</button> <button class="amount-btn" data-amount="50">50€</button></div><div class="custom-amount-group margin-top-md"><label for="customAmount" class="form-label">Montant personnalisé</label><div class="amount-input-wrapper margin-bottom-sm"><input type="number" id="customAmount" class="form-input amount-input" placeholder="1€" min="1" step="1"/></div></div></div><button id="donateBtn" class="btn btn-primary margin-bottom-lg">Faire un don de&nbsp;<span id="selectedAmount">5</span>€</button><div class="donation-info"><p class="margin-bottom-sm">Paiement protégé et sécurisé par Stripe</p><p class="margin-bottom-sm">Vos données de paiement sont cryptées et sécurisées.</p></div></div></section></div></main><div id="footer-placeholder"></div><style>.donation-amounts {
+        max-width: 500px;
+        margin: 0 auto;
+      }
 
-    <main class="main-content">
-      <div class="container margin-top-lg margin-bottom-lg">
-        <section class="static-page-section card text-center">
-          <h1 class="margin-bottom-md">Soutenir MWPLU</h1>
+      .amount-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
 
-          <p class="lead margin-bottom-lg">
-            Votre soutien nous aide à maintenir et à améliorer ce service de
-            répertoire des synthèses de PLU, ainsi qu'à développer de nouvelles
-            fonctionnalités pour la communauté.
-          </p>
+      .amount-btn {
+        padding: 14px 24px;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        min-width: 80px;
+      }
 
-          <div class="donation-options">
-            <h2 class="heading-3 margin-bottom-md">Faire un don</h2>
-            <p class="margin-bottom-sm">
-              Si vous trouvez notre service utile, envisagez de faire un don
-              pour nous aider à couvrir nos frais de fonctionnement et à
-              poursuivre notre mission.
-            </p>
+      .amount-btn:hover {
+        border-color: #3b82f6;
+        color: #3b82f6;
+      }
 
-            <p class="margin-bottom-md">
-              Vous pouvez nous soutenir via [Nom de la plateforme de don, ex:
-              PayPal, Ko-fi, Tipeee] en cliquant sur le lien ci-dessous :
-            </p>
-            <a href="#" class="btn btn-primary btn-lg margin-bottom-lg"
-              >Faire un don sur [Plateforme]</a
-            >
+      .amount-btn.selected {
+        border-color: #3b82f6;
+        background: #3b82f6;
+        color: white;
+      }
 
-            <p class="margin-top-lg">
-              Chaque contribution, quelle que soit sa taille, est grandement
-              appréciée !
-            </p>
-          </div>
+      .custom-amount-group {
+        max-width: 150px;
+        margin: 0 auto;
+      }
 
-          <div class="margin-top-lg">
-            <h2 class="heading-4">Autres façons de nous soutenir</h2>
-            <ul class="list-unstyled">
-              <li class="margin-bottom-xs">Parlez de MWPLU autour de vous.</li>
-              <li class="margin-bottom-xs">
-                Donnez-nous votre feedback pour améliorer le service.
-              </li>
-              <li>
-                Si vous êtes développeur, contribuez à notre projet (si open
-                source).
-              </li>
-            </ul>
-          </div>
-        </section>
-      </div>
-    </main>
+      .amount-input-wrapper {
+        position: relative;
+      }
 
-    <!-- Footer will be loaded here -->
-    <div id="footer-placeholder"></div>
+      .amount-input {
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+      }
 
-    <!-- Scripts -->
-    <script type="module" src="js/components/footer.js"></script>
-  </body>
-</html>
+      .donation-info {
+        font-size: 14px;
+        color: #6b7280;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .support-options {
+        text-align: left;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .support-options p {
+        margin: 8px 0;
+        color: #6b7280;
+      }
+
+      #donateBtn {
+        max-width: 250px;
+        padding: 12px 24px;
+        font-size: 14px;
+      }
+
+      #donateBtn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }</style></body></html>

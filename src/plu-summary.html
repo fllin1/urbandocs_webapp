@@ -7,146 +7,364 @@
     <link rel="stylesheet" href="css/main.css" />
   </head>
   <body>
-    <!-- Header -->
-    <header class="site-header">
-      <div class="container">
-        <div class="header-content">
-          <a href="/" class="header-logo animate-title">
-            <img src="assets/icons/MWPLU.svg" alt="MWPLU Logo" />
-          </a>
-          <nav class="header-nav">
-            <a href="/" class="auth-btn">Accueil</a>
-            <a href="/documentation" class="auth-btn">Documentation</a>
-            <a href="/profile" class="auth-btn">Profil</a>
-            <button id="logout-btn" class="auth-btn">Déconnexion</button>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <div id="header-placeholder"></div>
 
     <!-- Main Content -->
     <main class="main-content">
-      <div class="container">
-        <!-- Loading State -->
-        <div id="loading-state" class="loading-container">
-          <div class="loading-spinner"></div>
-          <p>Chargement du document...</p>
+      <!-- Loading State -->
+      <div id="loading-state" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Chargement du document...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="error-state" class="error-container" style="display: none">
+        <img
+          src="assets/icons/logo/MWPLU.svg"
+          alt="Erreur"
+          class="error-icon"
+        />
+        <h2>Oups! Une erreur s'est produite</h2>
+        <p id="error-message">Impossible de charger le document.</p>
+        <a href="/" class="btn btn-primary">Retour à l'accueil</a>
+      </div>
+
+      <!-- Document Content -->
+      <div id="document-content" style="display: none">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+          <a href="/">Documents</a>
+          <span class="breadcrumb-separator">/</span>
+          <a href="#" id="city-breadcrumb"></a>
+          <span class="breadcrumb-separator">/</span>
+          <span id="zone-breadcrumb"></span>
+        </nav>
+
+        <!-- Document Header -->
+        <div class="document-header">
+          <h1 class="document-title" id="document-title"></h1>
+          <p class="document-subtitle" id="document-subtitle"></p>
         </div>
 
-        <!-- Error State -->
-        <div id="error-state" class="error-container" style="display: none">
-          <img src="/assets/icons/MWPLU.svg" alt="Erreur" class="error-icon" />
-          <h2>Oups! Une erreur s'est produite</h2>
-          <p id="error-message">Impossible de charger le document.</p>
-          <a href="/" class="btn btn-primary">Retour à l'accueil</a>
-        </div>
-
-        <!-- Document Content -->
-        <div id="document-content" style="display: none">
-          <!-- Document Header -->
-          <div class="document-header">
-            <div class="breadcrumb">
-              <a href="/">Accueil</a>
-              <span>/</span>
-              <span id="city-name"></span>
-              <span>/</span>
-              <span id="zoning-name"></span>
-              <span>/</span>
-              <span id="zone-name"></span>
-            </div>
-            <h1 class="document-title">
-              <span id="doc-city"></span> - Zone <span id="doc-zone"></span>
-            </h1>
-            <p class="document-subtitle">
-              Document PLU - <span id="doc-zoning"></span>
-            </p>
-          </div>
-
-          <!-- Document Actions Bar -->
-          <div class="actions-bar">
-            <div class="actions-left">
-              <button id="download-btn" class="action-btn">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Télécharger PDF
-              </button>
-              <span class="download-count">
-                <span id="download-count">0</span> téléchargements
-              </span>
-            </div>
-            <div class="actions-right">
-              <div class="rating-container">
-                <span class="rating-label">Noter ce document:</span>
-                <div class="star-rating" id="user-rating">
-                  <button class="star" data-rating="1">★</button>
-                  <button class="star" data-rating="2">★</button>
-                  <button class="star" data-rating="3">★</button>
-                  <button class="star" data-rating="4">★</button>
-                  <button class="star" data-rating="5">★</button>
-                </div>
-                <div class="average-rating">
-                  <span id="average-rating">4.2</span>
-                  <span class="rating-count"
-                    >(<span id="rating-count">0</span> avis)</span
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Document Tabs -->
-          <div class="document-tabs">
-            <button class="tab-btn active" data-tab="summary">Synthèse</button>
-            <button class="tab-btn" data-tab="comments">
-              Commentaires (<span id="comment-count">0</span>)
+        <!-- Tabs -->
+        <div class="tabs-container">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="synthese">Synthèse</button>
+            <button class="tab-btn" data-tab="commentaires">
+              Commentaires
             </button>
+            <button class="tab-btn" data-tab="sources">Sources</button>
+          </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+          <!-- Synthèse Tab -->
+          <div id="synthese-tab" class="tab-pane active">
+            <div id="plu-content">
+              <!-- PLU HTML content will be inserted here -->
+            </div>
           </div>
 
-          <!-- Tab Content -->
-          <div class="tab-content">
-            <!-- Summary Tab -->
-            <div id="summary-tab" class="tab-pane active">
-              <div class="document-wrapper" id="plu-content">
-                <!-- PLU HTML content will be inserted here -->
+          <!-- Commentaires Tab -->
+          <div id="commentaires-tab" class="tab-pane">
+            <!-- Download Section -->
+            <div class="download-section">
+              <h2>Téléchargement</h2>
+              <div class="download-item">
+                <div class="download-info" id="download-btn">
+                  <svg
+                    class="download-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span class="download-label">Télécharger le document</span>
+                </div>
+                <div>
+                  <span class="download-type">PDF</span>
+                </div>
               </div>
             </div>
 
-            <!-- Comments Tab -->
-            <div id="comments-tab" class="tab-pane" style="display: none">
-              <div class="comments-section">
-                <!-- Comment Form -->
-                <div class="comment-form">
-                  <h3>Ajouter un commentaire</h3>
-                  <textarea
-                    id="comment-input"
-                    placeholder="Partagez votre avis sur ce document..."
-                    rows="4"
-                  ></textarea>
-                  <button id="submit-comment" class="btn btn-primary">
-                    Publier
+            <!-- Community Engagement -->
+            <div class="engagement-section">
+              <h2 class="engagement-header">Avis de la communauté</h2>
+
+              <div class="rating-container margin-bottom-lg">
+                <div class="rating-left">
+                  <span class="rating-number" id="average-rating">-</span>
+                  <div class="user-rating-inline">
+                    <div class="user-stars" id="user-rating">
+                      <button
+                        class="star-btn"
+                        data-rating="1"
+                        aria-label="Noter 1 étoile"
+                      >
+                        ★
+                      </button>
+                      <button
+                        class="star-btn"
+                        data-rating="2"
+                        aria-label="Noter 2 étoiles"
+                      >
+                        ★
+                      </button>
+                      <button
+                        class="star-btn"
+                        data-rating="3"
+                        aria-label="Noter 3 étoiles"
+                      >
+                        ★
+                      </button>
+                      <button
+                        class="star-btn"
+                        data-rating="4"
+                        aria-label="Noter 4 étoiles"
+                      >
+                        ★
+                      </button>
+                      <button
+                        class="star-btn"
+                        data-rating="5"
+                        aria-label="Noter 5 étoiles"
+                      >
+                        ★
+                      </button>
+                    </div>
+                  </div>
+                  <span class="rating-count">
+                    <span id="rating-count">0</span> avis
+                  </span>
+                </div>
+
+                <div class="rating-breakdown">
+                  <div class="rating-bar">
+                    <span class="rating-label">5</span>
+                    <div class="rating-bar-bg">
+                      <div
+                        class="rating-bar-fill"
+                        id="rating-5"
+                        style="width: 0%"
+                      ></div>
+                    </div>
+                    <span class="rating-percentage" id="rating-5-percent"
+                      >0%</span
+                    >
+                  </div>
+                  <div class="rating-bar">
+                    <span class="rating-label">4</span>
+                    <div class="rating-bar-bg">
+                      <div
+                        class="rating-bar-fill"
+                        id="rating-4"
+                        style="width: 0%"
+                      ></div>
+                    </div>
+                    <span class="rating-percentage" id="rating-4-percent"
+                      >0%</span
+                    >
+                  </div>
+                  <div class="rating-bar">
+                    <span class="rating-label">3</span>
+                    <div class="rating-bar-bg">
+                      <div
+                        class="rating-bar-fill"
+                        id="rating-3"
+                        style="width: 0%"
+                      ></div>
+                    </div>
+                    <span class="rating-percentage" id="rating-3-percent"
+                      >0%</span
+                    >
+                  </div>
+                  <div class="rating-bar">
+                    <span class="rating-label">2</span>
+                    <div class="rating-bar-bg">
+                      <div
+                        class="rating-bar-fill"
+                        id="rating-2"
+                        style="width: 0%"
+                      ></div>
+                    </div>
+                    <span class="rating-percentage" id="rating-2-percent"
+                      >0%</span
+                    >
+                  </div>
+                  <div class="rating-bar">
+                    <span class="rating-label">1</span>
+                    <div class="rating-bar-bg">
+                      <div
+                        class="rating-bar-fill"
+                        id="rating-1"
+                        style="width: 0%"
+                      ></div>
+                    </div>
+                    <span class="rating-percentage" id="rating-1-percent"
+                      >0%</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Comments Section -->
+              <div class="comment-form margin-top-lg">
+                <textarea
+                  id="comment-input"
+                  class="comment-input"
+                  placeholder="Ajouter un commentaire"
+                ></textarea>
+                <div class="comment-form-actions">
+                  <button id="submit-comment" class="comment-submit-btn">
+                    Envoyer
                   </button>
                 </div>
+              </div>
 
-                <!-- Comments List -->
-                <div class="comments-list" id="comments-list">
-                  <!-- Comments will be dynamically inserted here -->
-                </div>
+              <div id="comments-list">
+                <!-- Comments will be dynamically inserted here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Sources Tab -->
+          <div id="sources-tab" class="tab-pane">
+            <div class="sources-section">
+              <div class="source-item">
+                <span class="source-label">Document PLU original</span>
+                <a
+                  href="#"
+                  id="source-plu-link"
+                  class="source-link"
+                  target="_blank"
+                >
+                  Consulter le document
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    ></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+              <div class="source-item">
+                <span class="source-label"
+                  >Vocabulaire national d'urbanisme</span
+                >
+                <a
+                  href="https://outil2amenagement.cerema.fr/ressources/guides-fiches/lexique-national-durbanisme"
+                  class="source-link"
+                  target="_blank"
+                >
+                  Consulter le lexique
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    ></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+              <div class="source-item">
+                <span class="source-label">Politiques de ventes</span>
+                <a href="/policies" class="source-link">
+                  Lire les politiques
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    ></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+              <div class="source-item">
+                <span class="source-label">Politique de confidentialité</span>
+                <a href="/policies/privacy" class="source-link">
+                  Lire la politique
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    ></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+              <div class="source-item">
+                <span class="source-label">Conditions d'utilisation</span>
+                <a href="/policies/terms" class="source-link">
+                  Lire les CGU
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    ></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </main>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="back-to-top">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
 
     <!-- Edit Comment Modal -->
     <div id="edit-modal" class="modal" style="display: none">
@@ -156,15 +374,13 @@
           <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
-          <textarea id="edit-comment-input" rows="4"></textarea>
+          <textarea id="edit-comment-input" class="comment-input"></textarea>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" id="cancel-edit">Annuler</button>
-          <button class="btn btn-primary" id="save-edit">Enregistrer</button>
+          <button class="btn-secondary" id="cancel-edit">Annuler</button>
+          <button class="auth-button" id="save-edit">Enregistrer</button>
         </div>
       </div>
     </div>
-
-    <script type="module" src="../js/plu-summary.js"></script>
   </body>
 </html>

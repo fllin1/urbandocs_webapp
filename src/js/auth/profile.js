@@ -3,9 +3,10 @@
  * Profile Module
  * @module profile
  * @description Handles user profile management, including data fetching, updates, and account deletion.
- * @version 0.2.1
+ * @version 0.3.0
  *
  * @changelog
+ * - 0.3.0 (2025-01-27): Updated account deletion to use 30-day grace period system
  * - 0.2.1 (2025-01-27): Updated to use English column names and added date_of_birth support
  * - 0.2.0 (2025-01-27): Fixed database table references and field mappings to match actual Supabase structure
  * - 0.1.0 (2025-05-16): Added profile data fetching, updating, and account deletion functionality.
@@ -21,6 +22,7 @@ import {
   hideLoading,
 } from "./auth.js"; // Assuming auth.js exports showStatus that can take an element ID
 import { supabase } from "../supabase-client.js";
+import { initDeletionGuard } from "./deletion-guard.js";
 
 // Helper to show status messages for profile form and delete section
 function showProfileStatus(message, type, elementId) {
@@ -36,7 +38,9 @@ function showProfileStatus(message, type, elementId) {
 async function fetchUserProfile(userId) {
   const { data, error } = await supabase
     .from("profiles")
-    .select("first_name, last_name, phone, updated_at")
+    .select(
+      "first_name, last_name, phone, updated_at, deletion_requested_at, deletion_scheduled_for"
+    )
     .eq("id", userId)
     .single();
 
@@ -49,27 +53,43 @@ async function fetchUserProfile(userId) {
 }
 
 function populateProfileForm(profile) {
-  if (!profile) return;
+  const firstNameEl = document.getElementById("firstName");
+  const lastNameEl = document.getElementById("lastName");
+  const phoneEl = document.getElementById("phone");
 
-  // Map database fields to HTML form fields (HTML still uses French field names)
-  document.getElementById("nom").value = profile.last_name || "";
-  document.getElementById("prenom").value = profile.first_name || "";
-  document.getElementById("telephone").value = profile.phone || "";
-
-  // Handle date of birth
-  if (profile.date_of_birth) {
-    document.getElementById("dateNaissance").value = profile.date_of_birth;
+  if (firstNameEl && profile.first_name) {
+    firstNameEl.value = profile.first_name;
   }
-
-  const memberSinceEl = document.getElementById("memberSince");
-  if (memberSinceEl && profile.updated_at) {
-    memberSinceEl.textContent = new Date(profile.updated_at).toLocaleDateString(
-      "fr-FR"
-    );
+  if (lastNameEl && profile.last_name) {
+    lastNameEl.value = profile.last_name;
+  }
+  if (phoneEl && profile.phone) {
+    phoneEl.value = profile.phone;
   }
 }
 
+async function updateUserProfile(userId, profileData) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .update(profileData)
+    .eq("id", userId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating profile:", error);
+    throw error;
+  }
+  return data;
+}
+
 export async function initProfilePage() {
+  // Initialize deletion guard first
+  const canAccess = await initDeletionGuard(false);
+  if (!canAccess) {
+    return; // Access was blocked
+  }
+
   if (!(await protectPage())) return;
 
   const userEmailEl = document.getElementById("userEmail");
@@ -103,6 +123,11 @@ export async function initProfilePage() {
     const profile = await fetchUserProfile(user.id);
     if (profile) {
       populateProfileForm(profile);
+
+      // Check if account deletion is scheduled
+      if (profile.deletion_scheduled_for) {
+        updateDeleteAccountSection(profile);
+      }
     } else {
       console.log("No profile data found for user, form will be empty.");
     }
@@ -138,40 +163,31 @@ export async function initProfilePage() {
     if (profileForm) {
       profileForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+        const deleteStatusEl = "profileFormStatus";
+        document.getElementById(deleteStatusEl).classList.add("hidden");
+
         showLoading("saveProfileBtn");
-        const profileStatusEl = "profileFormStatus";
-        document.getElementById(profileStatusEl).classList.add("hidden");
-
-        // Get form values and map to database fields (using English column names)
-        const updates = {
-          id: user.id,
-          last_name: document.getElementById("nom").value.trim(),
-          first_name: document.getElementById("prenom").value.trim(),
-          phone: document.getElementById("telephone").value.trim(),
-          updated_at: new Date().toISOString(),
-        };
-
-        // Remove empty fields to avoid constraint violations
-        Object.keys(updates).forEach((key) => {
-          if (updates[key] === "" && key !== "id" && key !== "updated_at") {
-            updates[key] = null;
-          }
-        });
-
         try {
-          const { error } = await supabase.from("profiles").upsert(updates);
-          if (error) throw error;
+          const formData = new FormData(profileForm);
+          const profileData = {
+            first_name: formData.get("firstName") || null,
+            last_name: formData.get("lastName") || null,
+            phone: formData.get("phone") || null,
+            updated_at: new Date().toISOString(),
+          };
+
+          await updateUserProfile(user.id, profileData);
           showProfileStatus(
             "Profil mis à jour avec succès !",
             "success",
-            profileStatusEl
+            deleteStatusEl
           );
         } catch (error) {
           console.error("Error updating profile:", error);
           showProfileStatus(
             `Erreur lors de la mise à jour: ${error.message}`,
             "error",
-            profileStatusEl
+            deleteStatusEl
           );
         } finally {
           hideLoading("saveProfileBtn");
@@ -186,48 +202,55 @@ export async function initProfilePage() {
 
         if (
           confirm(
-            "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et toutes vos données seront perdues."
+            "Êtes-vous sûr de vouloir programmer la suppression de votre compte ? Votre compte sera supprimé dans 30 secondes pour le test, mais vous pourrez annuler cette action à tout moment avant la suppression définitive."
           )
         ) {
           showLoading("deleteAccountBtn");
           try {
-            // First delete the profile
-            const { error: profileError } = await supabase
-              .from("profiles")
-              .delete()
-              .eq("id", user.id);
-
-            if (profileError) {
-              console.error("Error deleting profile:", profileError);
+            // Call the account management edge function to schedule deletion
+            const { data: session } = await supabase.auth.getSession();
+            if (!session?.session?.access_token) {
+              throw new Error("No valid session");
             }
 
-            // Then try to delete the user account (this might require admin privileges)
-            const { error } = await supabase.rpc("delete_user_account");
-            if (error) {
-              // If RPC doesn't exist, just sign out the user
-              console.warn("delete_user_account RPC not available:", error);
-              await supabase.auth.signOut();
-              showProfileStatus(
-                "Profil supprimé. Veuillez contacter l'administrateur pour supprimer complètement votre compte.",
-                "info",
-                deleteStatusEl
-              );
-            } else {
-              showProfileStatus(
-                "Compte supprimé avec succès. Vous allez être déconnecté et redirigé.",
-                "success",
-                deleteStatusEl
-              );
-              await supabase.auth.signOut();
+            const response = await fetch(
+              `${supabase.supabaseUrl}/functions/v1/account-management`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${session.session.access_token}`,
+                },
+                body: JSON.stringify({
+                  action: "schedule",
+                  reason: "User requested account deletion from profile page",
+                }),
+              }
+            );
+
+            const result = await response.json();
+
+            if (!result.success) {
+              throw new Error(result.error || "Failed to schedule deletion");
             }
 
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 3000);
-          } catch (error) {
-            console.error("Error deleting account:", error);
             showProfileStatus(
-              `Erreur lors de la suppression du compte: ${error.message}`,
+              "Suppression de compte programmée pour dans 30 secondes. Vous pouvez annuler cette action à tout moment.",
+              "info",
+              deleteStatusEl
+            );
+
+            // Update the delete account section
+            setTimeout(async () => {
+              const updatedProfile = await fetchUserProfile(user.id);
+              if (updatedProfile) {
+                updateDeleteAccountSection(updatedProfile);
+              }
+            }, 1000);
+          } catch (error) {
+            console.error("Error scheduling account deletion:", error);
+            showProfileStatus(
+              `Erreur lors de la programmation de suppression: ${error.message}`,
               "error",
               deleteStatusEl
             );
@@ -245,6 +268,156 @@ export async function initProfilePage() {
     if (mainErrorContainer) {
       mainErrorContainer.innerHTML =
         '<p class="error-message">Impossible de charger les informations du profil. Veuillez réessayer plus tard.</p>';
+    }
+  }
+}
+
+/**
+ * Update the delete account section based on deletion status
+ */
+function updateDeleteAccountSection(profile) {
+  const deleteSection = document.getElementById("deleteAccountSection");
+  const deleteBtn = document.getElementById("deleteAccountBtn");
+
+  if (!deleteSection || !deleteBtn) return;
+
+  if (profile.deletion_scheduled_for) {
+    const deletionDate = new Date(profile.deletion_scheduled_for);
+    const now = new Date();
+    const secondsRemaining = Math.ceil(
+      (deletionDate.getTime() - now.getTime()) / 1000
+    );
+
+    // Update section content
+    deleteSection.innerHTML = `
+      <h3 class="margin-bottom-sm">Suppression de compte programmée</h3>
+      <div class="deletion-warning">
+        <p class="margin-bottom-sm">
+          ⚠️ Votre compte sera supprimé dans <strong>${secondsRemaining} seconde(s)</strong> 
+          (le ${deletionDate.toLocaleDateString(
+            "fr-FR"
+          )} à ${deletionDate.toLocaleTimeString("fr-FR")}).
+        </p>
+        <p class="margin-bottom-sm">
+          Vous pouvez annuler cette suppression à tout moment avant la date prévue.
+        </p>
+      </div>
+      <div class="deletion-actions">
+        <button id="cancelDeletionBtn" class="btn btn-primary">
+          Annuler la suppression
+        </button>
+        <button id="viewDeletionStatusBtn" class="btn btn-secondary">
+          Voir le statut détaillé
+        </button>
+      </div>
+      <div id="deleteStatusMessage" class="status-message hidden margin-top-sm"></div>
+    `;
+
+    // Add event listeners for new buttons
+    const cancelBtn = document.getElementById("cancelDeletionBtn");
+    const viewStatusBtn = document.getElementById("viewDeletionStatusBtn");
+
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", handleCancelDeletion);
+    }
+
+    if (viewStatusBtn) {
+      viewStatusBtn.addEventListener("click", () => {
+        window.location.href = "/user/account-deletion-status";
+      });
+    }
+  }
+}
+
+/**
+ * Handle canceling account deletion
+ */
+async function handleCancelDeletion() {
+  if (
+    !confirm(
+      "Êtes-vous sûr de vouloir annuler la suppression de votre compte ?"
+    )
+  ) {
+    return;
+  }
+
+  try {
+    const cancelBtn = document.getElementById("cancelDeletionBtn");
+    const originalText = cancelBtn.textContent;
+    cancelBtn.textContent = "Annulation...";
+    cancelBtn.disabled = true;
+
+    // Call the account management edge function to cancel deletion
+    const { data: session } = await supabase.auth.getSession();
+    if (!session?.session?.access_token) {
+      throw new Error("No valid session");
+    }
+
+    const response = await fetch(
+      `${supabase.supabaseUrl}/functions/v1/account-management`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.session.access_token}`,
+        },
+        body: JSON.stringify({
+          action: "cancel",
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error || "Failed to cancel deletion");
+    }
+
+    showProfileStatus(
+      "Suppression de compte annulée avec succès !",
+      "success",
+      "deleteStatusMessage"
+    );
+
+    // Restore original delete account section
+    setTimeout(() => {
+      const deleteSection = document.getElementById("deleteAccountSection");
+      if (deleteSection) {
+        deleteSection.innerHTML = `
+          <h3 class="margin-bottom-sm">Supprimer le compte</h3>
+          <p class="margin-bottom-sm">
+            Attention : Cette action programmera la suppression de votre compte dans 30 secondes pour le test. 
+            Vous pourrez annuler cette action à tout moment avant la suppression définitive.
+          </p>
+          <button id="deleteAccountBtn" class="btn btn-danger">
+            Programmer la suppression de mon compte
+          </button>
+          <div id="deleteStatusMessage" class="status-message hidden margin-top-sm"></div>
+        `;
+
+        // Re-add event listener
+        const newDeleteBtn = document.getElementById("deleteAccountBtn");
+        if (newDeleteBtn) {
+          newDeleteBtn.addEventListener("click", async () => {
+            // Re-run the delete account logic
+            location.reload(); // Simple solution: reload the page
+          });
+        }
+      }
+    }, 2000);
+  } catch (error) {
+    console.error("Error canceling deletion:", error);
+    showProfileStatus(
+      "Erreur lors de l'annulation de la suppression",
+      "error",
+      "deleteStatusMessage"
+    );
+
+    // Re-enable button
+    const cancelBtn = document.getElementById("cancelDeletionBtn");
+    if (cancelBtn) {
+      cancelBtn.textContent = "Annuler la suppression";
+      cancelBtn.disabled = false;
     }
   }
 }

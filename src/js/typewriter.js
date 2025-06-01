@@ -13,7 +13,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const subtitleElement = document.getElementById("typewriter-subtitle");
   // Text to animate
-  const textToType = "SIFT - MWPLU - 2025";
+  const textToType = "MWPLU - 2025";
   // Typing speed in milliseconds per character
   const typingSpeed = 70;
 

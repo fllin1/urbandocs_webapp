@@ -1,0 +1,511 @@
+<!doctype html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Suppression de compte - MWPLU</title><style>* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background: #f5f5f7;
+        min-height: 100vh;
+        color: #1d1d1f;
+        line-height: 1.47059;
+        font-weight: 400;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Loading State */
+      .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        color: #86868b;
+        text-align: center;
+      }
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 2px solid #f0f0f0;
+        border-left: 2px solid #007aff;
+        border-radius: 4px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 24px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-container p {
+        font-size: 17px;
+        font-weight: 400;
+        color: #86868b;
+      }
+
+      /* Error State */
+      .error-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .error-content {
+        background: #ffffff;
+        padding: 48px;
+        border-radius: 4px;
+        box-shadow: 0 4px 40px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+      }
+
+      .error-content h2 {
+        color: #ff3b30;
+        margin-bottom: 16px;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.003em;
+      }
+
+      .error-content p {
+        margin-bottom: 32px;
+        color: #86868b;
+        font-size: 17px;
+      }
+
+      /* Main Content */
+      .main-content {
+        width: 100%;
+      }
+
+      .deletion-status-card {
+        background: #ffffff;
+        border-radius: 4px;
+        padding: 48px;
+        box-shadow: 0 4px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .deletion-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .deletion-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        background: #ff3b30;
+        border-radius: 4px;
+        color: white;
+        margin-bottom: 24px;
+        animation: none;
+      }
+
+      .deletion-header h1 {
+        font-size: 32px;
+        color: #1d1d1f;
+        font-weight: 600;
+        letter-spacing: -0.003em;
+        margin-bottom: 8px;
+      }
+
+      /* Countdown */
+      .countdown-container {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        margin: 32px 0;
+        padding: 24px;
+        background: #f5f5f7;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+
+      .countdown-item {
+        text-align: center;
+        flex: 1;
+      }
+
+      .countdown-number {
+        display: block;
+        font-size: 40px;
+        font-weight: 600;
+        color: #ff3b30;
+        line-height: 1;
+        margin-bottom: 8px;
+        letter-spacing: -0.003em;
+      }
+
+      .countdown-label {
+        font-size: 13px;
+        color: #86868b;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      /* Deletion Details */
+      .deletion-details {
+        margin: 32px 0;
+        text-align: center;
+      }
+
+      .deletion-message {
+        font-size: 19px;
+        margin-bottom: 16px;
+        color: #1d1d1f;
+        font-weight: 400;
+        line-height: 1.4211;
+      }
+
+      .deletion-message strong {
+        color: #ff3b30;
+        font-weight: 600;
+      }
+
+      .deletion-warning {
+        background: #fff2cd;
+        padding: 16px 20px;
+        border-radius: 4px;
+        border: 1px solid #f1c40f;
+        font-weight: 400;
+        color: #8b6914;
+        font-size: 17px;
+        line-height: 1.47059;
+      }
+
+      /* Deletion Reason */
+      .deletion-reason {
+        margin: 24px 0;
+        padding: 20px;
+        background: #f5f5f7;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+
+      .deletion-reason h3 {
+        color: #1d1d1f;
+        margin-bottom: 8px;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: -0.022em;
+      }
+
+      .deletion-reason p {
+        color: #86868b;
+        font-size: 17px;
+        line-height: 1.47059;
+      }
+
+      /* Buttons */
+      .deletion-actions {
+        display: flex;
+        gap: 12px;
+        margin: 32px 0;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        flex: 1;
+        min-width: 160px;
+        padding: 12px 22px;
+        border: none;
+        border-radius: 2px;
+        font-size: 17px;
+        font-weight: 400;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: -0.022em;
+      }
+
+      .btn-primary {
+        background: #007aff;
+        color: white;
+        border: 1px solid #007aff;
+      }
+
+      .btn-primary:hover {
+        background: #0056cc;
+        border-color: #0056cc;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #007aff;
+        border: 1px solid #d1d1d6;
+      }
+
+      .btn-secondary:hover {
+        background: #f5f5f7;
+        border-color: #007aff;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn::before {
+        display: none;
+      }
+
+      /* Help Section */
+      .deletion-help {
+        margin-top: 32px;
+        padding: 24px;
+        background: #f5f5f7;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        text-align: center;
+      }
+
+      .deletion-help h3 {
+        color: #1d1d1f;
+        margin-bottom: 8px;
+        font-size: 19px;
+        font-weight: 600;
+        letter-spacing: -0.022em;
+      }
+
+      .deletion-help p {
+        color: #86868b;
+        font-size: 17px;
+        line-height: 1.47059;
+      }
+
+      .deletion-help a {
+        color: #007aff;
+        text-decoration: none;
+        font-weight: 400;
+        transition: opacity 0.2s ease;
+      }
+
+      .deletion-help a:hover {
+        opacity: 0.8;
+        background: none;
+      }
+
+      /* Status Messages */
+      .status-message {
+        margin-top: 20px;
+        padding: 16px 20px;
+        border-radius: 4px;
+        font-weight: 400;
+        text-align: center;
+        animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        font-size: 17px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .status-message.success {
+        background: #d1f2eb;
+        color: #00783e;
+        border: 1px solid #34ce57;
+      }
+
+      .status-message.error {
+        background: #fdeaea;
+        color: #d70015;
+        border: 1px solid #ff3b30;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+        }
+
+        .deletion-status-card {
+          padding: 32px 24px;
+          border-radius: 4px;
+        }
+
+        .deletion-header h1 {
+          font-size: 28px;
+        }
+
+        .countdown-container {
+          gap: 24px;
+          padding: 20px;
+        }
+
+        .countdown-number {
+          font-size: 32px;
+        }
+
+        .deletion-actions {
+          flex-direction: column;
+        }
+
+        .btn {
+          min-width: auto;
+        }
+
+        .error-content {
+          padding: 32px 24px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .deletion-status-card {
+          padding: 24px 20px;
+        }
+
+        .deletion-header h1 {
+          font-size: 24px;
+        }
+
+        .countdown-number {
+          font-size: 28px;
+        }
+
+        .countdown-container {
+          gap: 20px;
+          padding: 16px;
+        }
+      }
+
+      /* Dark mode support */
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #000000;
+          color: #f5f5f7;
+        }
+
+        .deletion-status-card {
+          background: #1c1c1e;
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .deletion-header h1 {
+          color: #f5f5f7;
+        }
+
+        .countdown-container {
+          background: #2c2c2e;
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .countdown-label {
+          color: #8e8e93;
+        }
+
+        .deletion-message {
+          color: #f5f5f7;
+        }
+
+        .deletion-warning {
+          background: #3a2f00;
+          border-color: #d48806;
+          color: #ffcc02;
+        }
+
+        .deletion-reason {
+          background: #2c2c2e;
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .deletion-reason h3 {
+          color: #f5f5f7;
+        }
+
+        .deletion-reason p {
+          color: #8e8e93;
+        }
+
+        .deletion-help {
+          background: #2c2c2e;
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .deletion-help h3 {
+          color: #f5f5f7;
+        }
+
+        .deletion-help p {
+          color: #8e8e93;
+        }
+
+        .btn-secondary {
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+          background: #2c2c2e;
+          border-color: #007aff;
+        }
+
+        .error-content {
+          background: #1c1c1e;
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .loading-container p {
+          color: #8e8e93;
+        }
+
+        .loading-spinner {
+          border-color: #2c2c2e;
+          border-left-color: #007aff;
+        }
+      }</style><script defer="defer" src="../js/common.bundle.js"></script><script defer="defer" src="../js/ui.bundle.js"></script><script defer="defer" src="../js/utils.bundle.js"></script><script defer="defer" src="../js/security.bundle.js"></script><script defer="defer" src="../js/accountDeletionStatus.bundle.js"></script></head><body><div id="loading-state" class="loading-container"><div class="loading-spinner"></div><p>Chargement des informations de suppression...</p></div><div id="error-state" class="error-container" style="display: none"><div class="error-content"><h2>Erreur</h2><p id="error-message">Une erreur est survenue lors du chargement.</p><button onclick="window.location.reload()" class="btn btn-primary">Réessayer</button></div></div><main id="main-content" class="main-content" style="display: none"><div class="container"><div class="deletion-status-card"><div class="deletion-header"><div class="deletion-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></div><h1>Suppression de compte programmée</h1></div><div class="deletion-info"><div class="countdown-container"><div class="countdown-item"><span class="countdown-number" id="days-remaining">--</span> <span class="countdown-label">jours</span></div><div class="countdown-item"><span class="countdown-number" id="hours-remaining">--</span> <span class="countdown-label">heures</span></div></div><div class="deletion-details"><p class="deletion-message">Votre compte sera définitivement supprimé le <strong id="deletion-date">--</strong>.</p><p class="deletion-warning">⚠️ Cette action est irréversible. Toutes vos données seront perdues.</p></div><div class="deletion-reason" id="deletion-reason-container" style="display: none"><h3>Raison de la suppression :</h3><p id="deletion-reason">--</p></div></div><div class="deletion-actions"><button id="cancel-deletion-btn" class="btn btn-primary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18"></path><path d="M21 3L3 21"></path></svg> Annuler la suppression</button> <button id="logout-btn" class="btn btn-secondary">Se déconnecter</button></div><div class="deletion-help"><h3>Besoin d'aide ?</h3><p>Si vous avez des questions ou souhaitez récupérer votre compte, contactez-nous à <a href="mailto:support@mwplu.com">support@mwplu.com</a></p></div></div><div id="status-message" class="status-message hidden"></div></div></main></body></html>

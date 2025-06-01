@@ -3,134 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Confirmation du mail - MWPLU</title>
+    <title>Confirmation d'Email - MWPLU</title>
     <link rel="stylesheet" href="../css/main.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      #statusMessage {
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 5px;
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        display: none;
-      }
-      #statusMessage.alert-success {
-        background-color: #d4edda;
-        border-color: #c3e6cb;
-        color: #155724;
-      }
-      #statusMessage.alert-error {
-        background-color: #f8d7da;
-        border-color: #f5c6cb;
-        color: #721c24;
-      }
-    </style>
+    <!-- Cloudflare Turnstile CAPTCHA -->
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback"
+      async
+      defer
+    ></script>
   </head>
   <body>
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="text-center">Confirmation de votre compte</h3>
-            </div>
-            <div class="card-body">
-              <p class="text-center">
-                Votre compte a été créé avec succès ! Pour l'activer, veuillez
-                consulter votre boîte mail et cliquer sur le lien de
-                confirmation.
-              </p>
-              <p class="text-center">
-                <strong>Si vous ne recevez pas l'email :</strong>
-              </p>
-              <ul>
-                <li>Vérifiez votre dossier spam/courrier indésirable</li>
-                <li>Assurez-vous que l'adresse email saisie est correcte</li>
-                <li>
-                  Attendez quelques minutes, l'email peut prendre du temps à
-                  arriver
-                </li>
-              </ul>
+    <div id="header-placeholder"></div>
 
-              <div class="text-center mt-4">
-                <button id="resendBtn" class="btn btn-primary">
-                  Renvoyer l'email de confirmation
-                </button>
-              </div>
-
-              <div id="statusMessage"></div>
-
-              <div class="text-center mt-3">
-                <a href="/" class="btn btn-secondary">Retour à l'accueil</a>
-              </div>
-            </div>
-          </div>
+    <div class="auth-container">
+      <div class="auth-card">
+        <!-- Initial loading state -->
+        <div id="loading" class="loading-state">
+          <div class="spinner"></div>
+          <p>Vérification du lien de confirmation...</p>
         </div>
+
+        <!-- Status messages -->
+        <div id="errorMessage" class="status-message hidden"></div>
+
+        <!-- Confirmation form -->
+        <div id="confirmationForm" class="confirmation-form hidden">
+          <div class="auth-title">MWPLU - Confirmation de compte</div>
+          <div class="auth-subtitle">
+            Cliquez sur le bouton ci-dessous pour finaliser la création de votre
+            compte.
+          </div>
+
+          <form id="confirmForm" class="auth-form">
+            <div class="auth-captcha">
+              <div id="turnstile-container"></div>
+            </div>
+
+            <div class="confirmation-button-container">
+              <button
+                type="submit"
+                id="confirmBtn"
+                class="btn btn-primary"
+                disabled
+              >
+                <span id="confirmSpinner" class="spinner hidden"></span>
+                Confirmer la création du compte
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Success message container -->
+        <div id="successMessage" class="hidden"></div>
       </div>
     </div>
-
-    <script>
-      // Code de confirmation déjà existant
-      const urlParams = new URLSearchParams(window.location.search);
-      const email = urlParams.get("email");
-
-      if (email) {
-        console.log("Email reçu depuis l'URL :", email);
-
-        document
-          .getElementById("resendBtn")
-          .addEventListener("click", function () {
-            resendConfirmationEmail(email);
-          });
-      } else {
-        console.error("Aucun email fourni dans l'URL");
-        document.getElementById("statusMessage").style.display = "block";
-        document.getElementById("statusMessage").className =
-          "alert alert-error";
-        document.getElementById("statusMessage").textContent =
-          "Erreur : aucun email spécifié pour la confirmation.";
-      }
-
-      async function resendConfirmationEmail(email) {
-        const resendBtn = document.getElementById("resendBtn");
-        const statusMessage = document.getElementById("statusMessage");
-
-        resendBtn.disabled = true;
-        resendBtn.textContent = "Envoi en cours...";
-
-        try {
-          // Remplacer cette URL par votre endpoint de renvoi d'email
-          const response = await fetch("/api/resend-confirmation", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: email }),
-          });
-
-          if (response.ok) {
-            statusMessage.style.display = "block";
-            statusMessage.className = "alert alert-success";
-            statusMessage.textContent =
-              "Email de confirmation renvoyé avec succès !";
-          } else {
-            throw new Error("Erreur lors du renvoi de l'email");
-          }
-        } catch (error) {
-          console.error("Erreur :", error);
-          statusMessage.style.display = "block";
-          statusMessage.className = "alert alert-error";
-          statusMessage.textContent =
-            "Erreur lors du renvoi de l'email. Veuillez réessayer.";
-        } finally {
-          resendBtn.disabled = false;
-          resendBtn.textContent = "Renvoyer l'email de confirmation";
-        }
-      }
-    </script>
   </body>
 </html>

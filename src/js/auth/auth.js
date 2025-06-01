@@ -176,7 +176,7 @@ export function isLoggedInSync() {
  * @param {string} redirectUrl - URL to redirect if not authenticated
  * @returns {Promise<boolean>} True if authenticated, false otherwise
  */
-export async function protectPage(redirectUrl = "/login") {
+export async function protectPage(redirectUrl = "/auth/login") {
   const isValid = await validateSession();
 
   if (!isValid) {

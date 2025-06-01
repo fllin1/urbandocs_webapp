@@ -1,0 +1,189 @@
+/* Documentation Page Specific Styles */
+
+/* Enhanced documentation content layout */
+.documentation-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Documentation section styling */
+.doc-section {
+    margin-bottom: var(--space-12);
+    padding: var(--space-8);
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-primary);
+    transition: var(--transition-base);
+    position: relative;
+}
+
+.doc-section:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border-secondary);
+}
+
+/* Section headers with icons */
+.doc-section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.doc-section-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-accent-600);
+    flex-shrink: 0;
+}
+
+.doc-section h2 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.doc-section p {
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+}
+
+/* Enhanced links section */
+.useful-links {
+    background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+}
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.link-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-primary);
+    transition: var(--transition-base);
+    text-decoration: none;
+}
+
+.link-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-accent-500);
+}
+
+.link-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--color-accent-600);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.link-content {
+    flex: 1;
+}
+
+.link-title {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-1);
+    display: block;
+}
+
+.link-description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+    margin: 0;
+}
+
+/* Coming soon badge */
+.coming-soon {
+    position: relative;
+    opacity: 0.7;
+}
+
+.coming-soon::after {
+    content: "Bientôt disponible";
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    background: var(--color-warning-500);
+    color: white;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Enhanced page title */
+.documentation-title {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+    text-align: center;
+}
+
+.documentation-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: var(--space-12);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .documentation-content {
+        max-width: 100%;
+    }
+
+    .doc-section {
+        padding: var(--space-6);
+        margin-bottom: var(--space-8);
+    }
+
+    .links-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+
+    .link-item {
+        padding: var(--space-3);
+    }
+
+    .documentation-title {
+        font-size: var(--font-size-3xl);
+    }
+
+    .documentation-subtitle {
+        font-size: var(--font-size-base);
+        margin-bottom: var(--space-8);
+    }
+}
+
+@media (max-width: 480px) {
+    .doc-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+
+    .doc-section-icon {
+        align-self: center;
+    }
+}

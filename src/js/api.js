@@ -1,247 +1,264 @@
 // src/js/api.js
 /**
- * Supabase API
+ * Supabase API - Modernized
  * @module api
- * @description This module handles API calls to fetch data for cities, zoning, zones, and typologies.
- * @version 0.1.0
+ * @description Clean, efficient API layer with enhanced error handling and state management
+ * @version 1.0.0
  * @author GreyPanda
- * @todo
  *
  * @changelog
+ * - 1.0.0 (2025-01-29): Modernized with state management and enhanced components
  * - 0.1.0 (2025-05-15): Migrating Supabase API calls for improved performance.
- * - 0.0.1 (2025-04-26): Separate module for API calls to improve code organization and maintainability.
+ * - 0.0.1 (2025-04-26): Initial version with basic API functionality.
  */
 
-// Import UI functions and elements (will be defined in ui.js)
+// Import enhanced modules
 import { supabase } from "./supabase-client.js";
+import { apiService } from "./services/api-service.js";
+import { stateManager } from "./state/state-manager.js";
 import {
   toggleSpinner,
   showStatus,
   populateSelect,
   resetSelect,
-  formatApiName,
-  citySelect,
-  zoningSelect,
-  zoneSelect,
-  synthesisBtn,
-  citySpinner,
-  zoningSpinner,
-  zoneSpinner,
-  documentSpinner,
+  domElements,
 } from "./ui.js";
 
-import { currentUser } from "./app.js";
-
-// Variable to store the fetched document details
-let selectedDocument = null;
-
 /**
- * Fetches cities from Supabase
+ * Enhanced city loading with caching and state management
  */
 async function loadCities() {
+  const citySelect = domElements.get("citySelect");
+  const citySpinner = domElements.get("citySpinner");
+
+  if (!citySelect) return;
+
   toggleSpinner(citySpinner, true);
-  showStatus("Chargement des cities...", "info");
-  citySelect.disabled = true;
+  stateManager.setLoading(true);
 
   try {
-    const { data, error } = await supabase
-      .from("cities")
-      .select("id, name")
-      .order("name");
-
-    if (error) throw error;
+    const cities = await apiService.loadCities();
 
     const hasData = populateSelect(
       citySelect,
-      data.map((city) => ({ id: city.id, name: city.name })),
-      "Sélectionnez une city",
+      cities,
+      "Sélectionnez une ville",
       "Aucune ville disponible",
       "city"
     );
 
     if (hasData) {
-      showStatus(`Villes chargées : ${data.length}`, "info");
-    } else if (currentUser === null) {
-      showStatus(
-        "Veuillez vous connecter pour accéder aux données.",
-        "warning"
-      );
+      showStatus(`${cities.length} villes chargées`, "success");
+      stateManager.setCities(cities);
     } else {
-      showStatus("Aucune ville n'a été trouvée.", "warning");
+      const currentUser = stateManager.getState("user");
+      const message =
+        currentUser === null
+          ? "Veuillez vous connecter pour accéder aux données."
+          : "Aucune ville trouvée.";
+      showStatus(message, "warning");
     }
   } catch (error) {
-    console.error("Erreur lors du chargement des cities:", error);
+    console.error("Erreur lors du chargement des villes:", error);
+    showStatus("Erreur de chargement des villes", "error");
     resetSelect(citySelect, "Erreur chargement");
   } finally {
     toggleSpinner(citySpinner, false);
+    stateManager.setLoading(false);
   }
 }
 
 /**
- * Fetches zonings for a city from Supabase
+ * Enhanced zoning loading with state management
  */
 async function loadZonings(cityId) {
-  resetSelect(zoningSelect, "Sélectionnez d'abord une city");
-  resetSelect(zoneSelect, "Sélectionnez d'abord un zoning");
-  synthesisBtn.disabled = true;
-  selectedDocument = null;
+  const zoningSelect = domElements.get("zoningSelect");
+  const zoneSelect = domElements.get("zoneSelect");
+  const zoningSpinner = domElements.get("zoningSpinner");
+  const synthesisBtn = domElements.get("synthesisBtn");
+
+  // Reset dependent selects
+  resetSelect(zoningSelect, "Sélectionnez d'abord une ville");
+  resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
+  if (synthesisBtn) synthesisBtn.disabled = true;
+
+  stateManager.clearSelectedDocument();
 
   if (!cityId) {
-    showStatus("Veuillez sélectionner une city.", "info");
+    showStatus("Veuillez sélectionner une ville.", "info");
     return;
   }
 
   toggleSpinner(zoningSpinner, true);
-  showStatus("Chargement des zonings...", "info");
-  zoningSelect.disabled = true;
+  stateManager.setLoading(true);
 
   try {
-    const { data, error } = await supabase
-      .from("zonings")
-      .select("id, name")
-      .eq("city_id", cityId)
-      .order("name");
-
-    if (error) throw error;
+    const zonings = await apiService.loadZonings(cityId);
 
     const hasData = populateSelect(
       zoningSelect,
-      data.map((zoning) => ({ id: zoning.id, name: zoning.name })),
-      "Sélectionnez un zoning",
+      zonings,
+      "Sélectionnez un zonage",
       "Aucun zonage disponible",
       "zoning"
     );
 
     if (hasData) {
-      showStatus(`Zonages chargés : ${data.length}`, "info");
+      showStatus(`${zonings.length} zonages chargés`, "success");
+      stateManager.setZonings(zonings);
     } else {
-      showStatus("Aucun zonage trouvé pour cette city.", "warning");
+      showStatus("Aucun zonage trouvé pour cette ville.", "warning");
     }
   } catch (error) {
-    console.error("Erreur lors du chargement des zonings:", error);
+    console.error("Erreur lors du chargement des zonages:", error);
+    showStatus("Erreur de chargement des zonages", "error");
     resetSelect(zoningSelect, "Erreur chargement");
   } finally {
     toggleSpinner(zoningSpinner, false);
+    stateManager.setLoading(false);
   }
 }
 
 /**
- * Fetches zones for a zoning from Supabase
+ * Enhanced zone loading with state management
  */
 async function loadZones(zoningId) {
-  resetSelect(zoneSelect, "Sélectionnez d'abord un zoning");
-  synthesisBtn.disabled = true;
-  selectedDocument = null;
+  const zoneSelect = domElements.get("zoneSelect");
+  const zoneSpinner = domElements.get("zoneSpinner");
+  const synthesisBtn = domElements.get("synthesisBtn");
+
+  resetSelect(zoneSelect, "Sélectionnez d'abord un zonage");
+  if (synthesisBtn) synthesisBtn.disabled = true;
+
+  stateManager.clearSelectedDocument();
 
   if (!zoningId) {
-    showStatus("Veuillez sélectionner un zoning.", "info");
+    showStatus("Veuillez sélectionner un zonage.", "info");
     return;
   }
 
   toggleSpinner(zoneSpinner, true);
-  showStatus("Chargement des zones...", "info");
-  zoneSelect.disabled = true;
+  stateManager.setLoading(true);
 
   try {
-    const { data, error } = await supabase
-      .from("zones")
-      .select("id, name")
-      .eq("zoning_id", zoningId)
-      .order("name");
-
-    if (error) throw error;
+    const zones = await apiService.loadZones(zoningId);
 
     const hasData = populateSelect(
       zoneSelect,
-      data.map((zone) => ({ id: zone.id, name: zone.name })),
+      zones,
       "Sélectionnez une zone",
       "Aucune zone disponible",
       "zone"
     );
 
     if (hasData) {
-      showStatus(`Zones chargées : ${data.length}`, "info");
+      showStatus(`${zones.length} zones chargées`, "success");
+      stateManager.setZones(zones);
     } else {
-      showStatus("Aucune zone trouvée pour ce zoning.", "warning");
+      showStatus("Aucune zone trouvée pour ce zonage.", "warning");
     }
   } catch (error) {
     console.error("Erreur lors du chargement des zones:", error);
+    showStatus("Erreur de chargement des zones", "error");
     resetSelect(zoneSelect, "Erreur chargement");
   } finally {
     toggleSpinner(zoneSpinner, false);
+    stateManager.setLoading(false);
   }
 }
 
 /**
- * Fetches document for a zone from Supabase
+ * Enhanced document finder with state management
  */
-async function findDocument(zoningId, zoneId, typologieId) {
-  synthesisBtn.disabled = true;
-  selectedDocument = null;
+async function findDocument(zoningId, zoneId, typologieId = null) {
+  const synthesisBtn = domElements.get("synthesisBtn");
+  const documentSpinner = domElements.get("documentSpinner");
 
+  if (synthesisBtn) synthesisBtn.disabled = true;
+  stateManager.clearSelectedDocument();
+
+  const currentUser = stateManager.getState("user");
   if (!currentUser) {
     showStatus(
       "Veuillez vous connecter pour accéder aux documents.",
       "warning"
     );
-    return;
+    return null;
   }
 
   if (!zoningId || !zoneId) {
     showStatus("Sélection incomplète pour rechercher le document.", "info");
-    return;
+    return null;
   }
 
   toggleSpinner(documentSpinner, true);
-  showStatus("Recherche du document...", "info");
+  stateManager.setLoading(true);
 
   try {
-    const { data, error } = await supabase
-      .from("documents")
-      .select("id, source_plu_date")
-      .eq("zoning_id", zoningId)
-      .eq("zone_id", zoneId)
-      .eq("typology_id", typologieId)
-      .single();
+    const document = await apiService.findDocument(
+      zoningId,
+      zoneId,
+      typologieId
+    );
 
-    if (error) {
-      if (error.code === "PGRST116") {
-        showStatus("Aucun document trouvé pour cette zone.", "warning");
-        return;
-      }
-      throw error;
-    }
-
-    selectedDocument = data;
-
-    if (currentUser && data?.id) {
-      synthesisBtn.disabled = false;
-      showStatus(
-        `Document trouvé (Source: ${
-          formatApiName(data.source_plu_date) || "Non spécifiée"
-        }). Prêt à consulter.`,
-        "success"
-      );
+    if (document) {
+      stateManager.setSelectedDocument(document);
+      if (synthesisBtn) synthesisBtn.disabled = false;
+      showStatus("Document trouvé !", "success");
+      return document;
     } else {
-      selectedDocument = null;
-      showStatus("Document trouvé mais lien manquant.", "warning");
+      showStatus("Aucun document trouvé pour cette sélection.", "warning");
+      return null;
     }
   } catch (error) {
     console.error("Erreur lors de la recherche du document:", error);
-    selectedDocument = null;
+    showStatus("Erreur lors de la recherche du document", "error");
+    return null;
   } finally {
     toggleSpinner(documentSpinner, false);
+    stateManager.setLoading(false);
   }
 }
 
+/**
+ * Get selected document from state
+ */
 function getSelectedDocument() {
-  return selectedDocument;
+  return stateManager.getState("selectedDocument");
 }
 
+/**
+ * Enhanced initialization with state management
+ */
+async function initializeApp() {
+  stateManager.setLoading(true);
+
+  try {
+    // Load initial data
+    await loadCities();
+
+    // Set up event listeners for state changes
+    stateManager.subscribe("user", (user) => {
+      if (user) {
+        loadCities(); // Reload cities when user logs in
+      }
+    });
+
+    showStatus("Application initialisée", "success");
+  } catch (error) {
+    console.error("Erreur d'initialisation:", error);
+    showStatus("Erreur d'initialisation de l'application", "error");
+  } finally {
+    stateManager.setLoading(false);
+  }
+}
+
+// Export clean, focused API
 export {
   loadCities,
   loadZonings,
   loadZones,
   findDocument,
   getSelectedDocument,
+  initializeApp,
 };

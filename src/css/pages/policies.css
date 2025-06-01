@@ -1,66 +1,55 @@
-/* Policy pages unified styling - Apple-inspired design */
-
-/* CSS Variables for policy pages */
-:root {
-    --policy-primary-color: #333;
-    --policy-secondary-color: #666;
-    --policy-background-color: #fff;
-    --policy-border-color: #eaeaea;
-    --policy-accent-color: #0071e3;
-    --policy-highlight-bg: #f5f5f7;
-}
+/* Policy pages unified styling - Using design system tokens */
 
 /* Base policy page styling */
 .policy-container {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    line-height: 1.6;
-    color: var(--policy-primary-color);
-    max-width: 1600px;
+    font-family: var(--font-family-primary);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text-primary);
+    max-width: var(--container-2xl);
     margin: 0 auto;
-    padding: 2rem;
-    background-color: var(--policy-background-color);
+    padding: var(--space-8);
+    background-color: var(--color-bg-primary);
 }
 
 .policy-container h1 {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-8);
     text-align: center;
-    color: var(--policy-primary-color);
+    color: var(--color-text-primary);
     letter-spacing: -0.5px;
 }
 
 .policy-container h2 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: var(--policy-primary-color);
-    border-bottom: 1px solid var(--policy-border-color);
-    padding-bottom: 0.5rem;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border-primary);
+    padding-bottom: var(--space-2);
 }
 
 .policy-container h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: var(--policy-primary-color);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+    color: var(--color-text-primary);
 }
 
 .policy-container .last-update {
     text-align: right;
-    color: var(--policy-secondary-color);
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-8);
     font-style: italic;
 }
 
 .policy-container .article {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--policy-border-color);
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--color-border-primary);
 }
 
 .policy-container .article:last-child {
@@ -68,43 +57,43 @@
 }
 
 .policy-container p {
-    margin-bottom: 1rem;
-    color: var(--policy-secondary-color);
+    margin-bottom: var(--space-4);
+    color: var(--color-text-secondary);
     text-align: justify;
 }
 
 .policy-container ul,
 .policy-container ol {
-    padding-left: 1.5rem;
-    margin-bottom: 1rem;
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-4);
 }
 
 .policy-container li {
-    margin-bottom: 0.5rem;
-    color: var(--policy-secondary-color);
+    margin-bottom: var(--space-2);
+    color: var(--color-text-secondary);
 }
 
 .policy-container a {
-    color: var(--policy-accent-color);
+    color: var(--color-accent-600);
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: var(--transition-base);
 }
 
 .policy-container a:hover {
     text-decoration: underline;
-    color: #005bb5;
+    color: var(--color-accent-700);
 }
 
 .policy-container .highlight {
-    background-color: var(--policy-highlight-bg);
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-    border-left: 4px solid var(--policy-accent-color);
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    margin: var(--space-4) 0;
+    border-left: 4px solid var(--color-accent-600);
 }
 
 .policy-container .highlight p {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-2);
 }
 
 .policy-container .highlight p:last-child {
@@ -113,78 +102,78 @@
 
 /* Special styling for important sections */
 .policy-container .important {
-    background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
-    border: 1px solid #f0c674;
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 1rem 0;
+    background: linear-gradient(135deg, var(--color-warning-50) 0%, var(--color-bg-primary) 100%);
+    border: 1px solid var(--color-warning-500);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin: var(--space-4) 0;
 }
 
 .policy-container .warning {
-    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
-    border: 1px solid #ff6b6b;
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 1rem 0;
+    background: linear-gradient(135deg, var(--color-error-50) 0%, var(--color-bg-primary) 100%);
+    border: 1px solid var(--color-error-500);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin: var(--space-4) 0;
 }
 
 /* Table styling for policy pages */
 .policy-container table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1rem 0;
-    font-size: 0.9rem;
+    margin: var(--space-4) 0;
+    font-size: var(--font-size-sm);
 }
 
 .policy-container th,
 .policy-container td {
-    padding: 0.75rem;
+    padding: var(--space-3);
     text-align: left;
-    border-bottom: 1px solid var(--policy-border-color);
+    border-bottom: 1px solid var(--color-border-primary);
 }
 
 .policy-container th {
-    background-color: var(--policy-highlight-bg);
-    font-weight: 600;
-    color: var(--policy-primary-color);
+    background-color: var(--color-bg-secondary);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
 }
 
 /* Contact information styling */
 .policy-container .contact-info {
-    background: var(--policy-highlight-bg);
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin: 2rem 0;
+    background: var(--color-bg-secondary);
+    padding: var(--space-6);
+    border-radius: var(--radius-xl);
+    margin: var(--space-8) 0;
     text-align: center;
 }
 
 .policy-container .contact-info h3 {
     margin-top: 0;
-    color: var(--policy-primary-color);
+    color: var(--color-text-primary);
 }
 
 /* Code and monospace text */
 .policy-container code {
-    background-color: var(--policy-highlight-bg);
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-base);
+    font-family: var(--font-family-mono);
     font-size: 0.9em;
-    color: var(--policy-primary-color);
+    color: var(--color-text-primary);
 }
 
 /* Responsive design for policy pages */
 @media (max-width: 768px) {
     .policy-container {
-        padding: 1rem;
+        padding: var(--space-4);
     }
 
     .policy-container h1 {
-        font-size: 1.5rem;
+        font-size: var(--font-size-3xl);
     }
 
     .policy-container h2 {
-        font-size: 1.1rem;
+        font-size: var(--font-size-lg);
     }
 
     .policy-container .last-update {
@@ -193,38 +182,38 @@
 
     .policy-container ul,
     .policy-container ol {
-        padding-left: 1rem;
+        padding-left: var(--space-4);
     }
 
     .policy-container table {
-        font-size: 0.8rem;
+        font-size: var(--font-size-xs);
     }
 
     .policy-container th,
     .policy-container td {
-        padding: 0.5rem;
+        padding: var(--space-2);
     }
 }
 
 @media (max-width: 480px) {
     .policy-container {
-        padding: 0.5rem;
+        padding: var(--space-2);
     }
 
     .policy-container h1 {
-        font-size: 1.25rem;
-        margin-bottom: 1rem;
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--space-4);
     }
 
     .policy-container .highlight,
     .policy-container .important,
     .policy-container .warning {
-        padding: 0.75rem;
-        margin: 0.5rem 0;
+        padding: var(--space-3);
+        margin: var(--space-2) 0;
     }
 
     .policy-container .contact-info {
-        padding: 1rem;
+        padding: var(--space-4);
     }
 }
 
