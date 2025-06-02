@@ -12,24 +12,7 @@ Detail list of tasks in the [TODO list](./references/TODO.md).
 
 ### Version Update
 
-Versions 0.0.* aims to create the first version of the website.
-
-Version 0.*.0 aims to improve the UX.
-
-```md
-0.0.10 (May 18th 2025) - Google Sign, Turnstil CAPTCHA, User Table
-0.0.9 (May 16th 2025) - PLU Synthesis template page, access only for auth
-0.0.8 (May 15th 2025) - Migrate all Firebase Cloud Functions to client side
-0.0.7 (May 14th 2025) - Update password feature
-0.0.6 (May 13th 2025) - Complete redesign, base built with [Bolt](https://bolt.new/~/github-p2sgvptw)
-0.0.5 (May 9th 2025) - Moved to Supabase Authentication (login & signup)
-0.0.4 (May 3rd 2025) - Supabase Mail Confirmation
-0.0.3 (April 27th 2025) - Firebase Authentication system for login
-0.0.2 (April 26th 2025) - Update on the UI
-0.0.1 (April 21st 2025) - Initial commit of the website
-```
-
-_For version 1.0.*, we'll aim to have a fixed solution, that is complete in features, UI and UX, with a well thought expendable base._
+Launch date : 01/06/2025
 
 ## Author
 
@@ -41,7 +24,6 @@ _For version 1.0.*, we'll aim to have a fixed solution, that is complete in feat
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?style=for-the-badge&logo=Webpack&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white)
 
 ## Documentation
@@ -54,9 +36,9 @@ _For version 1.0.*, we'll aim to have a fixed solution, that is complete in feat
 [![Static Badge](https://img.shields.io/badge/Reddit-Functions%20Rules-orange)](https://www.reddit.com/r/reactjs/comments/fsw405/firebase_cloud_functions_cors_policy_error/?rdt=48891)
 [![Static Badge](https://img.shields.io/badge/Cloudfare-Turnstile%20Widget-orange)](https://developers.cloudflare.com/turnstile/concepts/widget/)
 
-In this project, only the *App Hosting* and *Cloud Functions* from **Firebase** were used. The storage of the data was done with **Supabase**. 
+In this project, only the _App Hosting_ and _Cloud Functions_ from **Firebase** were used. The storage of the data was done with **Supabase**.
 
-For Firebase *gen2 functions*, refer to the reddit post on **Function Rules** to correctly update newly added rules in the Cloud Functions.
+For Firebase _gen2 functions_, refer to the reddit post on **Function Rules** to correctly update newly added rules in the Cloud Functions.
 
 To setup the CAPTCHA with **Cloudfare**, you will need to set the Turnstile widget.
 
@@ -76,24 +58,24 @@ You should use a bundler such as [webpack](https://webpack.js.org/guides/getting
 
 Write first your JS modules in the `./src/` folder, add its name in the `./webpack.config.js`.
 
-**NOTE** : You have just installed the *developper* version of webpack, in production mode, you might want to switch to the [production version](https://webpack.js.org/guides/production/).
+**NOTE** : You have just installed the _developper_ version of webpack, in production mode, you might want to switch to the [production version](https://webpack.js.org/guides/production/).
 
 ### Roadblocks
 
 1. If you encounter issues with your `pip` to install the dependencies, follow this [Youtube Tutorial](https://www.youtube.com/watch?v=q_sayYt50oM).
-2. **Set your [gcloud CLI](https://cloud.google.com/sdk/docs/install) account** (your gmail address should then appear on your terminal line). Then, after setting up your *Cloud Functions*, you should use the following terminal command to grand the necessary access to your functions.
+2. **Set your [gcloud CLI](https://cloud.google.com/sdk/docs/install) account** (your gmail address should then appear on your terminal line). Then, after setting up your _Cloud Functions_, you should use the following terminal command to grand the necessary access to your functions.
 
-    ```bash
-      gcloud functions add-invoker-policy-binding $python_function_name --member=allUsers
-    ```
+   ```bash
+     gcloud functions add-invoker-policy-binding $python_function_name --member=allUsers
+   ```
 
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your ̀`./functions/.env` file :
 
 ```sh
-SUPABASE_PROJECT_URL={PROJECT_URL}
-SUPABASE_SERVICE_KEY={SERVICE_ROLE_KEY}
+SUPABASE_URL=\{SUPABASE_URL\}
+SUPABASE_ANON_KEY=\{SUPABASE_ANON_KEY\}
 ```
 
 ## Run Locally
@@ -102,29 +84,30 @@ You will first need to create a Firebase project, this part is not covered and w
 
 1. Clone the project and go to the project directory
 
-    ```bash
-      git clone https://github.com/fllin1/urbandocs_webapp.git
-      cd urbandocs_webapp
-    ```
+   ```bash
+     git clone https://github.com/fllin1/urbandocs_webapp.git
+     cd urbandocs_webapp
+   ```
 
 2. Firebase Init
 
-    ```bash
-      firebase init
-    ```
+   ```bash
+     firebase init
+   ```
 
-    Choose to add the *Hosting* and *Cloud Functions* services.
-    - For Hosting : The default values should be the right ones.
-    - For Cloud Functions : Do not rewrite the files, and install the dependencies : Choose Python as the langagen then the default init configuration should be the right ones.
+   Choose to add the _Hosting_ (and _Cloud Functions_ services -- not used yet).
 
-    NOTE : If you encounter issues while installing your dependencies, I invite you to check the [Roadblocks](#roadblocks) section and refer to the Youtube Tutorial.
+   - For Hosting : The default values should be the right ones.
+   - For Cloud Functions : Do not rewrite the files, and install the dependencies : Choose Python as the langage then the default init configuration should be the right ones.
+
+   NOTE : If you encounter issues while installing your dependencies, I invite you to check the [Roadblocks](#roadblocks) section and refer to the Youtube Tutorial.
 
 3. If you wish to use webpack in development mode, the current `./webpack.config.js` is already configured for it. You can then start the emulator for a test run
 
-    ```bash
-      npm run dev
-      firebase emulators:start
-    ```
+   ```bash
+     npm run dev
+     firebase emulators:start
+   ```
 
 ## Deployment
 
@@ -134,6 +117,43 @@ The first step would be to use webpack in **production mode**. In this case, you
   npm run prod
   firebase deploy
 ```
+
+If you wish to deploy on a preview channel :
+
+```bash
+firebase hosting:channel:deploy preprod --expires 7d
+```
+
+As for the preprod custom domain `preprod.mwplu.com` :
+
+1. Set up multiple sites in your Firebase project :`firebase hosting:sites:create preprod-mwplu`.
+2. Update your firebase.json to include multiple hosting targets:
+  
+    ```json
+    {
+      "hosting": [
+        {
+          "target": "production",
+          "public": "dist",
+          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+        },
+        {
+          "target": "preprod",
+          "public": "dist",
+          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+        }
+      ]
+    }
+    ```
+
+3. Configure hosting targets & Deploy to the preprod target :
+  
+    ```bash
+    firebase target:apply hosting production mwplu-com
+    firebase target:apply hosting preprod preprod-mwplu
+
+    firebase deploy --only hosting:preprod
+    ```
 
 ## Code Structure
 
@@ -205,30 +225,6 @@ src/
 ├── profile.html                  # User profile management
 ├── signup.html                   # New user registration
 └── terms.html                    # Terms and conditions page
-```
-
-#### Public (with `npm run dev`)
-
-```text
-public/
-│
-├── assets/
-│   └── (same assets as dev)
-│
-├── js/
-│   ├── api.bundle.js
-│   ├── app.bundle.js
-│   ├── mappings.bundle.js
-│   ├── ui.bundle.js
-│   ├── auth.bundle.js
-│   ├── login.bundle.js
-│   ├── signup.bundle.js
-│   └── confirmation.bundle.js
-│
-├── css/
-│   └── (same .css as dev)
-│
-└── (same .html as dev)
 ```
 
 ### Backend (Python)

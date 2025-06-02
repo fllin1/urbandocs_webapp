@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Connexion - MWPLU</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="../css/main.css" />
     <script
       src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileLoginCallback"
       async
@@ -12,20 +12,7 @@
     ></script>
   </head>
   <body>
-    <header class="site-header">
-      <div class="container">
-        <div class="flex-between">
-          <a href="/" class="header-logo">
-            <img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo" />
-          </a>
-          <div class="auth-section">
-            <a href="/signup" id="signupLink" class="auth-btn">
-              Créer un compte
-            </a>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div id="header-placeholder"></div>
 
     <div class="container">
       <div class="auth-container">
@@ -68,37 +55,44 @@
             </div>
 
             <!-- Cloudflare Turnstile Placeholder for Login -->
-            <div class="form-group">
+            <div class="form-group auth-captcha">
               <div id="turnstile-login-container"></div>
             </div>
             <!-- End Cloudflare Turnstile Placeholder -->
 
-            <button id="loginBtn" class="auth-button" type="submit">
+            <button
+              id="loginBtn"
+              class="auth-button social-button"
+              type="submit"
+            >
+              <img
+                src="../assets/icons/logo/WHITE-PLU.svg"
+                alt="WHITE-PLU logo"
+                class="social-icon"
+              />
               Se connecter
               <span id="loginSpinner" class="spinner hidden"></span>
             </button>
+
+            <button
+              id="googleSignInBtn"
+              class="auth-button social-button margin-top-lg"
+              type="button"
+            >
+              <img
+                src="../assets/icons/social/google.svg"
+                alt="Google logo"
+                class="social-icon"
+              />
+              Continuer avec Google
+              <span id="googleSignInSpinner" class="spinner hidden"></span>
+            </button>
           </form>
 
-          <button
-            id="googleSignInBtn"
-            class="auth-button social-button google-button"
-            type="button"
-          >
-            <img
-              src="assets/icons/google.png"
-              alt="Google logo"
-              class="social-icon"
-            />
-            Continuer avec Google
-            <span id="googleSignInSpinner" class="spinner hidden"></span>
-          </button>
-
           <div class="auth-links">
-            <a href="/" class="text-link">Retour à l'accueil</a>
-            <div class="auth-prompt margin-top-sm">Mot de passe oublié ?</div>
-            <a href="/forgotten-password" class="text-link"
-              >Changer de mot de passe</a
-            >
+            <a href="/forgotten-password" class="text-link">
+              Mot de passe oublié ?
+            </a>
           </div>
 
           <div id="errorMessage" class="error-message hidden"></div>

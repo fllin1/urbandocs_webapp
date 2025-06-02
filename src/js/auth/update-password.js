@@ -59,7 +59,7 @@ export function initUpdatePasswordPage() {
         // Show success message and redirect
         showStatus("Mot de passe mis à jour avec succès!", "success");
         setTimeout(() => {
-          window.location.href = "/login";
+          window.location.href = "/auth/login";
         }, 2000);
       } catch (error) {
         console.error("Password update error:", error);

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil Utilisateur - MWPLU</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <script>
+      window.addEventListener("scroll", function () {
+        const header = document.querySelector(".site-header");
+        if (window.scrollY > 10) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+
+    <main class="main-content">
+      <div class="container">
+        <section class="profile-section margin-top-lg">
+          <h2 class="text-center margin-bottom-md">Mon Profil</h2>
+          <div id="profileDetails" class="card">
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <p><strong>Statut:</strong> <span>Actif</span></p>
+            <p>
+              <strong>Membre depuis:</strong> <span id="memberSince">-</span>
+            </p>
+          </div>
+
+          <div id="profileFormSection" class="card margin-top-md">
+            <h3 class="margin-bottom-md">Mes informations personnelles</h3>
+            <form id="profileForm">
+              <div class="form-group">
+                <label for="lastName">Nom :</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group">
+                <label for="firstName">Prénom :</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group">
+                <label for="phone">Téléphone :</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  class="form-control"
+                />
+              </div>
+              <button
+                type="submit"
+                id="saveProfileBtn"
+                class="btn btn-primary margin-top-sm"
+              >
+                Enregistrer les modifications
+              </button>
+              <div
+                id="profileFormStatus"
+                class="status-message hidden margin-top-sm"
+              ></div>
+            </form>
+          </div>
+
+          <div
+            id="deleteAccountSection"
+            class="card margin-top-md"
+            style="display: none"
+          >
+            <h3 class="margin-bottom-sm">Supprimer le compte</h3>
+            <p class="margin-bottom-sm">
+              Attention : Cette action programmera la suppression de votre
+              compte dans 30 jours. Vous pourrez annuler cette action à tout
+              moment avant la suppression définitive.
+            </p>
+            <button id="deleteAccountBtn" class="btn btn-danger">
+              Programmer la suppression de mon compte
+            </button>
+            <div
+              id="deleteStatusMessage"
+              class="status-message hidden margin-top-sm"
+            ></div>
+          </div>
+        </section>
+        <!-- TODO: Add a section to change the password -->
+        <!-- TODO : Add status message -->
+      </div>
+    </main>
+
+    <!-- Footer will be loaded here -->
+    <div id="footer-placeholder"></div>
+  </body>
+</html>

@@ -1,21 +1,192 @@
 /* Profile page specific styles */
 .profile-section {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
+    padding: 1rem;
 }
 
 .card {
     background: var(--primary-white);
     padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     margin-bottom: 2rem;
+    border: 1px solid #f0f0f0;
+}
+
+.card h3 {
+    color: var(--primary-black);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
 }
 
 .card p {
     margin-bottom: 1rem;
+    line-height: 1.6;
 }
 
 .card strong {
     display: inline-block;
-    width: 100px;
+    width: 140px;
+    color: var(--primary-black);
+    font-weight: 500;
+}
+
+/* Enhanced form styling for profile */
+.profile-section .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.profile-section .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--primary-black);
+    font-size: 0.95rem;
+}
+
+.profile-section .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fff;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.profile-section .form-control:focus {
+    outline: none;
+    border-color: var(--accent-color, #0071e3);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+}
+
+.profile-section .form-control:hover {
+    border-color: #d0d0d0;
+}
+
+.profile-section .form-control::placeholder {
+    color: #999;
+}
+
+/* Date input specific styling */
+.profile-section input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+}
+
+.profile-section input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+/* Tel input styling */
+.profile-section input[type="tel"] {
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+/* Button styling in profile */
+.profile-section .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profile-section .btn-primary {
+    background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%);
+    color: white;
+}
+
+.profile-section .btn-primary:hover {
+    background: linear-gradient(135deg, #005bb5 0%, #004494 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+}
+
+.profile-section .btn-danger {
+    background: linear-gradient(135deg, #ff3b30 0%, #d70015 100%);
+    color: white;
+}
+
+.profile-section .btn-danger:hover {
+    background: linear-gradient(135deg, #d70015 0%, #b8000c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+}
+
+/* Status messages in profile */
+.profile-section .status-message {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+.profile-section .status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.profile-section .status-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.profile-section .status-message.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* Delete account section specific styling */
+#deleteAccountSection {
+    border-left: 4px solid #ff3b30;
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+}
+
+#deleteAccountSection h3 {
+    color: #d70015;
+}
+
+#deleteAccountSection p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .profile-section {
+        padding: 0.5rem;
+    }
+
+    .card {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .card strong {
+        width: 100px;
+        font-size: 0.9rem;
+    }
 }

@@ -2,11 +2,12 @@
   "name": "urbandocs_webapp",
   "private": true,
   "description": "mwplu.com",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "scripts": {
-    "watch": "webpack --watch",
-    "dev": "webpack --mode=development",
-    "prod": "webpack --mode=production",
+    "dev": "webpack --mode=development && firebase serve",
+    "preprod": "webpack --mode=production && firebase deploy --only hosting:preprod",
+    "build": "webpack --mode=production",
+    "deploy": "webpack --mode=production && firebase deploy --only hosting",
     "analyze": "webpack --mode=production --profile --json > stats.json && webpack-bundle-analyzer stats.json"
   },
   "repository": {
@@ -20,9 +21,10 @@
   },
   "homepage": "https://github.com/fllin1/urbandocs_webapp#readme",
   "dependencies": {
+    "@stripe/stripe-js": "^7.3.1",
     "@supabase/supabase-js": "^2.49.4",
     "firebase": "^11.7.1",
-    "marked": "^12.0.2"
+    "stripe": "^18.2.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^13.0.0",

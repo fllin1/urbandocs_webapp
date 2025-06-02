@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "urbandocs"
-  }
+  },
+  "targets": {
+    "urbandocs": {
+      "hosting": {
+        "preprod": [
+          "mwplu-preprod"
+        ],
+        "production": [
+          "urbandocs"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

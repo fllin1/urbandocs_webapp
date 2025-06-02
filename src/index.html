@@ -3,27 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MWPLU</title>
+    <title>Accueil - MWPLU</title>
     <link rel="stylesheet" href="css/main.css" />
-    <style>
-      .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        background-color: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        width: 100%;
-        transition: all 0.3s ease;
-        border-bottom: 1px solid transparent;
-      }
-
-      .site-header.scrolled {
-        background-color: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        border-bottom: 1px solid var(--border-gray);
-      }
-    </style>
     <script>
       window.addEventListener("scroll", function () {
         const header = document.querySelector(".site-header");
@@ -36,32 +17,7 @@
     </script>
   </head>
   <body>
-    <header class="site-header">
-      <div class="container">
-        <div class="flex-between">
-          <a href="index.html" class="header-logo animate-title">
-            <img src="assets/icons/BLACK-PLU.svg" alt="MWPLU Logo" />
-          </a>
-          <div class="auth-section">
-            <a
-              href="/profile"
-              id="userStatus"
-              class="auth-btn margin-right-sm hidden"
-              >Votre compte</a
-            >
-            <a href="/login" id="loginLink" class="auth-btn margin-right-sm">
-              Se connecter
-            </a>
-            <a href="/signup" id="signupLink" class="auth-btn">
-              Créer un compte
-            </a>
-            <button id="logoutBtn" class="auth-btn hidden">
-              Se déconnecter
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div id="header-placeholder"></div>
 
     <main class="main-content">
       <section class="hero-section text-center">
@@ -72,12 +28,14 @@
       </section>
 
       <div class="container">
-        <form class="margin-bottom-lg">
+        <div id="statusMessage" class="status-message alert alert-info"></div>
+
+        <form class="margin-bottom-lg form-home">
           <div class="grid">
             <div class="grid-col-4">
               <div class="form-group">
-                <label for="villeSelect" class="form-label"> Ville </label>
-                <select id="villeSelect" class="form-select" disabled>
+                <label for="citySelect" class="form-label"> Ville </label>
+                <select id="citySelect" class="form-select" disabled>
                   <!-- Options loaded by JS -->
                 </select>
               </div>
@@ -85,8 +43,8 @@
 
             <div class="grid-col-4">
               <div class="form-group">
-                <label for="zonageSelect" class="form-label"> Zonage </label>
-                <select id="zonageSelect" class="form-select" disabled>
+                <label for="zoningSelect" class="form-label"> Zonage </label>
+                <select id="zoningSelect" class="form-select" disabled>
                   <option value="">Sélectionnez d'abord une ville</option>
                 </select>
               </div>
@@ -102,10 +60,10 @@
             </div>
           </div>
 
-          <div class="text-center margin-top-lg">
+          <div class="text-center margin-top-lg margin-bottom-sm">
             <button
               id="synthesisBtn"
-              class="download-btn btn"
+              class="to-plu-btn btn"
               type="button"
               disabled
             >
@@ -113,24 +71,10 @@
             </button>
           </div>
         </form>
-        <div
-          id="statusMessage"
-          class="status-message alert alert-info margin-top-lg"
-        ></div>
       </div>
     </main>
 
-    <footer class="site-footer">
-      <div class="container">
-        <div class="grid">
-          <div class="grid-col-4">
-            <h3 class="heading-6 margin-bottom-md">Contact</h3>
-            <div class="contact-info">
-              <p>sift@mwplu.com</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <!-- Footer will be loaded here -->
+    <div id="footer-placeholder"></div>
   </body>
 </html>

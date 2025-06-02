@@ -1,0 +1,191 @@
+/**
+ * Tab Component
+ * @description Reusable tab navigation component
+ * @version 1.0.0
+ * @author GreyPanda
+ */
+
+/* Tab Container */
+.tabs-container {
+    border-bottom: 1px solid var(--color-border-primary);
+    margin-bottom: var(--space-8);
+}
+
+.tabs {
+    display: flex;
+    gap: var(--space-8);
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+}
+
+.tabs::-webkit-scrollbar {
+    display: none;
+    /* WebKit */
+}
+
+/* Tab Button */
+.tab-btn {
+    background: none;
+    border: none;
+    padding: var(--space-4) 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    position: relative;
+    color: var(--color-text-muted);
+    transition: var(--transition-colors);
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+.tab-btn:hover {
+    color: var(--color-text-primary);
+}
+
+.tab-btn.active {
+    color: var(--color-text-primary);
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-text-primary);
+    border-radius: var(--radius-sm);
+}
+
+/* Tab Content */
+.tab-content {
+    background: var(--color-bg-primary);
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    box-shadow: var(--card-shadow);
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+    animation: fadeIn var(--transition-base);
+}
+
+/* Tab Variants */
+.tabs--pills {
+    border-bottom: none;
+    gap: var(--space-2);
+}
+
+.tabs--pills .tab-btn {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-secondary);
+    margin-bottom: 0;
+}
+
+.tabs--pills .tab-btn:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.tabs--pills .tab-btn.active {
+    background: var(--color-text-primary);
+    color: var(--color-text-inverse);
+}
+
+.tabs--pills .tab-btn.active::after {
+    display: none;
+}
+
+.tabs--vertical {
+    flex-direction: column;
+    border-bottom: none;
+    border-right: 1px solid var(--color-border-primary);
+    width: 200px;
+    min-width: 200px;
+}
+
+.tabs--vertical .tab-btn {
+    text-align: left;
+    padding: var(--space-3) var(--space-4);
+}
+
+.tabs--vertical .tab-btn.active::after {
+    left: auto;
+    right: -1px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    height: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tabs {
+        gap: var(--space-6);
+    }
+
+    .tab-btn {
+        font-size: var(--font-size-xs);
+        padding: var(--space-3) 0;
+    }
+
+    .tabs--vertical {
+        width: 100%;
+        flex-direction: row;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border-primary);
+    }
+
+    .tabs--vertical .tab-btn {
+        text-align: center;
+    }
+
+    .tabs--vertical .tab-btn.active::after {
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: -1px;
+        width: auto;
+        height: 2px;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .tab-btn {
+        transition: none;
+    }
+
+    .tab-pane.active {
+        animation: none;
+    }
+
+    @keyframes fadeIn {
+
+        from,
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}

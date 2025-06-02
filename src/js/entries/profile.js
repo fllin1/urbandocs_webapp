@@ -1,6 +1,2 @@
-import { initProfilePage } from "../auth/profile.js";
-
-document.addEventListener("DOMContentLoaded", () => {
-  initProfilePage();
-  console.log("Profile page initialized");
-});
+// src/js/entries/profile.js - Profile page entry point
+import "../profile-page.js";

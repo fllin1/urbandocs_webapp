@@ -14,8 +14,8 @@ import os
 from supabase import Client, create_client
 
 # Initialize Supabase client
-supabase_url = os.environ.get("SUPABASE_PROJECT_URL")
-supabase_key = os.environ.get("SUPABASE_SERVICE_KEY")
+supabase_url = os.environ.get("SUPABASE_URL")
+supabase_key = os.environ.get("SUPABASE_ANON_KEY")
 
 # Create singleton instance
 supabase: Client = create_client(supabase_url, supabase_key)
