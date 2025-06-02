@@ -13,9 +13,6 @@ export function createFooter() {
               <div class="contact-item">
                 <a href="tel:+33601842720">06 01 84 27 20</a>
               </div>
-              <div class="contact-item">
-                <a href="https://maps.google.com?q=40+Rue+Mallifaud,+38100+Grenoble" target="_blank">40 Rue Mallifaud, 38100 Grenoble</a>
-              </div>
             </div>
           </div>
 
