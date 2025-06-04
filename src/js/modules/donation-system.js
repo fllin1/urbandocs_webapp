@@ -1,44 +1,34 @@
-// src/js/modules/donation-system.js - Donation system module
-import { loadStripe } from "@stripe/stripe-js";
+// src/js/modules/donation-system.js - Simplified donation system using Stripe payment links
 
-// You'll need to replace this with your actual Stripe publishable key
-const STRIPE_PUBLISHABLE_KEY = "pk_test_..."; // Replace with your Stripe publishable key
-let stripe;
+// Stripe payment links for different donation amounts
+const DONATION_LINKS = {
+  5: "https://buy.stripe.com/fZu6oJ2R9fAp6GN0ms9Zm07",
+  10: "https://buy.stripe.com/4gM28t4Zhcod5CJ2uA9Zm06",
+  15: "https://buy.stripe.com/8x2fZj0J14VLe9fc5a9Zm03",
+  20: "https://buy.stripe.com/bJe9AV77pcod6GN3yE9Zm05",
+  30: "https://buy.stripe.com/7sY9AV9fx9c10ip1qw9Zm02",
+  50: "https://buy.stripe.com/6oU7sN0J1fAp7KR0ms9Zm04",
+  100: "https://buy.stripe.com/aFa7sN77p0Fv7KR2uA9Zm01",
+};
 
-// Initialize Stripe
-export async function initStripe() {
-  try {
-    stripe = await loadStripe(STRIPE_PUBLISHABLE_KEY);
-    if (!stripe) {
-      throw new Error("Stripe failed to load");
-    }
-    console.log("Stripe initialized successfully");
-    return true;
-  } catch (error) {
-    console.error("Error loading Stripe:", error);
-    showNotification("Erreur de chargement du système de paiement", "error");
-    return false;
-  }
-}
+// Custom amount payment link (pay-what-you-want)
+const CUSTOM_AMOUNT_LINK = "https://buy.stripe.com/6oUfZj77pgEtfdjb169Zm00";
 
-// Handle donation amount selection
-export function setupAmountSelection() {
+// Handle donation amount selection and redirect to Stripe
+export function setupDonationSystem() {
   const amountBtns = document.querySelectorAll(".amount-btn");
   const customAmountInput = document.getElementById("customAmount");
-  const selectedAmountSpan = document.getElementById("selectedAmount");
   const donateBtn = document.getElementById("donateBtn");
 
-  if (
-    !amountBtns.length ||
-    !customAmountInput ||
-    !selectedAmountSpan ||
-    !donateBtn
-  ) {
+  if (!amountBtns.length || !customAmountInput || !donateBtn) {
     console.error("Required donation form elements not found");
     return false;
   }
 
   let selectedAmount = 5; // Default amount
+
+  // Initialize the button with default amount
+  updateDonateButton(selectedAmount);
 
   // Handle preset amount buttons
   amountBtns.forEach((btn) => {
@@ -51,13 +41,10 @@ export function setupAmountSelection() {
 
       // Update selected amount
       selectedAmount = parseInt(btn.dataset.amount);
-      selectedAmountSpan.textContent = selectedAmount;
+      updateDonateButton(selectedAmount);
 
       // Clear custom amount input
       customAmountInput.value = "";
-
-      // Update button state
-      updateDonateButton(selectedAmount);
     });
   });
 
@@ -71,9 +58,6 @@ export function setupAmountSelection() {
 
       // Update selected amount
       selectedAmount = customAmount;
-      selectedAmountSpan.textContent = selectedAmount;
-
-      // Update button state
       updateDonateButton(selectedAmount);
     } else if (!e.target.value) {
       // If custom input is empty, select default amount
@@ -81,7 +65,6 @@ export function setupAmountSelection() {
       if (defaultBtn) {
         defaultBtn.classList.add("selected");
         selectedAmount = 5;
-        selectedAmountSpan.textContent = selectedAmount;
         updateDonateButton(selectedAmount);
       }
     }
@@ -94,72 +77,83 @@ export function setupAmountSelection() {
     }
   });
 
-  console.log("Donation amount selection setup complete");
+  console.log("Donation system setup complete");
   return true;
 }
 
-// Update donate button state
+// Update donate button state and text
 function updateDonateButton(amount) {
   const donateBtn = document.getElementById("donateBtn");
+
   if (donateBtn && amount > 0) {
     donateBtn.disabled = false;
     donateBtn.innerHTML = `Faire un don de&nbsp;<span id="selectedAmount">${amount}</span>€`;
   } else if (donateBtn) {
     donateBtn.disabled = true;
+    donateBtn.innerHTML = `Faire un don de&nbsp;<span id="selectedAmount">0</span>€`;
   }
 }
 
-// Process donation with Stripe
-async function processDonation(amount) {
-  if (!stripe) {
-    showNotification("Système de paiement non disponible", "error");
-    return;
-  }
-
+// Process donation by opening Stripe checkout in new window
+function processDonation(amount) {
   const donateBtn = document.getElementById("donateBtn");
   const originalHTML = donateBtn.innerHTML;
 
   // Show loading state
   donateBtn.disabled = true;
-  donateBtn.innerHTML = "Préparation du paiement...";
+  donateBtn.innerHTML = "Ouverture du paiement...";
 
   try {
-    // Create checkout session on your backend
-    const response = await fetch(
-      "https://ofeyssipibktmbfebibo.supabase.co/functions/v1/create-donation-session",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mZXlzc2lwaWJrdG1iZmViaWJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5MjUwOTQsImV4cCI6MjA1OTUwMTA5NH0.w71CAKfolktzRl-TmLVhHYaEbhCfVk4A7YraEUCglrU`, // anon key
-        },
-        body: JSON.stringify({
-          amount: amount * 100, // Convert to cents
-          currency: "eur",
-        }),
+    // Use pre-built payment link for standard amounts
+    if (DONATION_LINKS[amount]) {
+      // Open Stripe checkout in new window/tab
+      const stripeWindow = window.open(
+        DONATION_LINKS[amount],
+        "stripe-checkout",
+        "width=600,height=600,scrollbars=yes,resizable=yes"
+      );
+
+      // Restore button state after opening
+      setTimeout(() => {
+        donateBtn.disabled = false;
+        donateBtn.innerHTML = originalHTML;
+      }, 1000);
+
+      // Optional: Focus the new window
+      if (stripeWindow) {
+        stripeWindow.focus();
       }
+
+      return;
+    }
+
+    // For custom amounts, use the pay-what-you-want payment link
+    // The user will be able to adjust the amount on the Stripe page
+    const stripeWindow = window.open(
+      CUSTOM_AMOUNT_LINK,
+      "stripe-checkout",
+      "width=600,height=600,scrollbars=yes,resizable=yes"
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to create checkout session");
+    // Restore button state after opening
+    setTimeout(() => {
+      donateBtn.disabled = false;
+      donateBtn.innerHTML = originalHTML;
+    }, 1000);
+
+    // Optional: Focus the new window
+    if (stripeWindow) {
+      stripeWindow.focus();
     }
 
-    const { sessionId } = await response.json();
-
-    // Redirect to Stripe Checkout
-    const { error } = await stripe.redirectToCheckout({
-      sessionId: sessionId,
-    });
-
-    if (error) {
-      throw error;
-    }
+    // Show helpful message for custom amounts
+    showNotification(
+      `Vous pourrez ajuster le montant (${amount}€) sur la page de paiement Stripe.`,
+      "info"
+    );
   } catch (error) {
     console.error("Error processing donation:", error);
-    showNotification(
-      "Erreur lors du traitement du don. Veuillez réessayer.",
-      "error"
-    );
+    showNotification("Erreur lors du traitement du don.", "error");
 
     // Restore button state
     donateBtn.disabled = false;
@@ -184,13 +178,20 @@ export function showNotification(message, type = "info") {
     top: "20px",
     right: "20px",
     padding: "15px 20px",
-    borderRadius: "5px",
+    borderRadius: "8px",
     color: "white",
-    fontWeight: "bold",
+    fontWeight: "500",
     zIndex: "10000",
     maxWidth: "400px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
     backgroundColor:
-      type === "success" ? "#10b981" : type === "error" ? "#ef4444" : "#3b82f6",
+      type === "success"
+        ? "#10b981"
+        : type === "error"
+        ? "#ef4444"
+        : type === "warning"
+        ? "#f59e0b"
+        : "#3b82f6",
   });
 
   document.body.appendChild(notification);
@@ -206,25 +207,19 @@ export function showNotification(message, type = "info") {
 }
 
 // Initialize donation system
-export async function initDonationSystem() {
+export function initDonationSystem() {
   try {
-    // Initialize Stripe
-    const stripeInitialized = await initStripe();
-    if (!stripeInitialized) {
-      throw new Error("Failed to initialize Stripe");
-    }
-
-    // Setup amount selection functionality
-    const amountSelectionSetup = setupAmountSelection();
-    if (!amountSelectionSetup) {
-      throw new Error("Failed to setup amount selection");
+    const systemSetup = setupDonationSystem();
+    if (!systemSetup) {
+      throw new Error("Failed to setup donation system");
     }
 
     console.log("Donation system initialized successfully");
+    showNotification("Stripe initialisé", "success");
     return true;
   } catch (error) {
     console.error("Error initializing donation system:", error);
-    showNotification("Erreur d'initialisation du système de don", "error");
+    showNotification("Erreur d'initialisation du système de paiement", "error");
     return false;
   }
 }
