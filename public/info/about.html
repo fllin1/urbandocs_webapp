@@ -5,4 +5,63 @@
         } else {
           header.classList.remove("scrolled");
         }
-      });</script><script defer="defer" src="/js/common.bundle.js"></script><script defer="defer" src="/js/ui.bundle.js"></script><script defer="defer" src="/js/components.bundle.js"></script><script defer="defer" src="/js/uiComponents.bundle.js"></script><script defer="defer" src="/js/footer.bundle.js"></script><script defer="defer" src="/js/header.bundle.js"></script><script defer="defer" src="/js/about.bundle.js"></script></head><body><div id="header-placeholder"></div><main class="main-content"><div class="container margin-top-lg margin-bottom-lg"><section class="static-page-section card text-center"><h1 class="margin-bottom-md">À propos de MWPLU</h1><p class="lead margin-bottom-lg">MWPLU est une plateforme innovante dédiée à la simplification et à l'accessibilité des Plans Locaux d'Urbanisme (PLU) en France.</p><div class="about-content"><h2 class="heading-3 margin-bottom-md">Notre Mission</h2><p class="margin-bottom-md">Nous nous engageons à rendre les documents d'urbanisme plus accessibles et compréhensibles pour tous les professionnels et citoyens.</p><h2 class="heading-3 margin-bottom-md">Notre Équipe</h2><p class="margin-bottom-md">Une équipe passionnée d'experts en urbanisme et en technologie, dédiée à l'innovation dans le domaine de l'aménagement du territoire.</p><h2 class="heading-3 margin-bottom-md">Notre Vision</h2><p class="margin-bottom-md">Démocratiser l'accès à l'information urbanistique et faciliter la prise de décision dans les projets d'aménagement.</p></div></section></div></main><div id="footer-placeholder"></div></body></html>
+      });</script><script defer="defer" src="/js/common.bundle.js"></script><script defer="defer" src="/js/ui.bundle.js"></script><script defer="defer" src="/js/components.bundle.js"></script><script defer="defer" src="/js/uiComponents.bundle.js"></script><script defer="defer" src="/js/footer.bundle.js"></script><script defer="defer" src="/js/header.bundle.js"></script><script defer="defer" src="/js/about.bundle.js"></script></head><body><div id="header-placeholder"></div><main class="main-content"><div class="container margin-top-lg margin-bottom-lg"><section class="static-page-section card text-center"><h1 class="margin-bottom-md">À propos de MWPLU</h1><p class="lead margin-bottom-lg">MWPLU est une plateforme innovante dédiée à la simplification et à l'accessibilité des Plans Locaux d'Urbanisme (PLU) en France.</p><div class="about-content"><h2 class="heading-3 margin-bottom-md">Notre Mission</h2><p class="margin-bottom-md">Nous nous engageons à rendre les documents d'urbanisme plus accessibles et compréhensibles pour tous les professionnels et citoyens.</p><h2 class="heading-3 margin-bottom-md">Notre Équipe</h2><p class="margin-bottom-md">Une équipe passionnée d'experts en urbanisme et en technologie, dédiée à l'innovation dans le domaine de l'aménagement du territoire.</p><div class="team-members-grid margin-top-lg margin-bottom-lg"><div class="team-member-card"><img src="../assets/images/matthieu-guiller.webp" alt="Matthieu Guiller" class="team-member-img"/><div class="team-member-info"><h3>Matthieu Guiller</h3><p>Poste: Architecte</p></div></div><div class="team-member-card"><img src="../assets/images/rim-ennaciri.webp" alt="Rim Ennaciri" class="team-member-img"/><div class="team-member-info"><h3>Rim Ennaciri</h3><p>Poste: Architecte</p></div></div><div class="team-member-card"><img src="../assets/images/pierre-monnier.webp" alt="Pierre Monnier" class="team-member-img"/><div class="team-member-info"><h3>Pierre Monnier</h3><p>Poste: Architecte</p></div></div><div class="team-member-card"><img src="../assets/images/zakaria-touati.webp" alt="Zakaria Touati" class="team-member-img"/><div class="team-member-info"><h3>Zakaria Touati</h3><p>Poste: Architecte</p></div></div><div class="team-member-card"><img src="../assets/images/jimmy-mugisha.webp" alt="Jimmy Mugisha" class="team-member-img"/><div class="team-member-info"><h3>Jimmy Mugisha</h3><p>Poste: Architecte</p></div></div></div><h2 class="heading-3 margin-bottom-md">Notre Vision</h2><p class="margin-bottom-md">Démocratiser l'accès à l'information urbanistique et faciliter la prise de décision dans les projets d'aménagement.</p></div></section></div></main><div id="footer-placeholder"></div><style>/* Basic styling for the grid layout */
+      .team-members-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        justify-items: center; /* Center items in their grid cells */
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 960px; /* Max width for the grid container */
+      }
+
+      .team-member-card {
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+      }
+
+      .team-member-img {
+        width: 250px; /* Standardized width */
+        height: 300px; /* Standardized height */
+        object-fit: cover; /* Ensures images cover the area without distortion */
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+
+      .team-member-info h3 {
+        margin-top: 0;
+        margin-bottom: 5px;
+        color: var(--color-heading, #333);
+      }
+
+      .team-member-info p {
+        color: var(--color-text, #555);
+        font-size: 0.9em;
+        margin-bottom: 5px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 992px) {
+        .team-members-grid {
+          grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+          gap: 20px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .team-members-grid {
+          grid-template-columns: repeat(
+            1,
+            1fr
+          ); /* 1 column for mobile phones */
+          gap: 20px;
+        }
+        .team-member-img {
+          width: 150px;
+          height: 150px;
+        }
+      }</style></body></html>

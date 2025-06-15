@@ -44,6 +44,64 @@
               territoire.
             </p>
 
+            <div class="team-members-grid margin-top-lg margin-bottom-lg">
+              <div class="team-member-card">
+                <img
+                  src="../assets/images/matthieu-guiller.webp"
+                  alt="Matthieu Guiller"
+                  class="team-member-img"
+                />
+                <div class="team-member-info">
+                  <h3>Matthieu Guiller</h3>
+                  <p>Poste: Architecte</p>
+                </div>
+              </div>
+              <div class="team-member-card">
+                <img
+                  src="../assets/images/rim-ennaciri.webp"
+                  alt="Rim Ennaciri"
+                  class="team-member-img"
+                />
+                <div class="team-member-info">
+                  <h3>Rim Ennaciri</h3>
+                  <p>Poste: Architecte</p>
+                </div>
+              </div>
+              <div class="team-member-card">
+                <img
+                  src="../assets/images/pierre-monnier.webp"
+                  alt="Pierre Monnier"
+                  class="team-member-img"
+                />
+                <div class="team-member-info">
+                  <h3>Pierre Monnier</h3>
+                  <p>Poste: Architecte</p>
+                </div>
+              </div>
+              <div class="team-member-card">
+                <img
+                  src="../assets/images/zakaria-touati.webp"
+                  alt="Zakaria Touati"
+                  class="team-member-img"
+                />
+                <div class="team-member-info">
+                  <h3>Zakaria Touati</h3>
+                  <p>Poste: Architecte</p>
+                </div>
+              </div>
+              <div class="team-member-card">
+                <img
+                  src="../assets/images/jimmy-mugisha.webp"
+                  alt="Jimmy Mugisha"
+                  class="team-member-img"
+                />
+                <div class="team-member-info">
+                  <h3>Jimmy Mugisha</h3>
+                  <p>Poste: Architecte</p>
+                </div>
+              </div>
+            </div>
+
             <h2 class="heading-3 margin-bottom-md">Notre Vision</h2>
             <p class="margin-bottom-md">
               Démocratiser l'accès à l'information urbanistique et faciliter la
@@ -56,5 +114,68 @@
 
     <!-- Footer will be loaded here -->
     <div id="footer-placeholder"></div>
+
+    <style>
+      /* Basic styling for the grid layout */
+      .team-members-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        justify-items: center; /* Center items in their grid cells */
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 960px; /* Max width for the grid container */
+      }
+
+      .team-member-card {
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+      }
+
+      .team-member-img {
+        width: 250px; /* Standardized width */
+        height: 300px; /* Standardized height */
+        object-fit: cover; /* Ensures images cover the area without distortion */
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+
+      .team-member-info h3 {
+        margin-top: 0;
+        margin-bottom: 5px;
+        color: var(--color-heading, #333);
+      }
+
+      .team-member-info p {
+        color: var(--color-text, #555);
+        font-size: 0.9em;
+        margin-bottom: 5px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 992px) {
+        .team-members-grid {
+          grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+          gap: 20px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .team-members-grid {
+          grid-template-columns: repeat(
+            1,
+            1fr
+          ); /* 1 column for mobile phones */
+          gap: 20px;
+        }
+        .team-member-img {
+          width: 150px;
+          height: 150px;
+        }
+      }
+    </style>
   </body>
 </html>

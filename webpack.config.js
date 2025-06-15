@@ -389,6 +389,10 @@ module.exports = (argv) => {
               },
             }),
           },
+          {
+            from: "src/favicon.ico",
+            to: "favicon.ico",
+          },
         ],
       }),
     ],
