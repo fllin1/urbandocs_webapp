@@ -5,48 +5,56 @@
         } else {
           header.classList.remove("scrolled");
         }
-      });</script><script defer="defer" src="../js/common.bundle.js"></script><script defer="defer" src="../js/ui.bundle.js"></script><script defer="defer" src="../js/utils.bundle.js"></script><script defer="defer" src="../js/security.bundle.js"></script><script defer="defer" src="../js/components.bundle.js"></script><script defer="defer" src="../js/uiComponents.bundle.js"></script><script defer="defer" src="../js/footer.bundle.js"></script><script defer="defer" src="../js/header.bundle.js"></script><script defer="defer" src="../js/donation.bundle.js"></script></head><body><div id="header-placeholder"></div><main class="main-content"><div class="container margin-top-lg"><section class="static-page-section card text-center"><h1 class="margin-bottom-md">Soutenez MWPLU</h1><p class="lead margin-bottom-lg">Aidez-nous à maintenir ce service gratuit et à développer de nouvelles fonctionnalités.</p><div class="donation-section"><div class="donation-amounts margin-bottom-lg"><h2 class="heading-3 margin-bottom-md">Choisissez un montant</h2><div class="amount-buttons"><button class="amount-btn selected" data-amount="5">5€</button> <button class="amount-btn" data-amount="10">10€</button> <button class="amount-btn" data-amount="20">20€</button> <button class="amount-btn" data-amount="50">50€</button></div><div class="custom-amount-group margin-top-md"><label for="customAmount" class="form-label">Montant personnalisé</label><div class="amount-input-wrapper margin-bottom-sm"><input type="number" id="customAmount" class="form-input amount-input" placeholder="1€" min="1" step="1"/></div></div></div><button id="donateBtn" class="btn btn-primary margin-bottom-lg">Faire un don de&nbsp;<span id="selectedAmount">5</span>€</button><div class="donation-info"><p class="margin-bottom-sm">Paiement protégé et sécurisé par Stripe</p><p class="margin-bottom-sm">Vos données de paiement sont cryptées et sécurisées.</p></div></div></section></div></main><div id="footer-placeholder"></div><style>.donation-amounts {
+      });</script><script defer="defer" src="/js/common.bundle.js"></script><script defer="defer" src="/js/ui.bundle.js"></script><script defer="defer" src="/js/utils.bundle.js"></script><script defer="defer" src="/js/security.bundle.js"></script><script defer="defer" src="/js/components.bundle.js"></script><script defer="defer" src="/js/uiComponents.bundle.js"></script><script defer="defer" src="/js/footer.bundle.js"></script><script defer="defer" src="/js/header.bundle.js"></script><script defer="defer" src="/js/donation.bundle.js"></script></head><body><div id="header-placeholder"></div><main class="main-content"><div class="container margin-top-lg"><section class="static-page-section card text-center"><div class="donation-header margin-bottom-lg"><h1 class="margin-bottom-md">Soutenez MWPLU</h1><p class="lead">Aidez-nous à maintenir ce service gratuit et à développer de nouvelles fonctionnalités pour tous.</p></div><div class="donation-section"><div class="donation-amounts margin-bottom-lg"><h2 class="heading-3 margin-bottom-md">Choisissez un montant</h2><div class="amount-buttons margin-bottom-md"><button class="amount-btn selected" data-amount="5">5€</button> <button class="amount-btn" data-amount="10">10€</button> <button class="amount-btn" data-amount="20">20€</button> <button class="amount-btn" data-amount="50">50€</button></div><div class="custom-amount-section margin-bottom-md"><p class="text-sm margin-bottom-sm">Ou choisissez un montant personnalisé :</p><div class="custom-amount-group margin-bottom-md"><input type="number" id="customAmount" class="form-input amount-input" placeholder="Montant en €" min="1" step="1"/></div></div></div><button id="donateBtn" class="btn btn-primary btn-large margin-bottom-lg">Faire un don de&nbsp;<span id="selectedAmount">5</span>€</button><div class="donation-info"><div class="security-badges margin-bottom-md"><div class="security-badge"><span class="security-icon">🔒</span> <span>Paiement sécurisé par Stripe</span></div></div><div class="donation-benefits"><p class="text-sm margin-bottom-xs"><strong>Votre don nous aide à :</strong></p><ul class="benefits-list"><li>Maintenir le service gratuit pour tous</li><li>Développer de nouvelles fonctionnalités</li><li>Améliorer les performances et la fiabilité</li><li>Couvrir les frais d'hébergement et de maintenance</li></ul></div><p class="text-xs margin-top-md" style="color: #9ca3af">Vous serez redirigé vers Stripe pour finaliser votre don en toute sécurité.</p></div></div></section></div></main><div id="footer-placeholder"></div><style>.donation-header {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .donation-amounts {
         max-width: 500px;
         margin: 0 auto;
       }
 
       .amount-buttons {
         display: flex;
-        gap: 10px;
+        gap: 12px;
         justify-content: center;
-        margin-bottom: 20px;
         flex-wrap: wrap;
       }
 
       .amount-btn {
-        padding: 14px 24px;
+        padding: 16px 24px;
         border: 2px solid #e5e7eb;
         background: white;
-        border-radius: 8px;
+        border-radius: 2px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 600;
         transition: all 0.2s ease;
         min-width: 80px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
 
       .amount-btn:hover {
         border-color: #3b82f6;
         color: #3b82f6;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       }
 
       .amount-btn.selected {
         border-color: #3b82f6;
         background: #3b82f6;
         color: white;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
       }
 
-      .custom-amount-group {
-        max-width: 150px;
+      .custom-amount-section {
+        max-width: 250px;
         margin: 0 auto;
       }
 
-      .amount-input-wrapper {
+      .custom-amount-group {
         position: relative;
       }
 
@@ -54,33 +62,130 @@
         text-align: center;
         font-size: 16px;
         font-weight: 600;
+        border-radius: 2px;
+        border: 2px solid #e5e7eb;
+        padding: 12px;
+        width: 100%;
+        transition: border-color 0.2s ease;
+      }
+
+      .amount-input:focus {
+        border-color: #3b82f6;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .btn-large {
+        padding: 16px 32px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 2px;
+        min-width: 280px;
+        transition: all 0.2s ease;
+      }
+
+      .btn-large:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+      }
+
+      .btn-large:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Ensure selected amount is always visible on button */
+      #selectedAmount {
+        color: inherit;
+        font-weight: inherit;
       }
 
       .donation-info {
-        font-size: 14px;
-        color: #6b7280;
-        max-width: 400px;
+        max-width: 500px;
         margin: 0 auto;
       }
 
-      .support-options {
+      .security-badges {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .security-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #64748b;
+      }
+
+      .security-icon {
+        font-size: 16px;
+      }
+
+      .donation-benefits {
         text-align: left;
-        max-width: 400px;
-        margin: 0 auto;
+        background: #f8fafc;
+        padding: 20px;
+        border-radius: 2px;
+        margin: 16px 0;
       }
 
-      .support-options p {
-        margin: 8px 0;
-        color: #6b7280;
+      .benefits-list {
+        list-style: none;
+        padding: 0;
+        margin: 8px 0 0 0;
       }
 
-      #donateBtn {
-        max-width: 250px;
-        padding: 12px 24px;
+      .benefits-list li {
+        padding: 4px 0;
+        color: #64748b;
+        font-size: 14px;
+        position: relative;
+        padding-left: 20px;
+      }
+
+      .benefits-list li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+      }
+
+      .text-sm {
         font-size: 14px;
       }
 
-      #donateBtn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
+      .text-xs {
+        font-size: 12px;
+      }
+
+      @media (max-width: 768px) {
+        .amount-buttons {
+          gap: 8px;
+        }
+
+        .amount-btn {
+          padding: 14px 20px;
+          font-size: 14px;
+          min-width: 70px;
+        }
+
+        .btn-large {
+          padding: 14px 24px;
+          font-size: 16px;
+          min-width: 250px;
+        }
+
+        .security-badges {
+          flex-direction: column;
+          align-items: center;
+        }
       }</style></body></html>

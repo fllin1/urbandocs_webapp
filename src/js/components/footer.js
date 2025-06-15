@@ -13,9 +13,6 @@ export function createFooter() {
               <div class="contact-item">
                 <a href="tel:+33601842720">06 01 84 27 20</a>
               </div>
-              <div class="contact-item">
-                <a href="https://maps.google.com?q=40+Rue+Mallifaud,+38100+Grenoble" target="_blank">40 Rue Mallifaud, 38100 Grenoble</a>
-              </div>
             </div>
           </div>
 
@@ -38,7 +35,7 @@ export function createFooter() {
           <div class="footer-section">
             <h3 class="footer-title">Suivez-nous</h3>
             <div class="social-links">
-              <a href="#" class="social-link" aria-label="Twitter">
+              <a href="https://x.com/mwplu26830" class="social-link" aria-label="Twitter">
                 <span class="social-icon">
                   <img
                     src="https://mwplu.com/assets/icons/social/twitter-x.svg"
@@ -46,7 +43,7 @@ export function createFooter() {
                   />
                 </span>
               </a>
-              <a href="#" class="social-link" aria-label="Facebook">
+              <a href="https://www.facebook.com/mwplu" class="social-link" aria-label="Facebook">
                 <span class="social-icon">
                   <img
                     src="https://mwplu.com/assets/icons/social/facebook.svg"
@@ -54,7 +51,7 @@ export function createFooter() {
                   />
                 </span>
               </a>
-              <a href="#" class="social-link" aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/showcase/mwplu" class="social-link" aria-label="LinkedIn">
                 <span class="social-icon">
                   <img
                     src="https://mwplu.com/assets/icons/social/linkedin.svg"
@@ -62,7 +59,7 @@ export function createFooter() {
                   />
                 </span>
               </a>
-              <a href="#" class="social-link" aria-label="Youtube">
+              <a href="https://www.youtube.com/@Mwplu" class="social-link" aria-label="Youtube">
                 <span class="social-icon">
                   <img
                     src="https://mwplu.com/assets/icons/social/youtube.svg"

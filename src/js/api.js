@@ -48,7 +48,10 @@ async function loadCities() {
     );
 
     if (hasData) {
-      showStatus(`${cities.length} villes chargées`, "success");
+      showStatus(
+        `Nouvelles villes disponibles ! Retrouvez les synthèses de Lille et Bordeaux`,
+        "success"
+      );
       stateManager.setCities(cities);
     } else {
       const currentUser = stateManager.getState("user");

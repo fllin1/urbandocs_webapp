@@ -49,9 +49,18 @@ module.exports = (argv) => {
       donation: "./src/js/entries/donation.js",
     },
     output: {
-      filename: "js/[name].bundle.js",
+      // Use content hash for cache busting in production
+      filename: isProd
+        ? "js/[name].[contenthash].bundle.js"
+        : "js/[name].bundle.js",
+      // Add content hash to chunk files as well
+      chunkFilename: isProd
+        ? "js/[name].[contenthash].chunk.js"
+        : "js/[name].chunk.js",
       path: path.resolve(__dirname, "public"),
       clean: true,
+      // Ensure proper public path for assets
+      publicPath: "/",
     },
     plugins: [
       // TODO : Auth pages
@@ -59,96 +68,242 @@ module.exports = (argv) => {
         filename: "auth/confirmation.html",
         template: "src/auth/confirmation.html",
         chunks: [...commonChunks, "confirmation", "security"],
+        // Cache busting for HTML files
+        hash: isProd,
+        // Add meta tag to prevent HTML caching in production
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "auth/forgotten-password.html",
         template: "src/auth/forgotten-password.html",
         chunks: [...commonChunks, "forgottenPassword", "security"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "auth/login.html",
         template: "src/auth/login.html",
         chunks: [...commonChunks, "login", "security"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "auth/signup.html",
         template: "src/auth/signup.html",
         chunks: [...commonChunks, "signup", "security"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "auth/update-password.html",
         template: "src/auth/update-password.html",
         chunks: [...commonChunks, "updatePassword", "security"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       // TODO : Docs pages
       new HtmlWebpackPlugin({
         filename: "docs/documentation.html",
         template: "src/docs/documentation.html",
         chunks: [...commonChunks, "documentation"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       // TODO : Info pages
       new HtmlWebpackPlugin({
         filename: "info/about.html",
         template: "src/info/about.html",
         chunks: [...commonChunks, "about"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "info/contact.html",
         template: "src/info/contact.html",
         chunks: [...commonChunks, "contact", "security"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "info/donation.html",
         template: "src/info/donation.html",
         chunks: [...commonChunks, "donation", "security"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "info/donation-success.html",
         template: "src/info/donation-success.html",
         chunks: [...commonChunks],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       // TODO : Policies pages
       new HtmlWebpackPlugin({
         filename: "policies/privacy.html",
         template: "src/policies/privacy.html",
         chunks: [...commonChunks],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "policies/cookies.html",
         template: "src/policies/cookies.html",
         chunks: [...commonChunks],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "policies/legal-notice.html",
         template: "src/policies/legal-notice.html",
         chunks: [...commonChunks],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "policies/politiques-de-ventes.html",
         template: "src/policies/politiques-de-ventes.html",
         chunks: [...commonChunks],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "policies/terms.html",
         template: "src/policies/terms.html",
         chunks: [...commonChunks],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       // TODO : User pages
       new HtmlWebpackPlugin({
         filename: "user/profile.html",
         template: "src/user/profile.html",
         chunks: [...commonChunks, "profile", "security"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "user/account-deletion-status.html",
         template: "src/user/account-deletion-status.html",
         chunks: ["ui", "accountDeletionStatus", "security"],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       // TODO : Main pages
       new HtmlWebpackPlugin({
         filename: "404.html",
         template: "src/404.html",
         chunks: [...commonChunks],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "index.html",
@@ -162,6 +317,14 @@ module.exports = (argv) => {
           "stateManager",
           "performance",
         ],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new HtmlWebpackPlugin({
         filename: "plu-summary.html",
@@ -174,16 +337,61 @@ module.exports = (argv) => {
           "performance",
           "security",
         ],
+        hash: isProd,
+        ...(isProd && {
+          meta: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        }),
       }),
       new CopyPlugin({
         patterns: [
           {
             from: "src/css",
             to: "css",
+            // Add content hash to CSS files in production for cache busting
+            ...(isProd && {
+              rename: (fileName) => {
+                const ext = path.extname(fileName);
+                const name = path.basename(fileName, ext);
+                return `${name}.[contenthash]${ext}`;
+              },
+            }),
           },
           {
             from: "src/assets",
             to: "assets",
+            // Add content hash to asset files in production for cache busting
+            ...(isProd && {
+              rename: (fileName) => {
+                const ext = path.extname(fileName);
+                const name = path.basename(fileName, ext);
+                // Only add hash to cacheable assets (images, fonts, etc.)
+                const cacheableExtensions = [
+                  ".jpg",
+                  ".jpeg",
+                  ".png",
+                  ".gif",
+                  ".svg",
+                  ".webp",
+                  ".ico",
+                  ".woff",
+                  ".woff2",
+                  ".ttf",
+                  ".eot",
+                ];
+                if (cacheableExtensions.includes(ext.toLowerCase())) {
+                  return `${name}.[contenthash]${ext}`;
+                }
+                return fileName;
+              },
+            }),
+          },
+          {
+            from: "src/favicon.ico",
+            to: "favicon.ico",
           },
         ],
       }),
@@ -229,6 +437,10 @@ module.exports = (argv) => {
           },
         },
       },
+      // Ensure deterministic module IDs for better caching
+      moduleIds: "deterministic",
+      // Ensure deterministic chunk IDs for better caching
+      chunkIds: "deterministic",
     },
     // Enhanced module resolution
     resolve: {

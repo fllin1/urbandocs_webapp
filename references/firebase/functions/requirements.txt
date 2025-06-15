@@ -1,4 +1,0 @@
-firebase-functions~=0.4.2
-supabase
-python-dotenv
-requests

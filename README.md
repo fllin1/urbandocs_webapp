@@ -128,38 +128,38 @@ As for the preprod custom domain `preprod.mwplu.com` :
 
 1. Set up multiple sites in your Firebase project :`firebase hosting:sites:create preprod-mwplu`.
 2. Update your firebase.json to include multiple hosting targets:
-  
-    ```json
-    {
-      "hosting": [
-        {
-          "target": "production",
-          "public": "dist",
-          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-        },
-        {
-          "target": "preprod",
-          "public": "dist",
-          "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-        }
-      ]
-    }
-    ```
+
+   ```json
+   {
+     "hosting": [
+       {
+         "target": "production",
+         "public": "dist",
+         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+       },
+       {
+         "target": "preprod",
+         "public": "dist",
+         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+       }
+     ]
+   }
+   ```
 
 3. Configure hosting targets & Deploy to the preprod target :
-  
-    ```bash
-    firebase target:apply hosting production mwplu-com
-    firebase target:apply hosting preprod preprod-mwplu
 
-    firebase deploy --only hosting:preprod
-    ```
+   ```bash
+   firebase target:apply hosting production mwplu-com
+   firebase target:apply hosting preprod preprod-mwplu
+
+   firebase deploy --only hosting:preprod
+   ```
 
 ## Code Structure
 
 ### Frontend
 
-#### Source (JavaScript)
+#### Source (./src/)
 
 ```text
 src/
@@ -225,28 +225,6 @@ src/
 ├── profile.html                  # User profile management
 ├── signup.html                   # New user registration
 └── terms.html                    # Terms and conditions page
-```
-
-### Backend (Python)
-
-```text
-functions/
-├── main.py                      # Entry point for Firebase functions
-├── auth/                        # Functions related to authentication
-│   ├── handle_login.py          # Function to handle login
-│   ├── handle_signup.py         # Function to handle signup
-│   └── handle_confirmation.py   # Function to handle email confirmation
-│
-├── docs/                        # Functions to retrieve Supabase data
-│   ├── get_villes.py
-│   ├── get_zonages.py
-│   ├── get_zones.py
-│   ├── get_typologies.py
-│   └── get_document.py
-│
-└── utils/                       # Common utilities
-    ├── supabase_client.py       # Supabase client initialization
-    └── cors_config.py           # Common CORS configuration
 ```
 
 ## Licence

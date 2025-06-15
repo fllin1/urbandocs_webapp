@@ -3,13 +3,13 @@ import { initHeaderAuth } from "../auth/header-auth.js";
 import { initDonationSystem } from "../modules/donation-system.js";
 
 // Initialize header authentication and donation system when DOM is loaded
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   try {
     // Initialize header authentication
     initHeaderAuth();
 
-    // Initialize donation system
-    const donationSystemInitialized = await initDonationSystem();
+    // Initialize donation system (no longer async)
+    const donationSystemInitialized = initDonationSystem();
 
     if (donationSystemInitialized) {
       console.log("Donation page initialized successfully");
