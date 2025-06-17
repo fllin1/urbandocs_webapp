@@ -49,7 +49,7 @@ async function loadCities() {
 
     if (hasData) {
       showStatus(
-        `Nouvelles villes disponibles ! Retrouvez les synthèses de Lille et Bordeaux`,
+        `Nouvelle ville disponible ! Retrouvez les synthèses de Lille`,
         "success"
       );
       stateManager.setCities(cities);

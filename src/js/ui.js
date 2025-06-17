@@ -152,7 +152,7 @@ function formatApiName(name) {
 
   return name
     .replace(/_/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase())
+    .replace(/(^|\s)\w/g, (match) => match.toUpperCase())
     .trim();
 }
 
@@ -203,10 +203,10 @@ function populateSelect(
 
     // Enhanced formatting logic
     let displayText = "";
-    if (dataType === "zone" && zoneNameMappings.hasOwnProperty(item.name)) {
-      displayText = zoneNameMappings[item.name];
-    } else {
+    if (dataType === "city") {
       displayText = formatApiName(item.name);
+    } else {
+      displayText = item.name;
     }
 
     option.textContent = displayText;
